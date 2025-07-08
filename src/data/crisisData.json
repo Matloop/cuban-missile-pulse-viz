@@ -7,7 +7,9 @@
       "leader": "John F. Kennedy",
       "type": "País",
       "color": "#0052A5",
-      "description": "Potência mundial liderada pelo jovem presidente Kennedy, determinada a impedir a instalação de mísseis soviéticos em Cuba."
+      "description": "Superpotência mundial liderada pelo carismático presidente de 35 anos John F. Kennedy. Os EUA possuíam superioridade nuclear significativa, mas enfrentavam o desafio de mísseis soviéticos a apenas 90 milhas de suas costas.",
+      "details": "Kennedy assumiu a presidência em 1961 prometendo ser firme contra o comunismo. A descoberta dos mísseis em Cuba representava uma ameaça direta à segurança nacional americana e um teste crucial de sua liderança.",
+      "image": "kennedy-advisors"
     },
     {
       "id": "USSR",
@@ -15,7 +17,9 @@
       "leader": "Nikita Khrushchev",
       "type": "País", 
       "color": "#CC0000",
-      "description": "Superpotência comunista sob liderança de Khrushchev, buscando equilibrar o poder nuclear no hemisfério ocidental."
+      "description": "Superpotência comunista sob o comando de Nikita Khrushchev, que buscava equilibrar o poder nuclear após anos de desvantagem estratégica. A instalação de mísseis em Cuba era uma jogada ousada para proteger um aliado e pressionar os EUA.",
+      "details": "Khrushchev, líder carismático e por vezes impulsivo, havia chegado ao poder após a morte de Stalin. Ele via Cuba como uma oportunidade de projetar poder soviético no hemisfério ocidental e proteger o regime de Castro.",
+      "image": "khrushchev-castro"
     },
     {
       "id": "Cuba",
@@ -23,7 +27,9 @@
       "leader": "Fidel Castro",
       "type": "País",
       "color": "#228B22",
-      "description": "Ilha caribenha recém-revolucionária, aliada da URSS e palco principal da crise nuclear."
+      "description": "Ilha caribenha revolucionária a apenas 90 milhas da Flórida, que se tornou aliada soviética após a revolução de 1959. Castro aceitou os mísseis soviéticos para proteger seu regime de uma possível invasão americana.",
+      "details": "Fidel Castro liderou a revolução que derrubou o ditador Batista em 1959. Após a fracassada invasão da Baía dos Porcos em 1961, Castro se aproximou da URSS e aceitou os mísseis como proteção.",
+      "image": "soviet-missiles-cuba"
     },
     {
       "id": "UK",
@@ -46,8 +52,10 @@
     {
       "date": "1962-10-14",
       "title": "Descoberta dos Mísseis",
-      "description": "Voo de reconhecimento U-2 fotografa instalações de mísseis soviéticos em construção em Cuba. As imagens são analisadas e confirmam a presença de mísseis balísticos de médio alcance.",
+      "description": "Um avião espião U-2 americano pilotado por Richard Heyser voa sobre Cuba e fotografa instalações de mísseis soviéticos em San Cristóbal. As fotos revelam mísseis balísticos de médio alcance (MRBM) SS-4 Sandal, capazes de atingir alvos americanos em 1.175 milhas. A análise confirma que os soviéticos estão secretamente instalando armas nucleares a apenas 90 milhas da Flórida.",
       "riskLevel": 2,
+      "image": "u2-spy-plane",
+      "details": "As fotografias mostraram claramente rampas de lançamento, veículos de transporte e combustível, confirmando os piores temores americanos. Esta descoberta marcou o início dos 13 dias mais tensos da Guerra Fria.",
       "actions": [
         {"source": "USA", "target": "Cuba", "type": "surveillance", "strength": 0.5}
       ]
@@ -55,8 +63,10 @@
     {
       "date": "1962-10-16",
       "title": "Formação do ExComm",
-      "description": "Kennedy forma o Comitê Executivo do Conselho de Segurança Nacional (ExComm) para gerenciar a crise. Debates intensos sobre as opções de resposta começam.",
+      "description": "Kennedy é informado das descobertas às 8h45 e imediatamente forma o Comitê Executivo do Conselho de Segurança Nacional (ExComm). O grupo inclui Robert McNamara, Dean Rusk, Robert Kennedy e outros conselheiros próximos. Durante reuniões secretas intensas, discutem opções que variam de ataques aéreos cirúrgicos a invasão total de Cuba.",
       "riskLevel": 3,
+      "image": "kennedy-advisors",
+      "details": "O ExComm se reuniu quase continuamente pelos próximos 13 dias. Kennedy deliberadamente manteve as reuniões em segredo para evitar pressão pública por uma resposta militar imediata.",
       "actions": [
         {"source": "USA", "target": "Cuba", "type": "analysis", "strength": 0.7},
         {"source": "USA", "target": "NATO", "type": "consultation", "strength": 0.4}
@@ -65,8 +75,10 @@
     {
       "date": "1962-10-22",
       "title": "Discurso e 'Quarentena'",
-      "description": "Kennedy anuncia publicamente a descoberta dos mísseis e impõe um bloqueio naval ('quarentena') ao redor de Cuba. O mundo toma conhecimento da crise.",
+      "description": "Às 19h00, Kennedy faz um discurso televisivo dramático de 18 minutos para 100 milhões de americanos, revelando 'evidências inequívocas' dos mísseis soviéticos. Anuncia uma 'quarentena' naval seletiva (evitando o termo 'bloqueio', que seria ato de guerra) para impedir a chegada de mais armas. Exige a remoção imediata dos mísseis e coloca as forças armadas em DEFCON 3.",
       "riskLevel": 4,
+      "image": "naval-blockade",
+      "details": "O discurso chocou o mundo. Mercados financeiros despencaram, famílias se prepararam para guerra nuclear, e líderes mundiais se mobilizaram diplomaticamente. A quarentena naval envolveu 180 navios americanos.",
       "actions": [
         {"source": "USA", "target": "Cuba", "type": "blockade", "strength": 1.0},
         {"source": "USA", "target": "USSR", "type": "threat", "strength": 0.8},
@@ -76,8 +88,10 @@
     {
       "date": "1962-10-24",
       "title": "Navios Soviéticos Param",
-      "description": "Navios soviéticos param antes de atingir a linha de quarentena. Primeiro sinal de que a URSS pode estar recuando, mas a tensão permanece altíssima.",
+      "description": "Às 10h32, navios soviéticos carregando mísseis param na água, a 750 milhas da linha de quarentena americana. O Secretário de Estado Dean Rusk comenta: 'Estamos olho no olho, e creio que o outro cara acabou de piscar.' Embora seja o primeiro sinal de que a URSS pode estar recuando, submarinos soviéticos armados com torpedos nucleares continuam se aproximando da linha de quarentena.",
       "riskLevel": 4,
+      "image": "naval-blockade",
+      "details": "Este momento foi crucial - mostrou que Khrushchev estava hesitando em escalar a crise. No entanto, a construção dos mísseis em Cuba continuava a todo vapor, mantendo a pressão sobre Kennedy.",
       "actions": [
         {"source": "USSR", "target": "Cuba", "type": "support", "strength": 0.6},
         {"source": "USA", "target": "USSR", "type": "standoff", "strength": 0.9},
@@ -87,8 +101,10 @@
     {
       "date": "1962-10-26",
       "title": "Primeira Proposta Soviética",
-      "description": "Khrushchev envia carta propondo retirar os mísseis de Cuba em troca de garantia de não-invasão americana. Primeiro sinal real de possível resolução diplomática.",
+      "description": "Khrushchev envia uma carta emocional e longa a Kennedy, propondo retirar os mísseis de Cuba em troca de uma garantia pública americana de não invadir Cuba. A carta, aparentemente escrita pelo próprio Khrushchev, é vista como sincera e oferece esperança real de resolução pacífica. Simultaneamente, conversas secretas começam entre intermediários soviéticos e americanos.",
       "riskLevel": 3,
+      "image": "khrushchev-castro",
+      "details": "A carta foi interpretada como um sinal de que Khrushchev estava genuinamente preocupado com a escalada e buscava uma saída honrosa. O tom pessoal contrastava com a usual linguagem diplomática formal.",
       "actions": [
         {"source": "USSR", "target": "USA", "type": "negotiation", "strength": 0.7},
         {"source": "USA", "target": "Cuba", "type": "blockade", "strength": 0.8}
@@ -97,8 +113,10 @@
     {
       "date": "1962-10-27",
       "title": "Sábado Negro",
-      "description": "U-2 americano é abatido sobre Cuba. Segunda carta soviética demanda retirada de mísseis da Turquia. O mundo chega ao mais próximo de uma guerra nuclear.",
+      "description": "O dia mais perigoso da história moderna. Às 14h00, um U-2 pilotado por Rudolf Anderson é abatido sobre Cuba por um míssil SA-2, matando o piloto. Simultaneamente, Khrushchev envia uma segunda carta mais dura, exigindo a retirada dos mísseis Júpiter americanos da Turquia. Um submarino nuclear soviético B-59, armado com torpedo nuclear, quase ataca navios americanos quando perde comunicação. O mundo chega a minutos de uma guerra nuclear.",
       "riskLevel": 5,
+      "image": "u2-spy-plane",
+      "details": "No submarino B-59, três oficiais precisavam concordar para lançar o torpedo nuclear. Dois concordaram, mas Vasily Arkhipov se recusou, possivelmente salvando o mundo de uma guerra nuclear. Este foi o momento de maior perigo da Guerra Fria.",
       "actions": [
         {"source": "Cuba", "target": "USA", "type": "attack", "strength": 1.0},
         {"source": "USSR", "target": "USA", "type": "ultimatum", "strength": 1.0},
@@ -109,8 +127,10 @@
     {
       "date": "1962-10-28",
       "title": "Resolução da Crise",
-      "description": "Khrushchev anuncia publicamente a retirada dos mísseis de Cuba. Kennedy aceita e garante não invadir Cuba. Acordo secreto remove mísseis da Turquia.",
+      "description": "Às 9h00 (horário de Moscou), Khrushchev anuncia na rádio soviética que a URSS desmantelará e removerá os mísseis de Cuba, em troca da garantia americana de não invadir Cuba. Kennedy aceita publicamente. Secretamente, os EUA concordam em remover os mísseis Júpiter da Turquia em 4-5 meses. O mundo respira aliviado após 13 dias de tensão extrema. A crise termina, mas suas lições moldarão a diplomacia da Guerra Fria por décadas.",
       "riskLevel": 1,
+      "image": "kennedy-advisors",
+      "details": "O acordo secreto sobre os mísseis da Turquia só foi revelado publicamente em 1987. Ambos os líderes foram criticados em casa - Khrushchev por recuar, Kennedy por não ser mais agressivo. Paradoxalmente, ambos demonstraram maturidade ao evitar a guerra nuclear.",
       "actions": [
         {"source": "USSR", "target": "USA", "type": "agreement", "strength": 0.8},
         {"source": "USA", "target": "USSR", "type": "agreement", "strength": 0.8},
