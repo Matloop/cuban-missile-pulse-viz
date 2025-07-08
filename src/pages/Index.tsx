@@ -1,15 +1,18 @@
 
 import React, { useState, useEffect } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import NetworkVisualization from '../components/NetworkVisualization';
 import Timeline from '../components/Timeline';
 import InfoPanel from '../components/InfoPanel';
 import RiskIndicator from '../components/RiskIndicator';
+import { Button } from '../components/ui/button';
 import crisisData from '../data/crisisData.json';
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState('1962-10-14');
   const [selectedNode, setSelectedNode] = useState(null);
   const [currentEvent, setCurrentEvent] = useState(null);
+  const [isTimelineVisible, setIsTimelineVisible] = useState(true);
 
   useEffect(() => {
     const event = crisisData.events.find(e => e.date === selectedDate);
@@ -71,14 +74,26 @@ const Index = () => {
         </div>
       </div>
 
+      {/* Timeline Toggle Button */}
+      <Button
+        onClick={() => setIsTimelineVisible(!isTimelineVisible)}
+        className="fixed bottom-4 right-4 z-50 bg-blue-600 hover:bg-blue-700 text-white"
+        size="sm"
+      >
+        {isTimelineVisible ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+        {isTimelineVisible ? 'Ocultar Linha do Tempo' : 'Mostrar Linha do Tempo'}
+      </Button>
+
       {/* Timeline - Bottom */}
-      <div className="fixed bottom-0 left-0 right-0 bg-black/40 backdrop-blur-sm border-t border-blue-500/30 p-4">
-        <Timeline
-          events={crisisData.events}
-          selectedDate={selectedDate}
-          onDateChange={handleDateChange}
-        />
-      </div>
+      {isTimelineVisible && (
+        <div className="fixed bottom-0 left-0 right-0 bg-black/40 backdrop-blur-sm border-t border-blue-500/30 p-4">
+          <Timeline
+            events={crisisData.events}
+            selectedDate={selectedDate}
+            onDateChange={handleDateChange}
+          />
+        </div>
+      )}
     </div>
   );
 };
