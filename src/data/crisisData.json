@@ -1,0 +1,121 @@
+
+{
+  "nodes": [
+    {
+      "id": "USA",
+      "name": "Estados Unidos",
+      "leader": "John F. Kennedy",
+      "type": "País",
+      "color": "#0052A5",
+      "description": "Potência mundial liderada pelo jovem presidente Kennedy, determinada a impedir a instalação de mísseis soviéticos em Cuba."
+    },
+    {
+      "id": "USSR",
+      "name": "União Soviética",
+      "leader": "Nikita Khrushchev",
+      "type": "País", 
+      "color": "#CC0000",
+      "description": "Superpotência comunista sob liderança de Khrushchev, buscando equilibrar o poder nuclear no hemisfério ocidental."
+    },
+    {
+      "id": "Cuba",
+      "name": "Cuba",
+      "leader": "Fidel Castro",
+      "type": "País",
+      "color": "#228B22",
+      "description": "Ilha caribenha recém-revolucionária, aliada da URSS e palco principal da crise nuclear."
+    },
+    {
+      "id": "UK",
+      "name": "Reino Unido",
+      "leader": "Harold Macmillan",
+      "type": "Aliado",
+      "color": "#012169",
+      "description": "Principal aliado dos EUA na OTAN, oferecendo apoio diplomático durante a crise."
+    },
+    {
+      "id": "NATO",
+      "name": "OTAN",
+      "leader": "Dirk Stikker",
+      "type": "Organização",
+      "color": "#4169E1",
+      "description": "Aliança militar ocidental colocada em estado de alerta máximo durante a crise."
+    }
+  ],
+  "events": [
+    {
+      "date": "1962-10-14",
+      "title": "Descoberta dos Mísseis",
+      "description": "Voo de reconhecimento U-2 fotografa instalações de mísseis soviéticos em construção em Cuba. As imagens são analisadas e confirmam a presença de mísseis balísticos de médio alcance.",
+      "riskLevel": 2,
+      "actions": [
+        {"source": "USA", "target": "Cuba", "type": "surveillance", "strength": 0.5}
+      ]
+    },
+    {
+      "date": "1962-10-16",
+      "title": "Formação do ExComm",
+      "description": "Kennedy forma o Comitê Executivo do Conselho de Segurança Nacional (ExComm) para gerenciar a crise. Debates intensos sobre as opções de resposta começam.",
+      "riskLevel": 3,
+      "actions": [
+        {"source": "USA", "target": "Cuba", "type": "analysis", "strength": 0.7},
+        {"source": "USA", "target": "NATO", "type": "consultation", "strength": 0.4}
+      ]
+    },
+    {
+      "date": "1962-10-22",
+      "title": "Discurso e 'Quarentena'",
+      "description": "Kennedy anuncia publicamente a descoberta dos mísseis e impõe um bloqueio naval ('quarentena') ao redor de Cuba. O mundo toma conhecimento da crise.",
+      "riskLevel": 4,
+      "actions": [
+        {"source": "USA", "target": "Cuba", "type": "blockade", "strength": 1.0},
+        {"source": "USA", "target": "USSR", "type": "threat", "strength": 0.8},
+        {"source": "USA", "target": "NATO", "type": "alliance", "strength": 0.9}
+      ]
+    },
+    {
+      "date": "1962-10-24",
+      "title": "Navios Soviéticos Param",
+      "description": "Navios soviéticos param antes de atingir a linha de quarentena. Primeiro sinal de que a URSS pode estar recuando, mas a tensão permanece altíssima.",
+      "riskLevel": 4,
+      "actions": [
+        {"source": "USSR", "target": "Cuba", "type": "support", "strength": 0.6},
+        {"source": "USA", "target": "USSR", "type": "standoff", "strength": 0.9},
+        {"source": "USA", "target": "Cuba", "type": "blockade", "strength": 1.0}
+      ]
+    },
+    {
+      "date": "1962-10-26",
+      "title": "Primeira Proposta Soviética",
+      "description": "Khrushchev envia carta propondo retirar os mísseis de Cuba em troca de garantia de não-invasão americana. Primeiro sinal real de possível resolução diplomática.",
+      "riskLevel": 3,
+      "actions": [
+        {"source": "USSR", "target": "USA", "type": "negotiation", "strength": 0.7},
+        {"source": "USA", "target": "Cuba", "type": "blockade", "strength": 0.8}
+      ]
+    },
+    {
+      "date": "1962-10-27",
+      "title": "Sábado Negro",
+      "description": "U-2 americano é abatido sobre Cuba. Segunda carta soviética demanda retirada de mísseis da Turquia. O mundo chega ao mais próximo de uma guerra nuclear.",
+      "riskLevel": 5,
+      "actions": [
+        {"source": "Cuba", "target": "USA", "type": "attack", "strength": 1.0},
+        {"source": "USSR", "target": "USA", "type": "ultimatum", "strength": 1.0},
+        {"source": "USA", "target": "USSR", "type": "threat", "strength": 1.0},
+        {"source": "NATO", "target": "USA", "type": "alliance", "strength": 1.0}
+      ]
+    },
+    {
+      "date": "1962-10-28",
+      "title": "Resolução da Crise",
+      "description": "Khrushchev anuncia publicamente a retirada dos mísseis de Cuba. Kennedy aceita e garante não invadir Cuba. Acordo secreto remove mísseis da Turquia.",
+      "riskLevel": 1,
+      "actions": [
+        {"source": "USSR", "target": "USA", "type": "agreement", "strength": 0.8},
+        {"source": "USA", "target": "USSR", "type": "agreement", "strength": 0.8},
+        {"source": "USA", "target": "Cuba", "type": "guarantee", "strength": 0.5}
+      ]
+    }
+  ]
+}
