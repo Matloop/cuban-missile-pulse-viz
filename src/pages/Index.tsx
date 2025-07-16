@@ -5,6 +5,7 @@ import NetworkVisualization from '../components/NetworkVisualization';
 import Timeline from '../components/Timeline';
 import InfoPanel from '../components/InfoPanel';
 import RiskIndicator from '../components/RiskIndicator';
+import Quiz from '../components/Quiz';
 import { Button } from '../components/ui/button';
 import crisisData from '../data/crisisData.json';
 
@@ -13,11 +14,17 @@ const Index = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [currentEvent, setCurrentEvent] = useState(null);
   const [isTimelineVisible, setIsTimelineVisible] = useState(true);
+  const [showQuiz, setShowQuiz] = useState(false);
 
   useEffect(() => {
     const event = crisisData.events.find(e => e.date === selectedDate);
     setCurrentEvent(event);
     setSelectedNode(null); // Reset selected node when date changes
+    
+    // Show quiz when reaching the last day (1962-10-28)
+    if (selectedDate === '1962-10-28') {
+      setShowQuiz(true);
+    }
   }, [selectedDate]);
 
   const handleDateChange = (date) => {
@@ -43,7 +50,7 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-120px)]">
+      <div className={`max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-6 ${isTimelineVisible ? 'h-[calc(100vh-120px)]' : 'min-h-[calc(100vh-120px)]'}`}>
         
         {/* Network Visualization - Main Center */}
         <div className="lg:col-span-3 bg-black/20 backdrop-blur-sm rounded-lg border border-blue-500/30 p-4">
@@ -93,6 +100,11 @@ const Index = () => {
             onDateChange={handleDateChange}
           />
         </div>
+      )}
+
+      {/* Quiz Modal */}
+      {showQuiz && (
+        <Quiz onClose={() => setShowQuiz(false)} />
       )}
     </div>
   );
