@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import { User, Globe, Calendar, AlertTriangle } from 'lucide-react';
 
 // Import images
@@ -11,7 +10,28 @@ import khrushchevCastro from '../assets/khrushchev-castro.jpg';
 
 const InfoPanel = ({ currentEvent, selectedNode, nodes }) => {
   const displayNode = selectedNode || null;
-  
+
+  // --- START: Scroll Position Fix ---
+  const scrollRef = useRef(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  // This effect runs *after* render but *before* the browser paints,
+  // allowing us to restore the scroll position seamlessly.
+  useLayoutEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollPosition;
+    }
+    // This effect should re-run when the content changes
+  }, [currentEvent, selectedNode]);
+
+  // This function saves the scroll position whenever the user scrolls.
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      setScrollPosition(scrollRef.current.scrollTop);
+    }
+  };
+  // --- END: Scroll Position Fix ---
+
   const imageMap = {
     'kennedy-advisors': kennedyAdvisors,
     'u2-spy-plane': u2SpyPlane,
@@ -19,11 +39,16 @@ const InfoPanel = ({ currentEvent, selectedNode, nodes }) => {
     'naval-blockade': navalBlockade,
     'khrushchev-castro': khrushchevCastro
   };
-  
+
   return (
-    <div className="h-full overflow-y-auto">
+    // Attach the ref and scroll handler to the scrollable container
+    <div
+      className="h-full overflow-y-auto"
+      ref={scrollRef}
+      onScroll={handleScroll}
+    >
       <div className="space-y-4">
-        
+
         {/* Header */}
         <div className="border-b border-blue-500/30 pb-3">
           <h3 className="text-lg font-semibold text-blue-300 flex items-center gap-2">
@@ -46,7 +71,7 @@ const InfoPanel = ({ currentEvent, selectedNode, nodes }) => {
           <div className="space-y-4">
             <div className="bg-black/30 rounded-lg p-4 border border-blue-500/20">
               <div className="flex items-center gap-3 mb-3">
-                <div 
+                <div
                   className="w-6 h-6 rounded-full border-2 border-white"
                   style={{ backgroundColor: displayNode.color }}
                 />
@@ -60,29 +85,29 @@ const InfoPanel = ({ currentEvent, selectedNode, nodes }) => {
                   </p>
                 </div>
               </div>
-              
+
               <div className="mb-3">
                 <span className="inline-block bg-blue-600/50 text-blue-200 px-2 py-1 rounded text-xs">
                   {displayNode.type}
                 </span>
               </div>
-              
+
               <p className="text-gray-300 text-sm leading-relaxed">
                 {displayNode.description}
               </p>
             </div>
-            
+
             {/* Node Image */}
             {displayNode.image && imageMap[displayNode.image] && (
               <div className="rounded-lg overflow-hidden border border-blue-500/20">
-                <img 
-                  src={imageMap[displayNode.image]} 
-                  alt={displayNode.name} 
+                <img
+                  src={imageMap[displayNode.image]}
+                  alt={displayNode.name}
                   className="w-full h-40 object-cover"
                 />
               </div>
             )}
-            
+
             {/* Node Details */}
             {displayNode.details && (
               <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/20">
@@ -108,24 +133,24 @@ const InfoPanel = ({ currentEvent, selectedNode, nodes }) => {
                 })}
               </div>
             </div>
-            
+
             {/* Event Image */}
             {currentEvent.image && imageMap[currentEvent.image] && (
               <div className="rounded-lg overflow-hidden border border-blue-500/20">
-                <img 
-                  src={imageMap[currentEvent.image]} 
-                  alt={currentEvent.title} 
+                <img
+                  src={imageMap[currentEvent.image]}
+                  alt={currentEvent.title}
                   className="w-full h-48 object-cover"
                 />
               </div>
             )}
-            
+
             <div className="bg-black/30 rounded-lg p-4 border border-blue-500/20">
               <p className="text-gray-300 leading-relaxed text-sm">
                 {currentEvent.description}
               </p>
             </div>
-            
+
             {/* Event Details */}
             {currentEvent.details && (
               <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/20">
@@ -133,7 +158,7 @@ const InfoPanel = ({ currentEvent, selectedNode, nodes }) => {
                 <p className="text-sm text-gray-300 leading-relaxed">{currentEvent.details}</p>
               </div>
             )}
-            
+
             {/* Risk Level Indicator */}
             <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
               <h5 className="text-red-300 font-semibold mb-2">Nível de Risco Nuclear</h5>
@@ -142,14 +167,13 @@ const InfoPanel = ({ currentEvent, selectedNode, nodes }) => {
                   {[1, 2, 3, 4, 5].map(level => (
                     <div
                       key={level}
-                      className={`w-3 h-3 rounded-full ${
-                        level <= currentEvent.riskLevel
-                          ? level <= 2 ? 'bg-green-500' 
+                      className={`w-3 h-3 rounded-full ${level <= currentEvent.riskLevel
+                          ? level <= 2 ? 'bg-green-500'
                             : level <= 3 ? 'bg-yellow-500'
-                            : level <= 4 ? 'bg-orange-500'
-                            : 'bg-red-500'
+                              : level <= 4 ? 'bg-orange-500'
+                                : 'bg-red-500'
                           : 'bg-gray-600'
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>
@@ -177,10 +201,10 @@ const InfoPanel = ({ currentEvent, selectedNode, nodes }) => {
                   {currentEvent.actions.map((action, index) => {
                     const sourceNode = nodes.find(n => n.id === action.source);
                     const targetNode = nodes.find(n => n.id === action.target);
-                    
+
                     const actionColors = {
                       threat: 'text-red-400',
-                      blockade: 'text-orange-400', 
+                      blockade: 'text-orange-400',
                       alliance: 'text-blue-400',
                       agreement: 'text-green-400',
                       attack: 'text-red-500',
@@ -209,7 +233,7 @@ const InfoPanel = ({ currentEvent, selectedNode, nodes }) => {
                       negotiation: 'Negociação',
                       guarantee: 'Garantia'
                     };
-                    
+
                     return (
                       <div key={index} className="text-sm flex items-center gap-2">
                         <div className="flex items-center gap-1">
@@ -236,7 +260,7 @@ const InfoPanel = ({ currentEvent, selectedNode, nodes }) => {
         {/* Instructions */}
         <div className="bg-black/20 rounded-lg p-3 border border-blue-500/10">
           <p className="text-xs text-gray-400">
-            💡 <strong>Dica:</strong> {displayNode 
+            💡 <strong>Dica:</strong> {displayNode
               ? 'Clique na visualização para voltar aos eventos'
               : 'Clique nos países na visualização para mais informações'}
           </p>
