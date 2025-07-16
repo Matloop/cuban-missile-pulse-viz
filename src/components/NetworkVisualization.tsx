@@ -48,13 +48,13 @@ const NetworkVisualization = ({ nodes, currentEvent, onNodeSelect, selectedNode 
     svg.attr("width", width).attr("height", height);
 
     // Create links from current event actions
-    const links = currentEvent.actions.map(action => ({
+    const links = currentEvent.actions ? currentEvent.actions.map(action => ({
       source: action.source,
       target: action.target,
       type: action.type,
       strength: action.strength || 0.5,
       details: getLinkDetails(action.type)
-    }));
+    })) : [];
 
     // Setup zoom behavior
     const zoom = d3.zoom()
@@ -69,9 +69,12 @@ const NetworkVisualization = ({ nodes, currentEvent, onNodeSelect, selectedNode 
     // Create main group for zoomable content
     const g = svg.append("g");
 
-    // Create force simulation
-    const simulation = d3.forceSimulation(nodes)
-      .force("link", d3.forceLink(links).id(d => d.id).distance(150))
+    // Create force simulation with proper node copying
+    const nodesCopy = nodes.map(d => ({...d}));
+    const linksCopy = links.map(d => ({...d}));
+
+    const simulation = d3.forceSimulation(nodesCopy)
+      .force("link", d3.forceLink(linksCopy).id(d => d.id).distance(150))
       .force("charge", d3.forceManyBody().strength(-300))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .force("collision", d3.forceCollide().radius(40));
@@ -92,7 +95,7 @@ const NetworkVisualization = ({ nodes, currentEvent, onNodeSelect, selectedNode 
     // Create links
     const link = g.append("g")
       .selectAll("line")
-      .data(links)
+      .data(linksCopy)
       .join("line")
       .attr("stroke", d => {
         switch(d.type) {
@@ -140,7 +143,7 @@ const NetworkVisualization = ({ nodes, currentEvent, onNodeSelect, selectedNode 
     // Create link labels
     const linkLabels = g.append("g")
       .selectAll("text")
-      .data(links)
+      .data(linksCopy)
       .join("text")
       .text(d => d.type.toUpperCase())
       .attr("font-size", d => Math.max(8, 10 * zoomLevel))
@@ -154,11 +157,11 @@ const NetworkVisualization = ({ nodes, currentEvent, onNodeSelect, selectedNode 
     // Create nodes
     const node = g.append("g")
       .selectAll("circle")
-      .data(nodes)
+      .data(nodesCopy)
       .join("circle")
       .attr("r", d => {
         const baseRadius = d.type === 'País' ? 25 : 20;
-        return Math.max(baseRadius, baseRadius * zoomLevel * 0.8);
+        return Math.max(baseRadius, baseRadius * Math.min(zoomLevel * 0.8, 1.2));
       })
       .attr("fill", d => d.color)
       .attr("stroke", d => {
@@ -174,7 +177,7 @@ const NetworkVisualization = ({ nodes, currentEvent, onNodeSelect, selectedNode 
       .style("filter", "url(#glow)")
       .style("cursor", "pointer")
       .style("opacity", d => hoveredNode ? 
-        (getConnectedNodes(hoveredNode, links).has(d.id) ? 1 : 0.4) : 1)
+        (getConnectedNodes(hoveredNode, linksCopy).has(d.id) ? 1 : 0.4) : 1)
       .call(d3.drag()
         .on("start", dragstarted)
         .on("drag", dragged)
@@ -193,41 +196,41 @@ const NetworkVisualization = ({ nodes, currentEvent, onNodeSelect, selectedNode 
     // Add node labels
     const nodeLabels = g.append("g")
       .selectAll("text")
-      .data(nodes)
+      .data(nodesCopy)
       .join("text")
       .text(d => d.name)
-      .attr("font-size", d => Math.max(10, 12 * zoomLevel))
+      .attr("font-size", d => Math.max(10, 12 * Math.min(zoomLevel, 1.5)))
       .attr("font-weight", "bold")
       .attr("fill", "#fff")
       .attr("text-anchor", "middle")
       .attr("dy", 35)
       .style("opacity", d => hoveredNode ? 
-        (getConnectedNodes(hoveredNode, links).has(d.id) ? 1 : 0.4) : 1)
+        (getConnectedNodes(hoveredNode, linksCopy).has(d.id) ? 1 : 0.4) : 1)
       .style("pointer-events", "none");
 
     // Add leader labels (only show at higher zoom levels)
     const leaderLabels = g.append("g")
       .selectAll("text")
-      .data(nodes)
+      .data(nodesCopy)
       .join("text")
-      .text(d => d.leader)
-      .attr("font-size", d => Math.max(8, 10 * zoomLevel))
+      .text(d => d.leader || '')
+      .attr("font-size", d => Math.max(8, 10 * Math.min(zoomLevel, 1.3)))
       .attr("fill", "#ccc")
       .attr("text-anchor", "middle")
       .attr("dy", 48)
       .style("opacity", d => {
         const baseOpacity = zoomLevel > 1.2 ? 0.8 : 0.3;
         return hoveredNode ? 
-          (getConnectedNodes(hoveredNode, links).has(d.id) ? baseOpacity : baseOpacity * 0.5) : baseOpacity;
+          (getConnectedNodes(hoveredNode, linksCopy).has(d.id) ? baseOpacity : baseOpacity * 0.5) : baseOpacity;
       })
       .style("pointer-events", "none");
 
     // Add additional info at high zoom levels
     const detailLabels = g.append("g")
       .selectAll("text")
-      .data(nodes.filter(d => d.type === 'País'))
+      .data(nodesCopy.filter(d => d.type === 'País'))
       .join("text")
-      .text(d => `Risco: ${zoomLevel > 2 ? 'Alto' : ''}`)
+      .text(d => zoomLevel > 2 ? 'Risco: Alto' : '')
       .attr("font-size", "8px")
       .attr("fill", "#ff6666")
       .attr("text-anchor", "middle")
