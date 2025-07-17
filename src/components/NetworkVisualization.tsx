@@ -1,51 +1,129 @@
+// src/components/NetworkVisualization.tsx
+
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const NetworkVisualization = ({ nodes, currentEvent, onNodeSelect, selectedNode }) => {
-  const svgRef = useRef();
+// --- DEFINIÇÕES DE TIPO para segurança e clareza ---
 
-  // The 'hoveredNode' state was the main cause of the performance issue.
-  // It has been removed. Hover effects are now handled directly by D3.
+// Estende a interface base de nó do D3 com nossas propriedades customizadas.
+// O d3.SimulationNodeDatum adiciona propriedades como x, y, vx, vy, etc.
+interface NetworkNode extends d3.SimulationNodeDatum {
+  id: string;
+  name: string;
+  leader?: string;
+  type: string;
+  color: string;
+}
+
+// Estende a interface de link do D3, especificando que a fonte e o alvo
+// podem ser uma string (ID) ou um objeto NetworkNode completo.
+interface NetworkLink extends d3.SimulationLinkDatum<NetworkNode> {
+  source: string | NetworkNode;
+  target: string | NetworkNode;
+  type: string;
+  strength: number;
+}
+
+// Define a estrutura esperada para o objeto de evento atual.
+interface NetworkEvent {
+  actions: {
+    source: string;
+    target: string;
+    type: string;
+    strength?: number;
+  }[];
+}
+
+// Define a estrutura de uma única partícula para o sistema de canvas.
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  color: string;
+}
+
+// Define as props que o componente espera receber do seu pai (e.g., App.tsx).
+interface NetworkVisualizationProps {
+  nodes: NetworkNode[];
+  currentEvent: NetworkEvent | null;
+  selectedNode: NetworkNode | null;
+  onNodeSelect: (node: NetworkNode) => void;
+}
+
+
+// --- O COMPONENTE ---
+
+const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
+  nodes,
+  currentEvent,
+  onNodeSelect,
+  selectedNode,
+}) => {
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animationFrameId = useRef<number>();
 
   useEffect(() => {
-    if (!currentEvent || !nodes || !currentEvent.actions) return;
+    // Validação inicial para garantir que todos os elementos e dados necessários existam.
+    if (!currentEvent || !nodes || !currentEvent.actions || !canvasRef.current || !svgRef.current) {
+      return;
+    }
 
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
     const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove(); // Clear SVG for new event
+
+    svg.selectAll("*").remove(); // Limpa o SVG de renderizações anteriores.
 
     const width = 800;
     const height = 500;
 
+    // Ajusta o tamanho do Canvas e do SVG.
+    canvas.width = width;
+    canvas.height = height;
     svg.attr("width", width).attr("height", height);
 
-    const links = currentEvent.actions.map(action => ({
+    if (!ctx) return; // Aborta se o contexto 2D do canvas não puder ser obtido.
+
+    // --- PREPARAÇÃO DOS DADOS ---
+    const linkData: NetworkLink[] = currentEvent.actions.map(action => ({
       source: action.source,
       target: action.target,
       type: action.type,
-      strength: action.strength || 0.5
+      strength: action.strength || 0.5,
     }));
+    const nodeData: NetworkNode[] = nodes.map(d => ({ ...d }));
 
-    const nodeData = nodes.map(d => ({ ...d }));
-    const linkData = links.map(d => ({ ...d }));
+    // --- SISTEMA DE PARTÍCULAS ---
+    let particles: Particle[] = [];
 
-    const simulation = d3.forceSimulation(nodeData)
-      .force("link", d3.forceLink(linkData).id(d => d.id).distance(120))
-      .force("charge", d3.forceManyBody().strength(-400))
+    const emitParticles = (node: NetworkNode) => {
+      if (node.x === undefined || node.y === undefined) return;
+      const particleCount = 2; // Número de partículas a serem emitidas por nó a cada "tick".
+      for (let i = 0; i < particleCount; i++) {
+        const angle = Math.random() * 2 * Math.PI;
+        const speed = Math.random() * 0.5 + 0.1;
+        particles.push({
+          x: node.x,
+          y: node.y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: Math.random() * 30 + 30, // Tempo de vida da partícula em frames.
+          color: node.color,
+        });
+      }
+    };
+
+    // --- SIMULAÇÃO DE FORÇA D3 ---
+    const simulation = d3.forceSimulation<NetworkNode>(nodeData)
+      .force("link", d3.forceLink<NetworkNode, NetworkLink>(linkData).id(d => d.id).distance(150))
+      .force("charge", d3.forceManyBody().strength(-500))
       .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collision", d3.forceCollide().radius(35));
+      .force("collision", d3.forceCollide().radius(40));
 
-    const defs = svg.append("defs");
-    const filter = defs.append("filter")
-      .attr("id", "glow");
-
-    filter.append("feGaussianBlur")
-      .attr("stdDeviation", "3")
-      .attr("result", "coloredBlur");
-
-    const feMerge = filter.append("feMerge");
-    feMerge.append("feMergeNode").attr("in", "coloredBlur");
-    feMerge.append("feMergeNode").attr("in", "SourceGraphic");
-
+    // --- RENDERIZAÇÃO SVG ---
     const g = svg.append("g");
 
     const link = g.append("g")
@@ -59,29 +137,21 @@ const NetworkVisualization = ({ nodes, currentEvent, onNodeSelect, selectedNode 
           'surveillance': '#9966ff', 'negotiation': '#66ffaa', 'support': '#ffaa66',
           'standoff': '#ff6666', 'guarantee': '#aaffaa'
         };
-        return colors[d.type] || '#888';
+        return colors[d.type as keyof typeof colors] || '#888';
       })
       .attr("stroke-width", d => Math.max(2, d.strength * 4))
-      .attr("stroke-opacity", 0.8)
-      .style("filter", "url(#glow)");
+      .attr("stroke-opacity", 0.6);
 
     const node = g.append("g")
-      .selectAll("circle")
+      .selectAll<SVGCircleElement, NetworkNode>("circle")
       .data(nodeData)
       .join("circle")
-      .attr("r", d => d.type === 'País' ? 25 : 20)
+      .attr("r", d => (d.type === 'País' ? 25 : 20))
       .attr("fill", d => d.color || '#0066cc')
-      .attr("stroke", d => selectedNode?.id === d.id ? "#fff" : "#333")
-      .attr("stroke-width", d => selectedNode?.id === d.id ? 3 : 2)
-      .style("filter", "url(#glow)")
+      .attr("stroke", d => (selectedNode?.id === d.id ? "#fff" : "#333"))
+      .attr("stroke-width", d => (selectedNode?.id === d.id ? 3 : 2))
       .style("cursor", "pointer")
-      .call(d3.drag()
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended))
-      .on("click", (event, d) => {
-        onNodeSelect(d);
-      });
+      .on("click", (event, d) => onNodeSelect(d));
 
     const labels = g.append("g")
       .selectAll("text")
@@ -95,101 +165,109 @@ const NetworkVisualization = ({ nodes, currentEvent, onNodeSelect, selectedNode 
       .attr("dy", 35)
       .style("pointer-events", "none");
 
-    const leaderLabels = g.append("g")
-      .selectAll("text")
-      .data(nodeData)
-      .join("text")
-      .text(d => d.leader || '')
-      .attr("font-size", "10px")
-      .attr("fill", "#ccc")
-      .attr("text-anchor", "middle")
-      .attr("dy", 50)
-      .style("pointer-events", "none")
-      .style("opacity", 0.7);
+    // --- LOOP DE ANIMAÇÃO DO CANVAS ---
+    const animate = () => {
+      ctx.clearRect(0, 0, width, height);
 
-    // --- START: D3 Hover Effects (The Fix) ---
-    node.on("mouseover", function (event, d_hover) {
-      // Highlight the hovered node
-      d3.select(this).attr("stroke", "#ffff00").attr("stroke-width", 4);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.life--;
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+        p.x += p.vx;
+        p.y += p.vy;
 
-      const connectedNodeIds = new Set();
-      connectedNodeIds.add(d_hover.id);
-      linkData.forEach(l => {
-        if (l.source.id === d_hover.id) connectedNodeIds.add(l.target.id);
-        if (l.target.id === d_hover.id) connectedNodeIds.add(l.source.id);
-      });
+        ctx.globalAlpha = p.life / 60; // Desvanece a partícula conforme ela envelhece.
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      // Continua o loop de animação.
+      animationFrameId.current = requestAnimationFrame(animate);
+    };
 
-      // Fade out non-connected elements
-      node.style("opacity", n => connectedNodeIds.has(n.id) ? 1.0 : 0.3);
-      labels.style("opacity", n => connectedNodeIds.has(n.id) ? 1.0 : 0.3);
-      leaderLabels.style("opacity", n => connectedNodeIds.has(n.id) ? 0.7 : 0.2);
-    })
-    .on("mouseout", function (event, d_hover) {
-      // Restore default styles on mouseout
-      d3.select(this)
-        .attr("stroke", selectedNode?.id === d_hover.id ? "#fff" : "#333")
-        .attr("stroke-width", selectedNode?.id === d_hover.id ? 3 : 2);
-
-      // Restore opacity for all elements
-      node.style("opacity", 1.0);
-      labels.style("opacity", 1.0);
-      leaderLabels.style("opacity", 0.7);
-    });
-    // --- END: D3 Hover Effects ---
-
+    // --- MANIPULADOR DO "TICK" DA SIMULAÇÃO ---
+    // Esta é a cola que une a simulação D3, o SVG e o Canvas.
     simulation.on("tick", () => {
+      // 1. Atualiza a posição dos elementos SVG.
       link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
+        .attr("x1", d => (d.source as NetworkNode).x ?? 0)
+        .attr("y1", d => (d.source as NetworkNode).y ?? 0)
+        .attr("x2", d => (d.target as NetworkNode).x ?? 0)
+        .attr("y2", d => (d.target as NetworkNode).y ?? 0);
+
       node
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y);
+        .attr("cx", d => d.x ?? 0)
+        .attr("cy", d => d.y ?? 0);
+
       labels
-        .attr("x", d => d.x)
-        .attr("y", d => d.y);
-      leaderLabels
-        .attr("x", d => d.x)
-        .attr("y", d => d.y);
+        .attr("x", d => d.x ?? 0)
+        .attr("y", d => d.y ?? 0);
+
+      // 2. Emite novas partículas a partir da posição atualizada de cada nó.
+      nodeData.forEach(emitParticles);
     });
 
-    function dragstarted(event, d) {
+    // --- FUNCIONALIDADES DE DRAG E ZOOM ---
+    function dragstarted(event: d3.D3DragEvent<SVGCircleElement, NetworkNode, any>, d: NetworkNode) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
     }
 
-    function dragged(event, d) {
+    function dragged(event: d3.D3DragEvent<SVGCircleElement, NetworkNode, any>, d: NetworkNode) {
       d.fx = event.x;
       d.fy = event.y;
     }
 
-    function dragended(event, d) {
+    function dragended(event: d3.D3DragEvent<SVGCircleElement, NetworkNode, any>, d: NetworkNode) {
       if (!event.active) simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
     }
 
-    const zoom = d3.zoom()
+    node.call(d3.drag<SVGCircleElement, NetworkNode>()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended)
+    );
+    
+    const zoom = d3.zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.5, 2])
       .on("zoom", (event) => {
-        g.attr("transform", event.transform);
+        g.attr("transform", event.transform.toString());
       });
 
     svg.call(zoom);
 
+    // Inicia o loop de animação do canvas.
+    animate();
+
+    // --- LIMPEZA ---
+    // Esta função é executada quando o componente é desmontado ou as dependências mudam.
     return () => {
       simulation.stop();
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
     };
-    // The dependency array no longer includes 'hoveredNode'
   }, [currentEvent, nodes, selectedNode, onNodeSelect]);
 
+  // --- JSX RENDER ---
   return (
-    <div className="w-full h-full flex items-center justify-center">
+    // Um container relativo para empilhar o canvas (fundo) e o svg (frente).
+    <div className="relative w-full h-full flex items-center justify-center">
+      <canvas
+        ref={canvasRef}
+        className="absolute top-0 left-0 border border-blue-500/10 rounded bg-black/10"
+      />
       <svg
         ref={svgRef}
-        className="border border-blue-500/20 rounded bg-black/10"
+        className="absolute top-0 left-0"
         style={{ maxWidth: '100%', height: '500px' }}
       />
     </div>
