@@ -136,3 +136,52 @@ All colors MUST be HSL.
     }
   }
 }
+@layer utilities {
+  /* Fundo de grade animado */
+  .animated-grid-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: -1;
+    background-color: #020817; /* Cor de fundo base */
+    background-image: 
+      linear-gradient(to right, rgba(14, 116, 144, 0.2) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(14, 116, 144, 0.2) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: pan-grid 60s linear infinite;
+  }
+
+  @keyframes pan-grid {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+  }
+
+  /* Overlay de ruído sutil */
+  .noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39tbW1+fn5wbm5jZWVtYmJkY2NkW1tvaWppZ2dmZ2c9QD2gAAAAW0lEQVR42uzVrQoAIAgE4P4/2u213VsozT4k4C8B/e1yTnaJAQAAAMCAgQAAgLkBAAAAgBkT4qg5m4/bSjXwA2wPjY0U+gEBAAAA8K8HBYgH9bY7xJgAAAAASUVORK5CYII=');
+    opacity: 0.05;
+    animation: noise 0.2s infinite;
+  }
+
+  @keyframes noise {
+    0%, 100% { transform: translate(0,0); }
+    10% { transform: translate(-5%,-10%); }
+    20% { transform: translate(-15%,5%); }
+    30% { transform: translate(7%,-25%); }
+    40% { transform: translate(-5%,25%); }
+    50% { transform: translate(-15%,10%); }
+    60% { transform: translate(15%,0%); }
+    70% { transform: translate(0%,15%); }
+    80% { transform: translate(3%,35%); }
+    90% { transform: translate(-10%,10%); }
+  }
+}
