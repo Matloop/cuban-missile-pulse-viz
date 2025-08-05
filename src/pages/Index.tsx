@@ -1,3 +1,5 @@
+// src/pages/Index.tsx
+
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, BookOpen, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,6 +23,7 @@ const Index: React.FC = () => {
   const [currentEvent, setCurrentEvent] = useState<NetworkEvent | null>(null);
   const [isTimelineVisible, setIsTimelineVisible] = useState(true);
   const [showQuiz, setShowQuiz] = useState(false);
+  const [isFinalDay, setIsFinalDay] = useState(false); // Novo estado para controlar o último dia
 
   useEffect(() => {
     // Encontra o evento correspondente à data selecionada
@@ -28,10 +31,8 @@ const Index: React.FC = () => {
     setCurrentEvent(event);
     setSelectedNode(null); // Reseta a seleção de nó ao mudar de data
 
-    // Abre o quiz automaticamente ao chegar no último dia da crise
-    if (selectedDate === '1962-10-28') {
-      setTimeout(() => setShowQuiz(true), 1500); // Adiciona um pequeno delay para efeito dramático
-    }
+    // Verifica se é o último dia para exibir o botão do quiz
+    setIsFinalDay(selectedDate === '1962-10-28');
   }, [selectedDate]);
 
   const handleDateChange = (date: string) => {
@@ -57,20 +58,16 @@ const Index: React.FC = () => {
       transition={{ duration: 1.5, ease: "easeInOut" }}
       className="h-screen w-screen overflow-hidden text-white flex flex-col"
     >
-      {/* Camadas de fundo animadas (as classes vêm do seu CSS) */}
+      {/* Camadas de fundo animadas */}
       <div className="animated-grid-background" />
       <div className="noise-overlay" />
 
-      {/* Header Fixo */}
+      {/* Header Fixo (botão do quiz removido daqui) */}
       <header className="bg-black/30 backdrop-blur-sm border-b border-cyan-500/30 p-3 shrink-0 z-10">
         <div className="max-w-screen-2xl mx-auto flex justify-between items-center">
           <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-red-400 bg-clip-text text-transparent tracking-wider">
             OPERAÇÃO CHRONOS // ANÁLISE: CRISE DOS MÍSSEIS
           </h1>
-          <Button onClick={() => setShowQuiz(true)} size="sm" variant="outline" className="text-yellow-300 border-yellow-500/30 hover:bg-yellow-500/10 hover:text-yellow-200">
-            <BookOpen className="w-4 h-4 mr-2" />
-            Testar Conhecimento
-          </Button>
         </div>
       </header>
 
@@ -78,13 +75,36 @@ const Index: React.FC = () => {
       <main className="flex-grow min-h-0">
         <ResizablePanelGroup direction="horizontal" className="h-full max-w-screen-2xl mx-auto p-4">
           <ResizablePanel defaultSize={70}>
-            <div className="h-full w-full bg-black/20 backdrop-blur-sm rounded-lg border border-cyan-500/40 p-2 shadow-lg shadow-cyan-900/20">
+            <div className="relative h-full w-full bg-black/20 backdrop-blur-sm rounded-lg border border-cyan-500/40 p-2 shadow-lg shadow-cyan-900/20">
               <NetworkVisualization
                 nodes={crisisData.nodes as NetworkNode[]}
                 currentEvent={currentEvent}
                 onNodeSelect={handleNodeSelect}
                 selectedNode={selectedNode}
               />
+              {/* Botão do Quiz que aparece no último dia */}
+              <AnimatePresence>
+                {isFinalDay && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm"
+                  >
+                    <div className="text-center p-8 bg-black/70 rounded-lg border border-yellow-500/50 shadow-2xl shadow-yellow-500/20">
+                      <h2 className="text-2xl font-bold text-yellow-300 mb-2">Análise Concluída</h2>
+                      <p className="text-gray-300 mb-6 max-w-md">
+                        Você navegou pelos 13 dias que levaram o mundo à beira do abismo. Agora, teste seu conhecimento sobre os eventos críticos que definiram a Crise dos Mísseis.
+                      </p>
+                      <Button onClick={() => setShowQuiz(true)} size="lg" variant="outline" className="text-yellow-300 border-yellow-500/30 hover:bg-yellow-500/10 hover:text-yellow-200 text-lg">
+                        <BookOpen className="w-5 h-5 mr-3" />
+                        Iniciar Teste de Conhecimento
+                      </Button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </ResizablePanel>
           <ResizableHandle withHandle />
