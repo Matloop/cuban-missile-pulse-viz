@@ -82,22 +82,22 @@ const Index: React.FC = () => {
                 onNodeSelect={handleNodeSelect}
                 selectedNode={selectedNode}
               />
-              {/* Botão do Quiz que aparece no último dia */}
+              {/* Botão do Quiz que aparece no último dia, posicionado à direita */}
               <AnimatePresence>
                 {isFinalDay && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm"
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 100 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    className="absolute inset-y-0 right-0 flex items-center justify-end p-8 bg-gradient-to-l from-black/80 to-transparent pointer-events-none"
                   >
-                    <div className="text-center p-8 bg-black/70 rounded-lg border border-yellow-500/50 shadow-2xl shadow-yellow-500/20">
+                    <div className="text-left p-8 bg-black/80 rounded-lg border border-yellow-500/50 shadow-2xl shadow-yellow-500/20 max-w-sm pointer-events-auto">
                       <h2 className="text-2xl font-bold text-yellow-300 mb-2">Análise Concluída</h2>
-                      <p className="text-gray-300 mb-6 max-w-md">
+                      <p className="text-gray-300 mb-6">
                         Você navegou pelos 13 dias que levaram o mundo à beira do abismo. Agora, teste seu conhecimento sobre os eventos críticos que definiram a Crise dos Mísseis.
                       </p>
-                      <Button onClick={() => setShowQuiz(true)} size="lg" variant="outline" className="text-yellow-300 border-yellow-500/30 hover:bg-yellow-500/10 hover:text-yellow-200 text-lg">
+                      <Button onClick={() => setShowQuiz(true)} size="lg" variant="outline" className="text-yellow-300 border-yellow-500/30 hover:bg-yellow-500/10 hover:text-yellow-200 text-lg w-full justify-center">
                         <BookOpen className="w-5 h-5 mr-3" />
                         Iniciar Teste de Conhecimento
                       </Button>
