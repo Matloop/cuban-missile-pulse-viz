@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Eye, EyeOff, BookOpen, Clock, Key, FolderOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -7,8 +7,8 @@ import NetworkVisualization from '../components/NetworkVisualization';
 import Timeline from '../components/Timeline';
 import InfoPanel from '../components/InfoPanel';
 import RiskIndicator from '../components/RiskIndicator';
-import FinalQuiz from '../components/Quiz'; // Renomeado para maior clareza da funcionalidade
-
+import EventQuiz from '../components/EventQuiz';
+import FinalQuiz from '../components/Quiz';
 import Collection from '../components/Collection';
 import { Button } from '../components/ui/button';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../components/ui/resizable';
@@ -16,20 +16,20 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../compone
 // Dados e Tipos
 import crisisData from '../data/crisisData.json';
 import allFiguresData from '../data/historicalFigures.json';
-import { NetworkNode, NetworkEvent, HistoricalFigure } from '../types/crisisDataTypes';
+import allQuestionsData from '../data/quizQuestions.json';
+import { NetworkNode, NetworkEvent, HistoricalFigure, QuizData } from '../types/crisisDataTypes';
 import Lootbox from '@/components/LootBox';
 
 const allFigures = allFiguresData as HistoricalFigure[];
 
 const Index: React.FC = () => {
-  // --- ESTADOS PRINCIPAIS DA APLICAÇÃO ---
   const [selectedDate, setSelectedDate] = useState<string>(crisisData.events[0].date);
   const [currentEvent, setCurrentEvent] = useState<NetworkEvent | null>(null);
   const [selectedNode, setSelectedNode] = useState<NetworkNode | null>(null);
   const [isTimelineVisible, setIsTimelineVisible] = useState(true);
   
-  // --- ESTADOS DO SISTEMA DE JOGO ---
-  const [highestUnlockedLevel, setHighestUnlockedLevel] = useState<number>(0); // Nível 0 é o primeiro
+  const [highestUnlockedLevel, setHighestUnlockedLevel] = useState<number>(0);
+  const [showEventQuiz, setShowEventQuiz] = useState<boolean>(false);
   const [showFinalQuiz, setShowFinalQuiz] = useState<boolean>(false);
   const [lootboxTokens, setLootboxTokens] = useState<number>(1);
   const [showLootboxOpening, setShowLootboxOpening] = useState<boolean>(false);
@@ -39,36 +39,61 @@ const Index: React.FC = () => {
   const [isFinalDay, setIsFinalDay] = useState(false);
 
   useEffect(() => {
-    const event = crisisData.events.find(e => e.date === selectedDate) as NetworkEvent;
-    setCurrentEvent(event);
-    setSelectedNode(null);
-
-    const currentIndex = crisisData.events.findIndex(e => e.date === selectedDate);
-    // Desbloqueia o próximo nível ao visitar o nível mais alto disponível
-    if (currentIndex === highestUnlockedLevel && currentIndex < crisisData.events.length - 1) {
-      setHighestUnlockedLevel(prev => prev + 1);
+    const eventIndex = crisisData.events.findIndex(e => e.date === selectedDate);
+    const event = crisisData.events[eventIndex] as NetworkEvent;
+    
+    let questionForEvent: QuizData | undefined = undefined;
+    // Pega uma pergunta sobre o dia ANTERIOR para o quiz de progressão
+    if (eventIndex > 0) {
+      const previousEventDate = crisisData.events[eventIndex - 1].date;
+      const possibleQuestions = (allQuestionsData as Record<string, QuizData[]>)[previousEventDate] || [];
+      if (possibleQuestions.length > 0) {
+        questionForEvent = possibleQuestions[Math.floor(Math.random() * possibleQuestions.length)];
+      }
     }
     
-    // Verifica se chegou ao último dia para mostrar o painel do quiz
-    setIsFinalDay(selectedDate === crisisData.events[crisisData.events.length - 1].date);
-  }, [selectedDate, highestUnlockedLevel]);
+    setCurrentEvent({ ...event, quiz: questionForEvent });
+    setSelectedNode(null);
 
-  // --- FUNÇÕES DE MANIPULAÇÃO DE ESTADO ---
+    // CORREÇÃO DA LÓGICA DE PROGRESSÃO:
+    // Mostra o quiz se o usuário CLICOU em um novo dia que ele acabou de desbloquear
+    if (eventIndex > highestUnlockedLevel && questionForEvent) {
+      setTimeout(() => setShowEventQuiz(true), 1500);
+    }
 
-  const handleOpenLootbox = () => {
+    // Desbloqueia o próximo nível assim que o usuário VISITA o nível mais alto
+    if (eventIndex === highestUnlockedLevel && eventIndex < crisisData.events.length - 1) {
+        setHighestUnlockedLevel(prev => prev + 1);
+    }
+
+    setIsFinalDay(eventIndex === crisisData.events.length - 1);
+  }, [selectedDate]);
+
+  const handleEventQuizAnswer = (isCorrect: boolean) => {
+    setShowEventQuiz(false);
+    if (isCorrect) {
+      setLootboxTokens(prev => prev + 1);
+    }
+    // A progressão já aconteceu no useEffect, aqui apenas fechamos o modal
+  };
+  
+  const handleFinalQuizComplete = (keysEarned: number) => {
+    setLootboxTokens(prev => prev + keysEarned);
+    setShowFinalQuiz(false);
+  };
+
+  const handleOpenLootbox = useCallback(() => {
     if (lootboxTokens <= 0) return;
     setLootboxTokens(prev => prev - 1);
 
     const sortedFigures = [...allFigures].sort((a, b) => a.chance - b.chance);
     let figureRolled: HistoricalFigure | null = null;
-
     for (const figure of sortedFigures) {
       if (Math.floor(Math.random() * figure.chance) === 0) {
         figureRolled = figure;
         break;
       }
     }
-    
     if (!figureRolled) {
       const commonFigures = allFigures.filter(f => f.rarity === 'Comum');
       figureRolled = commonFigures[Math.floor(Math.random() * commonFigures.length)];
@@ -76,26 +101,22 @@ const Index: React.FC = () => {
     
     setUnlockedFigure(figureRolled);
     setShowLootboxOpening(true);
-  };
+  }, [lootboxTokens]);
   
-  const handleCollectFigure = () => {
-      if (unlockedFigure && !userCollection.includes(unlockedFigure.id)) {
-          setUserCollection(prev => [...prev, unlockedFigure.id]);
+  const handleCollectFigure = useCallback(() => {
+    if (unlockedFigure) {
+      if (!userCollection.includes(unlockedFigure.id)) {
+        setUserCollection(prev => [...prev, unlockedFigure.id]);
       }
-      setShowLootboxOpening(false);
       setUnlockedFigure(null);
-  };
-
-  const handleQuizComplete = (keysEarned: number) => {
-    setLootboxTokens(prev => prev + keysEarned);
-    setShowFinalQuiz(false);
-  };
+      setShowLootboxOpening(false);
+    }
+  }, [unlockedFigure, userCollection]);
 
   const handleDateChange = (date: string) => setSelectedDate(date);
   const handleNodeSelect = (node: NetworkNode) => setSelectedNode(prev => (prev?.id === node.id ? null : node));
   const formattedDate = new Date(selectedDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
 
-  // --- RENDERIZAÇÃO ---
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -132,7 +153,7 @@ const Index: React.FC = () => {
                 onNodeSelect={handleNodeSelect}
                 selectedNode={selectedNode}
               />
-               <AnimatePresence>
+              <AnimatePresence>
                 {isFinalDay && (
                   <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 50 }} className="absolute inset-0 flex items-center justify-end p-8 bg-gradient-to-l from-black/80 via-black/50 to-transparent pointer-events-none">
                     <div className="text-left p-8 bg-black/80 rounded-lg border border-yellow-500/50 max-w-sm pointer-events-auto shadow-2xl shadow-yellow-500/10">
@@ -186,10 +207,13 @@ const Index: React.FC = () => {
       </AnimatePresence>
       
       <AnimatePresence>
+        {showEventQuiz && currentEvent?.quiz && (
+          <EventQuiz {...currentEvent.quiz} onAnswer={handleEventQuizAnswer} />
+        )}
         {showFinalQuiz && (
           <FinalQuiz
             onClose={() => setShowFinalQuiz(false)}
-            onComplete={handleQuizComplete}
+            onComplete={handleFinalQuizComplete}
           />
         )}
         {showLootboxOpening && unlockedFigure && (

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Lock } from 'lucide-react'; // Importe o ícone de cadeado
-import { cn } from '@/lib/utils'; // Assumindo que você usa shadcn/ui utils
+import { Lock } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-// Adicione 'highestUnlockedLevel' às props
 const Timeline = ({ events, selectedDate, onDateChange, highestUnlockedLevel }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -30,7 +29,7 @@ const Timeline = ({ events, selectedDate, onDateChange, highestUnlockedLevel }) 
         <div className="flex justify-between items-start relative">
           {events.map((event: any, index: number) => {
             const isSelected = event.date === selectedDate;
-            const isLocked = index > highestUnlockedLevel; // Lógica de bloqueio
+            const isLocked = index > highestUnlockedLevel;
             const dayNumber = getDaysDifference(firstDate, event.date) + 1;
             
             return (
@@ -44,7 +43,6 @@ const Timeline = ({ events, selectedDate, onDateChange, highestUnlockedLevel }) 
                 )}
                 onClick={() => !isLocked && onDateChange(event.date)}
               >
-                {/* Marcador do evento com ícone de cadeado */}
                 <div
                   className={cn(
                     'w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-300 relative',
