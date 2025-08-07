@@ -1,0 +1,58 @@
+[
+    {
+      "id": "hitler",
+      "name": "Adolf Hitler",
+      "rarity": "Lendário",
+      "chance": 64,
+      "description": "Líder da Alemanha Nazista, uma figura central na Segunda Guerra Mundial.",
+      "image": "figure_hitler.jpg"
+    },
+    {
+      "id": "stalin",
+      "name": "Joseph Stalin",
+      "rarity": "Épico",
+      "chance": 32,
+      "description": "Líder da União Soviética, transformou a nação em uma superpotência global.",
+      "image": "figure_stalin.jpg"
+    },
+    {
+      "id": "churchill",
+      "name": "Winston Churchill",
+      "rarity": "Épico",
+      "chance": 24,
+      "description": "Primeiro-Ministro do Reino Unido durante a Segunda Guerra Mundial, conhecido por sua liderança inspiradora.",
+      "image": "figure_churchill.jpg"
+    },
+    {
+      "id": "roosevelt",
+      "name": "Franklin D. Roosevelt",
+      "rarity": "Raro",
+      "chance": 16,
+      "description": "Presidente dos EUA durante a Grande Depressão e a Segunda Guerra Mundial.",
+      "image": "figure_roosevelt.jpg"
+    },
+    {
+      "id": "mcnamara",
+      "name": "Robert McNamara",
+      "rarity": "Raro",
+      "chance": 12,
+      "description": "Secretário de Defesa dos EUA sob Kennedy, uma figura central no ExComm durante a crise.",
+      "image": "figure_mcnamara.jpg"
+    },
+    {
+      "id": "gromyko",
+      "name": "Andrei Gromyko",
+      "rarity": "Comum",
+      "chance": 8,
+      "description": "Ministro das Relações Exteriores soviético, conhecido como 'Mr. Nyet' por sua diplomacia rígida.",
+      "image": "figure_gromyko.jpg"
+    },
+    {
+      "id": "dobrynin",
+      "name": "Anatoly Dobrynin",
+      "rarity": "Comum",
+      "chance": 4,
+      "description": "Embaixador soviético nos EUA, crucial nos canais de comunicação secretos durante a crise.",
+      "image": "figure_dobrynin.jpg"
+    }
+  ]
