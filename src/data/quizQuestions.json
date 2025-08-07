@@ -1,0 +1,72 @@
+[
+    {
+      "id": 1,
+      "question": "Qual tipo de avião espião americano fotografou os mísseis em Cuba?",
+      "options": ["SR-71 Blackbird", "U-2 Dragon Lady", "B-52 Stratofortress", "F-4 Phantom"],
+      "correctAnswer": 1,
+      "explanation": "O U-2, um avião de reconhecimento de alta altitude, foi crucial para a descoberta das instalações de mísseis."
+    },
+    {
+      "id": 2,
+      "question": "Qual o nome do comitê secreto que Kennedy formou para gerenciar a crise?",
+      "options": ["Conselho de Guerra", "Grupo de Crise", "ExComm (Comitê Executivo)", "Comando Estratégico"],
+      "correctAnswer": 2,
+      "explanation": "O ExComm (Comitê Executivo do Conselho de Segurança Nacional) foi formado para assessorar Kennedy."
+    },
+    {
+      "id": 3,
+      "question": "O termo 'quarentena' foi usado em vez de 'bloqueio' porque:",
+      "options": ["Soava menos agressivo", "Um bloqueio é um ato de guerra", "Era tecnicamente mais preciso", "Foi uma sugestão da ONU"],
+      "correctAnswer": 1,
+      "explanation": "Sob o direito internacional, um 'bloqueio' é considerado um ato de guerra, algo que Kennedy queria evitar a todo custo."
+    },
+    {
+      "id": 4,
+      "question": "Quem era o embaixador soviético nos EUA que atuou como um canal de comunicação secreto?",
+      "options": ["Andrei Gromyko", "Rodion Malinovsky", "Anatoly Dobrynin", "Oleg Penkovsky"],
+      "correctAnswer": 2,
+      "explanation": "Anatoly Dobrynin manteve conversas secretas cruciais com Robert F. Kennedy para resolver a crise."
+    },
+    {
+      "id": 5,
+      "question": "O que aconteceu no dia conhecido como 'Sábado Negro' (27 de Outubro)?",
+      "options": ["O discurso de Kennedy na TV", "Os navios soviéticos pararam", "Um avião U-2 foi abatido sobre Cuba", "Fidel Castro declarou guerra"],
+      "correctAnswer": 2,
+      "explanation": "O abate do U-2 do Major Rudolf Anderson aumentou drasticamente a tensão, levando o mundo à beira da guerra."
+    },
+    {
+      "id": 6,
+      "question": "Qual foi a concessão secreta feita pelos EUA para encerrar a crise?",
+      "options": ["Remover mísseis da Turquia", "Pagar uma indenização a Cuba", "Encerrar o embargo comercial", "Reconhecer a Alemanha Oriental"],
+      "correctAnswer": 0,
+      "explanation": "Os EUA concordaram secretamente em remover seus mísseis Júpiter da Turquia meses após a crise."
+    },
+    {
+      "id": 7,
+      "question": "Quantos dias a Crise dos Mísseis de Cuba durou oficialmente?",
+      "options": ["7 dias", "13 dias", "30 dias", "45 dias"],
+      "correctAnswer": 1,
+      "explanation": "A crise durou 13 dias intensos, de 16 a 28 de outubro de 1962."
+    },
+    {
+      "id": 8,
+      "question": "Qual oficial de submarino soviético é creditado por evitar um possível lançamento de torpedo nuclear?",
+      "options": ["Mikhail Gorbachev", "Vasily Arkhipov", "Yuri Gagarin", "Georgy Zhukov"],
+      "correctAnswer": 1,
+      "explanation": "Vasily Arkhipov, a bordo do submarino B-59, vetou a decisão de lançar um torpedo nuclear contra navios americanos."
+    },
+    {
+      "id": 9,
+      "question": "Qual operação da CIA, que falhou em 1961, aumentou a desconfiança de Cuba em relação aos EUA?",
+      "options": ["Operação Mongoose", "Operação Northwoods", "Invasão da Baía dos Porcos", "Operação Paperclip"],
+      "correctAnswer": 2,
+      "explanation": "A fracassada Invasão da Baía dos Porcos, uma tentativa de derrubar Castro, levou Cuba a buscar proteção militar da URSS."
+    },
+    {
+      "id": 10,
+      "question": "O que foi estabelecido entre Washington e Moscou imediatamente após a crise para evitar futuros conflitos?",
+      "options": ["A 'Linha Vermelha' (Hotline)", "A Organização das Nações Unidas", "O Tratado de Não Proliferação Nuclear", "A OTAN"],
+      "correctAnswer": 0,
+      "explanation": "A 'Linha Vermelha', um link de comunicação direta, foi criada para permitir um diálogo rápido entre os líderes das superpotências."
+    }
+  ]

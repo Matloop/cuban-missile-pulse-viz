@@ -1,112 +1,59 @@
-// src/components/SplashScreen.tsx
-
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Power, AlertTriangle } from 'lucide-react';
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import type { ISourceOptions } from "@tsparticles/engine";
-import { loadSlim } from "@tsparticles/slim";
 import { TypeAnimation } from 'react-type-animation';
-
-// A importação acima irá funcionar assim que o pacote @tsparticles/react for instalado.
+import * as THREE from 'three';
+import NET from 'vanta/dist/vanta.net.min.js';
 
 interface SplashScreenProps {
   onStart: () => void;
 }
 
 const SplashScreen: React.FC<SplashScreenProps> = ({ onStart }) => {
-  const [init, setInit] = useState<boolean>(false);
+  const vantaRef = useRef(null);
+  const [vantaEffect, setVantaEffect] = useState<any>(null);
 
   useEffect(() => {
-    initParticlesEngine(async (engine) => {
-      await loadSlim(engine);
-    }).then(() => {
-      setInit(true);
-    });
-  }, []);
+    // Inicializa o efeito Vanta.js apenas uma vez
+    if (!vantaEffect && vantaRef.current) {
+      setVantaEffect(
+        NET({
+          el: vantaRef.current,
+          THREE: THREE, // Passa a biblioteca THREE.js para o Vanta
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0x0891b2, // Cor ciano (em hexadecimal)
+          backgroundColor: 0x020617, // Fundo azul escuro
+          points: 12.00,
+          maxDistance: 25.00,
+          spacing: 18.00
+        })
+      );
+    }
 
-  const particlesOptions = useMemo<ISourceOptions>(
-    () => ({
-      background: {
-        color: {
-          value: '#020617',
-        },
-      },
-      fpsLimit: 120,
-      interactivity: {
-        events: {
-          onClick: {
-            enable: false,
-          },
-          onHover: {
-            enable: true,
-            mode: 'repulse',
-          },
-        },
-        modes: {
-          repulse: {
-            distance: 80,
-            duration: 0.4,
-          },
-        },
-      },
-      particles: {
-        color: {
-          value: '#0891b2',
-        },
-        links: {
-          color: '#0e7490',
-          distance: 150,
-          enable: true,
-          opacity: 0.3,
-          width: 1,
-        },
-        move: {
-          direction: 'none',
-          enable: true,
-          outModes: {
-            default: 'bounce',
-          },
-          random: false,
-          speed: 1,
-          straight: false,
-        },
-        number: {
-          density: {
-            enable: true,
-          },
-          value: 120,
-        },
-        opacity: {
-          value: 0.4,
-        },
-        shape: {
-          type: 'circle',
-        },
-        size: {
-          value: { min: 1, max: 3 },
-        },
-      },
-      detectRetina: true,
-    }),
-    [],
-  );
-
-  if (!init) {
-    return null;
-  }
+    // Função de limpeza para destruir o efeito quando o componente for desmontado
+    return () => {
+      if (vantaEffect) {
+        vantaEffect.destroy();
+      }
+    };
+  }, [vantaEffect]);
 
   return (
-    <div className="relative w-screen h-screen bg-slate-950 overflow-hidden">
-      <Particles
-        id="tsparticles"
-        options={particlesOptions}
-        className="absolute top-0 left-0 w-full h-full z-0"
-      />
-
+    // O div principal agora serve como container para o efeito Vanta
+    <div ref={vantaRef} className="relative w-screen h-screen overflow-hidden">
+      {/* O efeito Vanta.js será renderizado neste div */}
+      
+      {/* Overlay de Scanline (opcional, mas mantém o estilo) */}
       <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none">
         <div className="scanline"></div>
       </div>
 
+      {/* Conteúdo Central */}
       <div className="relative z-20 flex flex-col items-center justify-center w-full h-full text-cyan-200 font-mono">
         <div className="bg-black/40 backdrop-blur-sm border border-cyan-500/30 rounded-xl p-8 max-w-3xl text-center shadow-2xl shadow-cyan-500/10">
           <div className="flex justify-center items-center gap-4 mb-4">

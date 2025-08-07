@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { EyeOff, Clock, Key, FolderOpen } from 'lucide-react';
+import { Eye, EyeOff, BookOpen, Clock, Key, FolderOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Componentes
@@ -7,62 +7,53 @@ import NetworkVisualization from '../components/NetworkVisualization';
 import Timeline from '../components/Timeline';
 import InfoPanel from '../components/InfoPanel';
 import RiskIndicator from '../components/RiskIndicator';
-import EventQuiz from '../components/EventQuiz';
+import FinalQuiz from '../components/Quiz'; // Renomeado para maior clareza da funcionalidade
+
+import Collection from '../components/Collection';
 import { Button } from '../components/ui/button';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../components/ui/resizable';
 
-// Dados
+// Dados e Tipos
 import crisisData from '../data/crisisData.json';
 import allFiguresData from '../data/historicalFigures.json';
-
-// Tipos
-import { NetworkNode, NetworkEvent, HistoricalFigure, QuizData } from '../types/crisisDataTypes';
+import { NetworkNode, NetworkEvent, HistoricalFigure } from '../types/crisisDataTypes';
 import Lootbox from '@/components/LootBox';
-import Collection from '@/components/Collection';
 
-// Adicionando perguntas ao crisisData dinamicamente para não precisar editar o JSON
-const quizQuestions: QuizData[] = [
-  { question: "Qual tipo de avião americano descobriu os mísseis?", options: ["SR-71 Blackbird", "U-2 Dragon Lady", "B-52 Stratofortress"], correctAnswer: 1 },
-  { question: "Qual o nome do comitê secreto de Kennedy?", options: ["Conselho de Guerra", "ExComm", "Grupo de Crise"], correctAnswer: 1 },
-  { question: "Por que Kennedy usou o termo 'quarentena'?", options: ["Soava melhor", "Bloqueio é um ato de guerra", "Foi sugestão da ONU"], correctAnswer: 1 },
-  { question: "Qual evento marcou o 'Sábado Negro'?", options: ["O abate de um avião U-2", "A chegada dos navios soviéticos", "O discurso de Kennedy"], correctAnswer: 0 },
-  { question: "Qual acordo secreto resolveu a crise?", options: ["Remoção dos mísseis da Turquia", "Pagamento de indenização", "Cuba se tornar neutra"], correctAnswer: 0 }
-];
-crisisData.events.forEach((event, index) => {
-  if (quizQuestions[index]) {
-    (event as any).quiz = quizQuestions[index];
-  }
-});
 const allFigures = allFiguresData as HistoricalFigure[];
 
 const Index: React.FC = () => {
+  // --- ESTADOS PRINCIPAIS DA APLICAÇÃO ---
   const [selectedDate, setSelectedDate] = useState<string>(crisisData.events[0].date);
-  const [selectedNode, setSelectedNode] = useState<NetworkNode | null>(null);
   const [currentEvent, setCurrentEvent] = useState<NetworkEvent | null>(null);
+  const [selectedNode, setSelectedNode] = useState<NetworkNode | null>(null);
   const [isTimelineVisible, setIsTimelineVisible] = useState(true);
   
-  const [showEventQuiz, setShowEventQuiz] = useState<boolean>(false);
+  // --- ESTADOS DO SISTEMA DE JOGO ---
+  const [highestUnlockedLevel, setHighestUnlockedLevel] = useState<number>(0); // Nível 0 é o primeiro
+  const [showFinalQuiz, setShowFinalQuiz] = useState<boolean>(false);
   const [lootboxTokens, setLootboxTokens] = useState<number>(1);
   const [showLootboxOpening, setShowLootboxOpening] = useState<boolean>(false);
   const [unlockedFigure, setUnlockedFigure] = useState<HistoricalFigure | null>(null);
   const [userCollection, setUserCollection] = useState<string[]>([]);
   const [showCollection, setShowCollection] = useState<boolean>(false);
+  const [isFinalDay, setIsFinalDay] = useState(false);
 
   useEffect(() => {
     const event = crisisData.events.find(e => e.date === selectedDate) as NetworkEvent;
     setCurrentEvent(event);
     setSelectedNode(null);
-    if (event?.quiz && selectedDate !== crisisData.events[0].date) {
-      setShowEventQuiz(true);
-    }
-  }, [selectedDate]);
 
-  const handleQuizAnswer = (isCorrect: boolean) => {
-    setShowEventQuiz(false);
-    if (isCorrect) {
-      setLootboxTokens(prev => prev + 1);
+    const currentIndex = crisisData.events.findIndex(e => e.date === selectedDate);
+    // Desbloqueia o próximo nível ao visitar o nível mais alto disponível
+    if (currentIndex === highestUnlockedLevel && currentIndex < crisisData.events.length - 1) {
+      setHighestUnlockedLevel(prev => prev + 1);
     }
-  };
+    
+    // Verifica se chegou ao último dia para mostrar o painel do quiz
+    setIsFinalDay(selectedDate === crisisData.events[crisisData.events.length - 1].date);
+  }, [selectedDate, highestUnlockedLevel]);
+
+  // --- FUNÇÕES DE MANIPULAÇÃO DE ESTADO ---
 
   const handleOpenLootbox = () => {
     if (lootboxTokens <= 0) return;
@@ -95,8 +86,16 @@ const Index: React.FC = () => {
       setUnlockedFigure(null);
   };
 
+  const handleQuizComplete = (keysEarned: number) => {
+    setLootboxTokens(prev => prev + keysEarned);
+    setShowFinalQuiz(false);
+  };
+
+  const handleDateChange = (date: string) => setSelectedDate(date);
+  const handleNodeSelect = (node: NetworkNode) => setSelectedNode(prev => (prev?.id === node.id ? null : node));
   const formattedDate = new Date(selectedDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
 
+  // --- RENDERIZAÇÃO ---
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -126,13 +125,26 @@ const Index: React.FC = () => {
       <main className="flex-grow min-h-0">
         <ResizablePanelGroup direction="horizontal" className="h-full max-w-screen-2xl mx-auto p-4">
           <ResizablePanel defaultSize={70}>
-            <div className="h-full w-full bg-black/20 backdrop-blur-sm rounded-lg border border-cyan-500/40 p-2 shadow-lg shadow-cyan-900/20">
+            <div className="relative h-full w-full bg-black/20 backdrop-blur-sm rounded-lg border border-cyan-500/40 p-2 shadow-lg shadow-cyan-900/20">
               <NetworkVisualization
                 nodes={crisisData.nodes as NetworkNode[]}
                 currentEvent={currentEvent}
-                onNodeSelect={(node) => setSelectedNode(prev => (prev?.id === node.id ? null : node))}
+                onNodeSelect={handleNodeSelect}
                 selectedNode={selectedNode}
               />
+               <AnimatePresence>
+                {isFinalDay && (
+                  <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 50 }} className="absolute inset-0 flex items-center justify-end p-8 bg-gradient-to-l from-black/80 via-black/50 to-transparent pointer-events-none">
+                    <div className="text-left p-8 bg-black/80 rounded-lg border border-yellow-500/50 max-w-sm pointer-events-auto shadow-2xl shadow-yellow-500/10">
+                      <h2 className="text-2xl font-bold text-yellow-300">Análise Concluída</h2>
+                      <p className="text-gray-300 my-4">Você navegou pelos 13 dias da crise. Teste seu conhecimento para ganhar mais Chaves de Análise e desbloquear figuras históricas.</p>
+                      <Button onClick={() => setShowFinalQuiz(true)} size="lg" className="w-full bg-yellow-600 hover:bg-yellow-700">
+                        <BookOpen className="w-5 h-5 mr-3" /> Iniciar Questionário Final
+                      </Button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </ResizablePanel>
           <ResizableHandle withHandle />
@@ -154,16 +166,31 @@ const Index: React.FC = () => {
       </main>
 
       <Button onClick={() => setIsTimelineVisible(!isTimelineVisible)} className="fixed bottom-6 right-6 z-50 rounded-full h-12 w-12 p-0"><EyeOff className="w-6 h-6" /></Button>
-      <div className="fixed bottom-6 left-6 z-30 font-mono text-sm text-cyan-300"><Clock className="inline w-4 h-4 mr-2" />{formattedDate}</div>
+      <div className="fixed bottom-6 left-6 z-30 font-mono text-sm text-cyan-300 pointer-events-none bg-black/30 p-2 rounded border border-cyan-500/20">
+        <div className="flex items-center gap-2">
+           <Clock className="w-4 h-4 animate-spin" style={{ animationDuration: '30s' }} /> <span>{formattedDate}</span>
+        </div>
+      </div>
       
       <AnimatePresence>
         {isTimelineVisible && (
           <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="fixed bottom-0 left-0 right-0 z-40 bg-black/50 backdrop-blur-md border-t border-cyan-500/30 p-4">
-            <Timeline events={crisisData.events} selectedDate={selectedDate} onDateChange={setSelectedDate} />
+            <Timeline
+              events={crisisData.events}
+              selectedDate={selectedDate}
+              onDateChange={handleDateChange}
+              highestUnlockedLevel={highestUnlockedLevel}
+            />
           </motion.div>
         )}
-        {showEventQuiz && currentEvent?.quiz && (
-          <EventQuiz {...currentEvent.quiz} onAnswer={handleQuizAnswer} />
+      </AnimatePresence>
+      
+      <AnimatePresence>
+        {showFinalQuiz && (
+          <FinalQuiz
+            onClose={() => setShowFinalQuiz(false)}
+            onComplete={handleQuizComplete}
+          />
         )}
         {showLootboxOpening && unlockedFigure && (
           <Lootbox figure={unlockedFigure} onCollect={handleCollectFigure} />
