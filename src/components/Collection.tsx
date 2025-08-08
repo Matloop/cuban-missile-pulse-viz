@@ -5,26 +5,7 @@ import { ScrollArea } from './ui/scroll-area';
 import { Badge } from './ui/badge';
 import { HistoricalFigure } from '../types/crisisDataTypes';
 import { cn } from '@/lib/utils';
-import lockedPlaceholder from '../assets/locked_placeholder.png';
-
-// Importe todas as imagens das figuras aqui
-import figure_hitler from '../assets/figure_hitler.jpg';
-import figure_stalin from '../assets/figure_stalin.jpg';
-import figure_churchill from '../assets/figure_churchill.jpg';
-import figure_roosevelt from '../assets/figure_roosevelt.jpg';
-import figure_mcnamara from '../assets/figure_mcnamara.jpg';
-import figure_gromyko from '../assets/figure_gromyko.jpg';
-import figure_dobrynin from '../assets/figure_dobrynin.jpg';
-
-const figureImageMap: { [key: string]: string } = {
-  'figure_hitler.jpg': figure_hitler,
-  'figure_stalin.jpg': figure_stalin,
-  'figure_churchill.jpg': figure_churchill,
-  'figure_roosevelt.jpg': figure_roosevelt,
-  'figure_mcnamara.jpg': figure_mcnamara,
-  'figure_gromyko.jpg': figure_gromyko,
-  'figure_dobrynin.jpg': figure_dobrynin,
-};
+import { getFigureImageUrl, getLockedImageUrl } from '@/lib/imageLoader'; // <--- 1. Importe as novas funções
 
 const rarityStyles: { [key: string]: string } = {
   "Comum": "border-gray-500 text-gray-300",
@@ -52,13 +33,17 @@ const Collection: React.FC<CollectionProps> = ({ collection, allFigures, onClose
               {allFigures.map((figure) => {
                 const isUnlocked = collection.includes(figure.id);
                 const rarityClass = rarityStyles[figure.rarity] || 'border-gray-700';
+
                 return (
                   <div key={figure.id} className={cn('p-4 border rounded-lg transition-all', isUnlocked ? `bg-slate-800 ${rarityClass}` : 'bg-black/50 border-slate-800')}>
-                    <img
-                      src={isUnlocked ? figureImageMap[figure.image] : lockedPlaceholder}
-                      alt={isUnlocked ? figure.name : 'Bloqueado'}
+                    
+                    {/* --- 2. Use as funções aqui --- */}
+                    <img 
+                      src={isUnlocked ? getFigureImageUrl(figure.image) : getLockedImageUrl()} 
+                      alt={isUnlocked ? figure.name : 'Bloqueado'} 
                       className={cn('w-24 h-24 object-cover rounded-full mx-auto mb-2 border-4', isUnlocked ? rarityClass : 'border-gray-700 filter grayscale opacity-50')}
                     />
+                    
                     <h3 className={cn('font-bold text-center', isUnlocked ? 'text-white' : 'text-gray-500')}>{isUnlocked ? figure.name : '???'}</h3>
                     {isUnlocked && <Badge variant="outline" className={cn('mt-2 w-full justify-center', rarityClass)}>{figure.rarity}</Badge>}
                   </div>
