@@ -7,7 +7,6 @@ import NetworkVisualization from '../components/NetworkVisualization';
 import Timeline from '../components/Timeline';
 import InfoPanel from '../components/InfoPanel';
 import RiskIndicator from '../components/RiskIndicator';
-import EventQuiz from '../components/EventQuiz';
 import FinalQuiz from '../components/Quiz';
 import Collection from '../components/Collection';
 import { Button } from '../components/ui/button';
@@ -22,28 +21,36 @@ import Lootbox from '@/components/LootBox';
 
 const allFigures = allFiguresData as HistoricalFigure[];
 
-const Index: React.FC = () => {
+// Define as props que o componente Index espera receber
+interface IndexProps {
+  initialFigureId: string | null;
+}
+
+const Index: React.FC<IndexProps> = ({ initialFigureId }) => {
+  // Estados da Aplicação
   const [selectedDate, setSelectedDate] = useState<string>(crisisData.events[0].date);
   const [currentEvent, setCurrentEvent] = useState<NetworkEvent | null>(null);
   const [selectedNode, setSelectedNode] = useState<NetworkNode | null>(null);
   const [isTimelineVisible, setIsTimelineVisible] = useState(true);
   
+  // Estados do Jogo
+  // A coleção agora começa com o personagem escolhido, se houver um
+  const [userCollection, setUserCollection] = useState<string[]>(initialFigureId ? [initialFigureId] : []);
   const [highestUnlockedLevel, setHighestUnlockedLevel] = useState<number>(0);
-  const [showEventQuiz, setShowEventQuiz] = useState<boolean>(false);
   const [showFinalQuiz, setShowFinalQuiz] = useState<boolean>(false);
   const [lootboxTokens, setLootboxTokens] = useState<number>(1);
   const [showLootboxOpening, setShowLootboxOpening] = useState<boolean>(false);
   const [unlockedFigure, setUnlockedFigure] = useState<HistoricalFigure | null>(null);
-  const [userCollection, setUserCollection] = useState<string[]>([]);
   const [showCollection, setShowCollection] = useState<boolean>(false);
   const [isFinalDay, setIsFinalDay] = useState(false);
-
+  
+  // O resto do seu componente Index.tsx permanece exatamente o mesmo
+  // ... (useEffect, handleFunctions, etc.)
   useEffect(() => {
     const eventIndex = crisisData.events.findIndex(e => e.date === selectedDate);
     const event = crisisData.events[eventIndex] as NetworkEvent;
     
     let questionForEvent: QuizData | undefined = undefined;
-    // Pega uma pergunta sobre o dia ANTERIOR para o quiz de progressão
     if (eventIndex > 0) {
       const previousEventDate = crisisData.events[eventIndex - 1].date;
       const possibleQuestions = (allQuestionsData as Record<string, QuizData[]>)[previousEventDate] || [];
@@ -55,28 +62,13 @@ const Index: React.FC = () => {
     setCurrentEvent({ ...event, quiz: questionForEvent });
     setSelectedNode(null);
 
-    // CORREÇÃO DA LÓGICA DE PROGRESSÃO:
-    // Mostra o quiz se o usuário CLICOU em um novo dia que ele acabou de desbloquear
-    if (eventIndex > highestUnlockedLevel && questionForEvent) {
-      setTimeout(() => setShowEventQuiz(true), 1500);
-    }
-
-    // Desbloqueia o próximo nível assim que o usuário VISITA o nível mais alto
     if (eventIndex === highestUnlockedLevel && eventIndex < crisisData.events.length - 1) {
         setHighestUnlockedLevel(prev => prev + 1);
     }
 
     setIsFinalDay(eventIndex === crisisData.events.length - 1);
-  }, [selectedDate]);
+  }, [selectedDate, highestUnlockedLevel]);
 
-  const handleEventQuizAnswer = (isCorrect: boolean) => {
-    setShowEventQuiz(false);
-    if (isCorrect) {
-      setLootboxTokens(prev => prev + 1);
-    }
-    // A progressão já aconteceu no useEffect, aqui apenas fechamos o modal
-  };
-  
   const handleFinalQuizComplete = (keysEarned: number) => {
     setLootboxTokens(prev => prev + keysEarned);
     setShowFinalQuiz(false);
@@ -207,9 +199,6 @@ const Index: React.FC = () => {
       </AnimatePresence>
       
       <AnimatePresence>
-        {showEventQuiz && currentEvent?.quiz && (
-          <EventQuiz {...currentEvent.quiz} onAnswer={handleEventQuizAnswer} />
-        )}
         {showFinalQuiz && (
           <FinalQuiz
             onClose={() => setShowFinalQuiz(false)}
