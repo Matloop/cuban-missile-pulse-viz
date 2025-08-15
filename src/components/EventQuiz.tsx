@@ -1,25 +1,32 @@
+// src/components/EventQuiz.tsx
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
-import { HelpCircle } from 'lucide-react';
+import { HelpCircle, CheckCircle, XCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
+import { QuizData } from '../types/crisisDataTypes';
 
 interface EventQuizProps {
-  question: string;
-  options: string[];
-  correctAnswer: number;
-  onAnswer: (isCorrect: boolean) => void;
+  quiz: QuizData;
+  onComplete: (isCorrect: boolean) => void;
 }
 
-const EventQuiz: React.FC<EventQuizProps> = ({ question, options, correctAnswer, onAnswer }) => {
+const EventQuiz: React.FC<EventQuizProps> = ({ quiz, onComplete }) => {
   const [selected, setSelected] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
 
   const handleSelect = (index: number) => {
     if (answered) return;
+    
     setAnswered(true);
     setSelected(index);
-    const isCorrect = index === correctAnswer;
-    setTimeout(() => onAnswer(isCorrect), 2500);
+    
+    // After a delay to show feedback, call the onComplete callback.
+    setTimeout(() => {
+      onComplete(index === quiz.correctAnswer);
+    }, 2000); // 2-second delay
   };
 
   return (
@@ -30,38 +37,44 @@ const EventQuiz: React.FC<EventQuizProps> = ({ question, options, correctAnswer,
             <CardTitle className="text-yellow-300 flex items-center gap-2"><HelpCircle /> Pop-up de Inteligência</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-lg text-white mb-6">{question}</p>
+            <p className="text-lg text-white mb-6">{quiz.question}</p>
             <div className="space-y-3">
-              {options.map((option, index) => {
+              {quiz.options.map((option, index) => {
                 const isSelected = selected === index;
-                const isCorrect = index === correctAnswer;
+                const isCorrect = quiz.correctAnswer === index;
+                
                 return (
-                  <button
+                  <Button
                     key={index}
+                    variant="outline"
                     onClick={() => handleSelect(index)}
                     disabled={answered}
-                    className={`w-full p-3 text-left rounded-md border-2 transition-all duration-300
-                      ${!answered
-                        ? 'border-yellow-500/30 hover:bg-yellow-900/50 text-white cursor-pointer'
-                        : isSelected
-                          ? (isCorrect ? 'bg-green-500/30 border-green-500 text-green-300 scale-105' : 'bg-red-500/30 border-red-500 text-red-300 scale-105')
-                          : isCorrect
-                            ? 'bg-green-500/20 border-green-500/50 text-green-300'
-                            : 'opacity-60 border-slate-700'
-                      }`
-                    }
+                    className={cn(
+                      "w-full justify-between h-auto py-3 text-left text-white whitespace-normal",
+                      "border-blue-500/30 bg-slate-800 hover:bg-slate-700 disabled:opacity-80",
+                      answered && isCorrect && "bg-green-500/20 border-green-500 text-white",
+                      answered && isSelected && !isCorrect && "bg-red-500/20 border-red-500 text-white"
+                    )}
                   >
-                    {option}
-                  </button>
+                    <span>{option}</span>
+                    {answered && isSelected && !isCorrect && <XCircle className="ml-auto text-red-400" />}
+                    {answered && isCorrect && <CheckCircle className="ml-auto text-green-400" />}
+                  </Button>
                 );
               })}
             </div>
           </CardContent>
-          <CardFooter className="h-12 flex items-center justify-center">
-              {answered && (selected === correctAnswer
-                ? <p className="text-green-400 w-full text-center animate-pulse font-semibold">Correto! +1 Chave de Análise!</p>
-                : <p className="text-red-400 w-full text-center font-semibold">Incorreto. A resposta era: "{options[correctAnswer]}"</p>
-              )}
+          <CardFooter className="min-h-[4rem] flex items-center justify-center p-4">
+             {answered ? (
+                <motion.p 
+                  initial={{ opacity: 0 }} 
+                  animate={{ opacity: 1 }} 
+                  className="text-sm text-gray-300 text-center"
+                >
+                  <span className='font-bold'>{selected === quiz.correctAnswer ? "Correto! " : "Incorreto. "}</span> 
+                  {quiz.explanation}
+                </motion.p>
+            ) : <p className="text-sm text-gray-400">Responda para prosseguir.</p>}
           </CardFooter>
         </Card>
       </motion.div>

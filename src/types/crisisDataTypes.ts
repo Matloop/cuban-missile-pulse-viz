@@ -1,5 +1,3 @@
-// src/types/crisisDataTypes.ts
-
 import * as d3 from 'd3';
 
 export interface NetworkNode extends d3.SimulationNodeDatum {
@@ -16,9 +14,11 @@ export interface NetworkNode extends d3.SimulationNodeDatum {
 }
 
 export interface QuizData {
+  id: number;
   question: string;
   options: string[];
   correctAnswer: number;
+  explanation: string;
 }
 
 export interface NetworkEvent {
@@ -46,4 +46,10 @@ export interface HistoricalFigure {
   chance: number;
   description: string;
   image: string;
+  isStarter?: boolean;
+  stats: {
+    hp: number;
+    attack: number;
+    speed: number;
+  };
 }

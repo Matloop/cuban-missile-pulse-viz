@@ -15,13 +15,6 @@
       "options": ["Conselho de Guerra", "Grupo de Crise", "ExComm"],
       "correctAnswer": 2,
       "explanation": "O ExComm (Comitê Executivo do Conselho de Segurança Nacional) foi formado para assessorar Kennedy."
-    },
-    {
-      "id": 11,
-      "question": "No ExComm, qual era a principal sugestão da facção conhecida como 'falcões'?",
-      "options": ["Um bloqueio naval", "Negociações imediatas", "Um ataque aéreo a Cuba"],
-      "correctAnswer": 2,
-      "explanation": "Os 'falcões' (Hawks), como os Chefes de Estado-Maior, defendiam uma ação militar direta e imediata contra as instalações de mísseis."
     }
   ],
   "1962-10-22": [
@@ -31,13 +24,6 @@
       "options": ["Soava menos agressivo", "Um bloqueio é um ato de guerra", "Foi uma sugestão da ONU"],
       "correctAnswer": 1,
       "explanation": "Sob o direito internacional, um 'bloqueio' é considerado um ato de guerra, algo que Kennedy queria evitar."
-    },
-    {
-      "id": 12,
-      "question": "Qual foi o nível de alerta militar (DEFCON) que as forças americanas entraram após o discurso de Kennedy?",
-      "options": ["DEFCON 5", "DEFCON 4", "DEFCON 3"],
-      "correctAnswer": 2,
-      "explanation": "As forças armadas dos EUA foram colocadas em DEFCON 3, que significa 'aumento da prontidão das forças'."
     }
   ],
   "1962-10-27": [
@@ -47,13 +33,6 @@
       "options": ["O discurso de Khrushchev", "A invasão de Cuba", "O abate de um avião U-2"],
       "correctAnswer": 2,
       "explanation": "O abate do U-2 do Major Rudolf Anderson aumentou drasticamente a tensão, levando o mundo à beira da guerra."
-    },
-    {
-      "id": 8,
-      "question": "Qual oficial de submarino soviético evitou um desastre nuclear no 'Sábado Negro'?",
-      "options": ["Mikhail Gorbachev", "Vasily Arkhipov", "Yuri Gagarin"],
-      "correctAnswer": 1,
-      "explanation": "Vasily Arkhipov, a bordo do submarino B-59, vetou a decisão de lançar um torpedo nuclear contra navios americanos."
     }
   ],
   "geral": [
@@ -65,71 +44,8 @@
       "explanation": "Os EUA concordaram secretamente em remover seus mísseis Júpiter da Turquia meses após a crise."
     },
     { "id": 7, "question": "Quantos dias a Crise dos Mísseis de Cuba durou oficialmente?", "options": ["7 dias", "13 dias", "30 dias"], "correctAnswer": 1, "explanation": "A crise durou 13 dias intensos, de 16 a 28 de outubro de 1962." },
+    { "id": 8, "question": "Qual oficial de submarino soviético evitou um desastre nuclear no 'Sábado Negro'?", "options": ["Mikhail Gorbachev", "Vasily Arkhipov", "Yuri Gagarin"], "correctAnswer": 1, "explanation": "Vasily Arkhipov, a bordo do submarino B-59, vetou a decisão de lançar um torpedo nuclear." },
     { "id": 9, "question": "Qual operação da CIA, que falhou em 1961, aumentou a desconfiança de Cuba em relação aos EUA?", "options": ["Operação Mongoose", "Invasão da Baía dos Porcos", "Operação Northwoods"], "correctAnswer": 1, "explanation": "A fracassada Invasão da Baía dos Porcos levou Cuba a buscar proteção militar da URSS." },
-    { "id": 10, "question": "O que foi estabelecido entre Washington e Moscou após a crise para evitar futuros conflitos?", "options": ["A 'Linha Vermelha' (Hotline)", "A Organização das Nações Unidas", "O Tratado de Não Proliferação Nuclear"], "correctAnswer": 0, "explanation": "A 'Linha Vermelha', um link de comunicação direta, foi criada para permitir um diálogo rápido entre os líderes." },
-    { "id": 13, "question": "Quem era o Secretário de Defesa dos EUA durante a crise?", "options": ["Dean Rusk", "McGeorge Bundy", "Robert McNamara"], "correctAnswer": 2, "explanation": "Robert McNamara, membro do ExComm, inicialmente apoiou uma ação militar, mas depois favoreceu a quarentena." },
-    { "id": 14, "question": "Fidel Castro incentivou a União Soviética a fazer o quê, caso os EUA invadissem Cuba?", "options": ["Negociar a paz", "Lançar um ataque nuclear preventivo", "Recuar imediatamente"], "correctAnswer": 1, "explanation": "Em uma carta a Khrushchev, Castro defendeu uma resposta nuclear soviética, assustando os líderes soviéticos." },
-    { "id": 15, "question": "Qual o nível de alerta militar mais alto alcançado pelos EUA durante a crise?", "options": ["DEFCON 1", "DEFCON 2", "DEFCON 3"], "correctAnswer": 1, "explanation": "As forças do Comando Aéreo Estratégico foram colocadas em DEFCON 2 pela primeira e única vez na história." },
-    { "id": 16, "question": "Qual era o nome dos mísseis americanos posicionados na Turquia?", "options": ["Atlas", "Titan", "Jupiter"], "correctAnswer": 2, "explanation": "Os mísseis PGM-19 Jupiter na Turquia foram a principal justificativa de Khrushchev para a operação em Cuba." },
-    { "id": 17, "question": "Qual era o nome da operação soviética para instalar os mísseis em Cuba?", "options": ["Operação Anadyr", "Operação Barbarossa", "Operação Tufão"], "correctAnswer": 0, "explanation": "A Operação Anadyr foi o codinome soviético para o envio secreto de tropas e mísseis para Cuba." },
-    { "id": 18, "question": "Quem era o Secretário-Geral da ONU que atuou como mediador durante a crise?", "options": ["Dag Hammarskjöld", "Kurt Waldheim", "U Thant"], "correctAnswer": 2, "explanation": "U Thant, da Birmânia, desempenhou um papel diplomático crucial, apelando por moderação e facilitando as negociações." },
-    { "id": 19, "question": "Qual famoso jornalista americano foi usado como intermediário para um canal de comunicação secreto?", "options": ["Walter Cronkite", "John Scali", "Edward R. Murrow"], "correctAnswer": 1, "explanation": "John Scali, da ABC News, foi contatado por um oficial da KGB e serviu como um canal de comunicação informal." },
-    { "id": 20, "question": "Qual era o cargo de Robert F. Kennedy no governo de seu irmão?", "options": ["Secretário de Estado", "Vice-Presidente", "Procurador-Geral"], "correctAnswer": 2, "explanation": "Apesar de ser Procurador-Geral, Robert Kennedy foi o conselheiro mais próximo do presidente e o principal negociador secreto." },
-    { "id": 21, "question": "Além dos mísseis, que outro tipo de armamento nuclear tático os soviéticos tinham em Cuba?", "options": ["Minas terrestres nucleares", "Mochilas-bomba nucleares", "Foguetes táticos 'FROG-7'"], "correctAnswer": 2, "explanation": "Os americanos não sabiam na época, mas os soviéticos também tinham 98 armas nucleares táticas para uso em caso de invasão." },
-    { "id": 22, "question": "Qual foi a famosa frase dita pelo Secretário de Estado Dean Rusk quando os navios soviéticos pararam?", "options": ["'A caçada acabou'", "'Estamos olho no olho, e o outro cara piscou'", "'A paz prevaleceu'"], "correctAnswer": 1, "explanation": "Esta frase capturou o momento de alívio tenso quando a escalada militar direta foi evitada na linha de quarentena." },
-    { "id": 23, "question": "Antes de Castro, quem era o ditador de Cuba apoiado pelos EUA?", "options": ["Che Guevara", "Fulgencio Batista", "Augusto Pinochet"], "correctAnswer": 1, "explanation": "A revolução de Fidel Castro em 1959 derrubou o regime autoritário de Fulgencio Batista." },
-    { "id": 24, "question": "Qual tratado importante foi assinado em 1963, como consequência direta da crise?", "options": ["Tratado de Não Proliferação Nuclear", "Acordos SALT I", "Tratado de Proibição Parcial de Testes Nucleares"], "correctAnswer": 2, "explanation": "Assustados com o quão perto chegaram da guerra, EUA e URSS assinaram o tratado que proibia testes nucleares na atmosfera." },
-    { "id": 25, "question": "Qual foi a consequência política para Nikita Khrushchev após a crise?", "options": ["Ele foi celebrado como herói", "Ele foi deposto do poder dois anos depois", "Ele se tornou presidente vitalício"], "correctAnswer": 1, "explanation": "Membros do Politburo consideraram a resolução uma humilhação para a URSS, o que contribuiu para sua remoção do poder em 1964." },
-    { "id": 26, "question": "Qual o nome dos mísseis balísticos soviéticos de médio alcance (MRBM) identificados em Cuba?", "options": ["SS-4 'Sandal'", "SS-6 'Sapwood'", "SS-18 'Satan'"], "correctAnswer": 0, "explanation": "As primeiras fotografias identificaram claramente os mísseis R-12, designados pela OTAN como SS-4 'Sandal'." },
-    { "id": 27, "question": "Qual era a distância aproximada de Cuba à Flórida?", "options": ["500 milhas", "250 milhas", "90 milhas"], "correctAnswer": 2, "explanation": "A proximidade extrema (cerca de 90 milhas ou 145 km) tornava a ameaça dos mísseis imediata e inaceitável para os EUA." },
-    { "id": 28, "question": "Onde Adlai Stevenson apresentou as fotos dos mísseis, confrontando o embaixador soviético?", "options": ["Na Casa Branca", "Na Assembleia Geral da ONU", "No Conselho de Segurança da ONU"], "correctAnswer": 2, "explanation": "Em um momento dramático, Stevenson revelou as fotos de reconhecimento no Conselho de Segurança da ONU, exigindo uma resposta da URSS." },
-    { "id": 29, "question": "Qual foi a principal preocupação de Kennedy ao considerar um ataque aéreo a Cuba?", "options": ["O custo financeiro", "A opinião pública mundial", "A retaliação soviética em outro lugar, como Berlim"], "correctAnswer": 2, "explanation": "Kennedy e o ExComm temiam que um ataque a Cuba levasse a URSS a tomar Berlim Ocidental, o que poderia escalar para uma guerra total na Europa." },
-    { "id": 30, "question": "Qual era a capacidade de ogivas nucleares que os mísseis em Cuba adicionariam ao arsenal soviético?", "options": ["Aumentaria em 10%", "Aumentaria em 50%", "Dobrararia a capacidade"], "correctAnswer": 1, "explanation": "Os mísseis em Cuba aumentariam a capacidade de ataque nuclear de primeiro impacto da URSS em cerca de 50%." },
-    { "id": 31, "question": "Qual cidade importante dos EUA estava fora do alcance dos mísseis MRBM, mas seria atingida pelos IRBMs?", "options": ["Washington D.C.", "Miami", "Seattle"], "correctAnswer": 2, "explanation": "Enquanto Miami e Washington estavam ao alcance dos mísseis de médio alcance (MRBM), os mísseis de alcance intermediário (IRBM) poderiam atingir quase todo o território continental dos EUA, exceto o noroeste, como Seattle." },
-    { "id": 32, "question": "Qual foi a reação inicial da maioria dos membros do ExComm?",
-      "options": ["Apoiar um ataque aéreo imediato", "Sugerir negociações diplomáticas", "Ignorar os mísseis"],
-      "correctAnswer": 0,
-      "explanation": "Inicialmente, a maioria dos conselheiros, incluindo os militares, defendia um ataque aéreo rápido e decisivo para destruir os mísseis."
-    },
-    { "id": 33, "question": "Quantos submarinos soviéticos com armas nucleares estavam na área da 'quarentena'?",
-      "options": ["Um", "Quatro", "Dez"],
-      "correctAnswer": 1,
-      "explanation": "Quatro submarinos soviéticos da classe Foxtrot, cada um armado com um torpedo nuclear, foram enviados para a região."
-    },
-    { "id": 34, "question": "Além da promessa de não invadir Cuba, o que mais Kennedy ofereceu publicamente?",
-      "options": ["Ajuda econômica", "O fim do embargo", "Nada"],
-      "correctAnswer": 2,
-      "explanation": "Publicamente, a única concessão foi a promessa de não invadir Cuba. A remoção dos mísseis da Turquia foi um acordo estritamente secreto."
-    },
-    { "id": 35, "question": "Qual era a profissão do Major Rudolf Anderson Jr., a única baixa da crise?",
-      "options": ["Piloto de caça F-4", "Piloto de bombardeiro B-52", "Piloto de avião espião U-2"],
-      "correctAnswer": 2,
-      "explanation": "Major Anderson pilotava um avião de reconhecimento U-2 quando foi abatido por um míssil terra-ar soviético sobre Cuba."
-    },
-    { "id": 36, "question": "Como Fidel Castro reagiu ao acordo final entre EUA e URSS?",
-      "options": ["Com alívio e celebração", "Com indiferença", "Com fúria, sentindo-se traído"],
-      "correctAnswer": 2,
-      "explanation": "Castro ficou furioso por não ter sido consultado na decisão final de Khrushchev e sentiu que a soberania de Cuba foi usada como moeda de troca."
-    },
-    { "id": 37, "question": "Qual livro, escrito por Robert F. Kennedy, narra os eventos da crise?",
-      "options": ["A Arte da Guerra", "Treze Dias", "O Fio da Navalha"],
-      "correctAnswer": 1,
-      "explanation": "'Treze Dias: Uma Memória da Crise dos Mísseis de Cuba' é o relato em primeira mão de Robert Kennedy sobre as deliberações do ExComm."
-    },
-    { "id": 38, "question": "Qual o nome da base naval americana em Cuba que se tornou um ponto de alta tensão?",
-      "options": ["Base de Pearl Harbor", "Base de Guantánamo", "Base Aérea de Andrews"],
-      "correctAnswer": 1,
-      "explanation": "A Base Naval da Baía de Guantánamo, em território cubano, foi fortemente reforçada e se tornou um potencial estopim para o conflito."
-    },
-    { "id": 39, "question": "Que tipo de navios a 'quarentena' naval americana se propunha a inspecionar?",
-      "options": ["Todos os navios, sem exceção", "Apenas navios de guerra", "Navios que pudessem carregar armas ofensivas"],
-      "correctAnswer": 2,
-      "explanation": "A quarentena era seletiva, focada em impedir a chegada de mais armamentos, permitindo a passagem de itens como combustível."
-    },
-    { "id": 40, "question": "Qual foi a principal lição que os líderes mundiais aprenderam com a crise?",
-      "options": ["A guerra nuclear é vencível", "A importância da comunicação direta para evitar escaladas", "A diplomacia é ineficaz"],
-      "correctAnswer": 1,
-      "explanation": "A crise demonstrou o quão perigosamente perto o mundo poderia chegar da aniquilação por falhas de comunicação e suposições erradas."
-    }
+    { "id": 10, "question": "O que foi estabelecido entre Washington e Moscou após a crise para evitar futuros conflitos?", "options": ["A 'Linha Vermelha' (Hotline)", "A Organização das Nações Unidas", "O Tratado de Não Proliferação Nuclear"], "correctAnswer": 0, "explanation": "A 'Linha Vermelha', um link de comunicação direta, foi criada para permitir um diálogo rápido entre os líderes." }
   ]
 }

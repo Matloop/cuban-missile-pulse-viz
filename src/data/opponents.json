@@ -1,0 +1,13 @@
+{
+    "1962-10-16": {
+      "id": "opponent_lemay",
+      "name": "General 'Hawkeye' Curtis LeMay",
+      "description": "Um general americano da Força Aérea, conhecido por sua postura agressiva ('falcão'). Ele representa a pressão por um ataque militar imediato contra Cuba.",
+      "image": "figure_lemay.jpg",
+      "stats": {
+        "hp": 100,
+        "attack": 25,
+        "speed": 60
+      }
+    }
+  }

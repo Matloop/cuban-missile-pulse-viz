@@ -10,15 +10,16 @@ interface SplashScreenProps {
 
 const SplashScreen: React.FC<SplashScreenProps> = ({ onStart }) => {
   const vantaRef = useRef(null);
+  // Usamos 'any' para o tipo do vantaEffect, pois a biblioteca Vanta não fornece tipos oficiais
   const [vantaEffect, setVantaEffect] = useState<any>(null);
 
   useEffect(() => {
-    // Inicializa o efeito Vanta.js apenas uma vez
+    // A verificação `vantaRef.current` garante que o div exista antes de inicializar o Vanta
     if (!vantaEffect && vantaRef.current) {
       setVantaEffect(
         NET({
           el: vantaRef.current,
-          THREE: THREE, // Passa a biblioteca THREE.js para o Vanta
+          THREE: THREE, // Passa a biblioteca THREE.js (versão correta) para o Vanta
           mouseControls: true,
           touchControls: true,
           gyroControls: false,
@@ -41,19 +42,16 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onStart }) => {
         vantaEffect.destroy();
       }
     };
-  }, [vantaEffect]);
+  }, [vantaEffect]); // A dependência garante que o useEffect rode apenas uma vez
 
   return (
     // O div principal agora serve como container para o efeito Vanta
     <div ref={vantaRef} className="relative w-screen h-screen overflow-hidden">
-      {/* O efeito Vanta.js será renderizado neste div */}
       
-      {/* Overlay de Scanline (opcional, mas mantém o estilo) */}
       <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none">
         <div className="scanline"></div>
       </div>
 
-      {/* Conteúdo Central */}
       <div className="relative z-20 flex flex-col items-center justify-center w-full h-full text-cyan-200 font-mono">
         <div className="bg-black/40 backdrop-blur-sm border border-cyan-500/30 rounded-xl p-8 max-w-3xl text-center shadow-2xl shadow-cyan-500/10">
           <div className="flex justify-center items-center gap-4 mb-4">

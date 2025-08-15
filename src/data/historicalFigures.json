@@ -4,58 +4,56 @@
     "name": "Vasily Arkhipov",
     "rarity": "Lendário",
     "chance": 64,
-    "description": "O oficial de submarino soviético que, sozinho, se recusou a autorizar o lançamento de um torpedo nuclear durante a quarentena, potencialmente salvando o mundo.",
-    "image": "figure_arkhipov.jpg"
+    "description": "O oficial que, sozinho, se recusou a autorizar um lançamento nuclear, potencialmente salvando o mundo.",
+    "image": "figure_arkhipov.jpg",
+    "stats": { "hp": 150, "attack": 20, "speed": 40 }
   },
   {
     "id": "rfk",
     "name": "Robert F. Kennedy",
     "rarity": "Épico",
     "chance": 32,
-    "description": "Procurador-Geral e irmão do presidente. Ele foi a figura central no canal de comunicação secreto com o embaixador soviético, crucial para a resolução pacífica.",
+    "description": "Procurador-Geral e principal negociador secreto de Kennedy, crucial para a resolução pacífica.",
     "image": "figure_rfk.jpg",
-    "isStarter": true
+    "isStarter": true,
+    "stats": { "hp": 90, "attack": 25, "speed": 80 }
   },
   {
     "id": "stevenson",
     "name": "Adlai Stevenson II",
     "rarity": "Épico",
     "chance": 24,
-    "description": "Embaixador dos EUA na ONU. Famoso por confrontar diretamente o embaixador soviético com as fotos de reconhecimento.",
-    "image": "figure_stevenson.jpg"
+    "description": "Embaixador dos EUA na ONU, famoso por confrontar publicamente o embaixador soviético com as fotos.",
+    "image": "figure_stevenson.jpg",
+    "stats": { "hp": 80, "attack": 30, "speed": 70 }
   },
   {
     "id": "mcnamara",
     "name": "Robert McNamara",
     "rarity": "Raro",
     "chance": 16,
-    "description": "Secretário de Defesa dos EUA. Um membro-chave do ExComm que ajudou a moldar a estratégia da 'quarentena'.",
+    "description": "Secretário de Defesa dos EUA e membro-chave do ExComm que ajudou a moldar a estratégia da 'quarentena'.",
     "image": "figure_mcnamara.jpg",
-    "isStarter": true
+    "isStarter": true,
+    "stats": { "hp": 110, "attack": 20, "speed": 60 }
   },
   {
     "id": "anderson",
     "name": "Rudolf Anderson Jr.",
     "rarity": "Raro",
     "chance": 12,
-    "description": "O piloto do avião espião U-2 que foi abatido sobre Cuba no 'Sábado Negro'. Foi a única baixa em combate direto da crise.",
-    "image": "figure_anderson.jpg"
-  },
-  {
-    "id": "gromyko",
-    "name": "Andrei Gromyko",
-    "rarity": "Comum",
-    "chance": 8,
-    "description": "Ministro das Relações Exteriores soviético. Conhecido como 'Mr. Nyet', ele negou a existência dos mísseis a Kennedy.",
-    "image": "figure_gromyko.jpg"
+    "description": "O piloto do U-2 abatido sobre Cuba no 'Sábado Negro', a única baixa em combate direto da crise.",
+    "image": "figure_anderson.jpg",
+    "stats": { "hp": 70, "attack": 15, "speed": 90 }
   },
   {
     "id": "dobrynin",
     "name": "Anatoly Dobrynin",
     "rarity": "Comum",
     "chance": 4,
-    "description": "Embaixador soviético nos EUA. Sua linha de comunicação secreta com Robert F. Kennedy foi essencial para o acordo.",
+    "description": "Embaixador soviético nos EUA. Sua linha de comunicação secreta com RFK foi essencial para o acordo.",
     "image": "figure_dobrynin.jpg",
-    "isStarter": true
+    "isStarter": true,
+    "stats": { "hp": 80, "attack": 15, "speed": 75 }
   }
 ]

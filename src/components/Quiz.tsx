@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { CheckCircle, XCircle, Trophy, ChevronsRight, Info, Key, RefreshCw } from 'lucide-react';
-import { ScrollArea } from './ui/scroll-area';
-import { Separator } from './ui/separator';
-import allQuestionsData from '../data/quizQuestions.json';
 import { motion } from 'framer-motion';
+import allQuestionsData from '../data/quizQuestions.json';
 
 const allQuestions = Object.values(allQuestionsData).flat();
 
@@ -75,7 +73,6 @@ const FinalQuiz: React.FC<QuizProps> = ({ onClose, onComplete }) => {
   const handleCloseAndReward = () => {
     const score = calculateScore();
     onComplete(score);
-    onClose();
   };
 
   if (quizState === 'results') {
