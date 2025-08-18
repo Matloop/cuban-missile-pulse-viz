@@ -76,11 +76,9 @@ const Index: React.FC<IndexProps> = ({ initialCollection }) => {
     if (nextIndex >= crisisData.events.length) return;
     const nextDate = crisisData.events[nextIndex].date;
     const opponent = opponents[nextDate as keyof typeof opponents];
-    
     if (opponent) {
         setPendingDate(nextDate);
         setCurrentOpponent(opponent);
-        // Batalhas de Tetris não precisam de seleção de agente
         if (opponent.battleType === 'tetris') {
             setShowBattleScreen(true);
         } else {
@@ -119,13 +117,43 @@ const Index: React.FC<IndexProps> = ({ initialCollection }) => {
     setShowFinalQuiz(false);
   };
 
-  const handleOpenLootbox = useCallback(() => { /* ... (inalterado) ... */ }, [lootboxTokens]);
-  const handleCollectFigure = useCallback(() => { /* ... (inalterado) ... */ }, [unlockedFigure, userCollection]);
-  const handleNodeSelect = (node: NetworkNode) => setSelectedNode(prev => (prev?.id === node.id ? null : node));
+  const handleOpenLootbox = useCallback(() => {
+    if (lootboxTokens <= 0) return;
+    setLootboxTokens(prev => prev - 1);
+    const sortedFigures = [...allFigures].sort((a, b) => a.chance - b.chance);
+    let figureRolled: HistoricalFigure | null = null;
+    for (const figure of sortedFigures) {
+      if (Math.floor(Math.random() * figure.chance) === 0) {
+        figureRolled = figure;
+        break;
+      }
+    }
+    if (!figureRolled) {
+      const commonFigures = allFigures.filter(f => f.rarity === 'Comum');
+      figureRolled = commonFigures[Math.floor(Math.random() * commonFigures.length)];
+    }
+    setUnlockedFigure(figureRolled);
+    setShowLootboxOpening(true);
+  }, [lootboxTokens]);
   
+  const handleCollectFigure = useCallback(() => {
+    if (unlockedFigure) {
+      setUserCollection(prevCollection => {
+        if (!prevCollection.includes(unlockedFigure.id)) {
+          return [...prevCollection, unlockedFigure.id];
+        }
+        return prevCollection;
+      });
+      setUnlockedFigure(null);
+      setShowLootboxOpening(false);
+    }
+  }, [unlockedFigure]);
+
+  const handleNodeSelect = (node: NetworkNode) => setSelectedNode(prev => (prev?.id === node.id ? null : node));
   const formattedDate = new Date(selectedDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
   const currentIndex = crisisData.events.findIndex(e => e.date === selectedDate);
   const canAdvance = currentIndex === highestUnlockedLevel && !isFinalDay;
+  const BattleComponent = currentOpponent?.battleType === 'tetris' ? MissileCrisisTetris : BattleScreen;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-screen w-screen overflow-hidden text-white flex flex-col">
@@ -186,27 +214,15 @@ const Index: React.FC<IndexProps> = ({ initialCollection }) => {
       </AnimatePresence>
       <AnimatePresence>
         {showAgentSelection && ( <AgentSelection userCollection={userCollection} allFigures={allFigures} onSelect={handleAgentSelectForBattle} onCancel={() => setShowAgentSelection(false)} /> )}
-        
-        {/* >> CORREÇÃO FINAL AQUI << */}
         {showBattleScreen && currentOpponent && (
             currentOpponent.battleType === 'tetris' ? (
-                <MissileCrisisTetris
-                    opponent={currentOpponent}
-                    onWin={handleBattleWin}
-                    onLose={handleBattleLose}
-                />
+                <MissileCrisisTetris onWin={handleBattleWin} onLose={handleBattleLose} opponent={undefined} />
             ) : (
                 selectedAgentForBattle && (
-                    <BattleScreen
-                        playerAgent={selectedAgentForBattle}
-                        opponent={currentOpponent}
-                        onWin={handleBattleWin}
-                        onLose={handleBattleLose}
-                    />
+                    <BattleScreen playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />
                 )
             )
         )}
-
         {showFinalQuiz && ( <FinalQuiz onClose={() => setShowFinalQuiz(false)} onComplete={handleFinalQuizComplete} /> )}
         {showLootboxOpening && unlockedFigure && ( <Lootbox figure={unlockedFigure} onCollect={handleCollectFigure} /> )}
         {showCollection && ( <Collection collection={userCollection} allFigures={allFigures} onClose={() => setShowCollection(false)} /> )}
