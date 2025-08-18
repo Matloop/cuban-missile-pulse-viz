@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 
+// Importe os componentes e dados necessários
 import SplashScreen from "./components/SplashScreen";
 import StarterSelection from "./components/StarterSelection";
 import Index from "./pages/Index";
@@ -18,7 +19,9 @@ const App: React.FC = () => {
   const [appState, setAppState] = useState<'splash' | 'starter' | 'main'>('splash');
   const [initialCollection, setInitialCollection] = useState<string[]>([]);
 
-  const handleStart = () => setAppState('starter');
+  const handleStart = () => {
+    setAppState('starter');
+  };
 
   const handleStarterSelect = (figureId: string) => {
     setInitialCollection([figureId]);
@@ -29,9 +32,13 @@ const App: React.FC = () => {
     switch (appState) {
       case 'splash':
         return <SplashScreen onStart={handleStart} />;
+      
       case 'starter':
-        const starters = allFiguresData.filter(fig => (fig as any).isStarter) as HistoricalFigure[];
+        // CORREÇÃO: Garante que allFiguresData é tratado como um array
+        const figuresArray = Array.isArray(allFiguresData) ? allFiguresData : [];
+        const starters = figuresArray.filter(fig => (fig as any).isStarter) as HistoricalFigure[];
         return <StarterSelection starters={starters} onSelect={handleStarterSelect} />;
+      
       case 'main':
         return (
           <BrowserRouter>
@@ -41,6 +48,7 @@ const App: React.FC = () => {
             </Routes>
           </BrowserRouter>
         );
+      
       default:
         return <SplashScreen onStart={handleStart} />;
     }

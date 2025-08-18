@@ -1,144 +1,20 @@
 {
   "nodes": [
-    {
-      "id": "USA",
-      "name": "Estados Unidos",
-      "leader": "John F. Kennedy",
-      "type": "Superpotência",
-      "color": "#3b82f6",
-      "description": "Liderando o bloco ocidental, buscava conter a expansão do comunismo e responder à ameaça direta a 90 milhas de sua costa.",
-      "image": "kennedy-advisors",
-      "objective": "Remover os mísseis de Cuba sem iniciar uma guerra nuclear.",
-      "key_figures": "Robert Kennedy, Robert McNamara",
-      "key_assets": "Aviões U-2, Frota Naval"
-    },
-    {
-      "id": "USSR",
-      "name": "União Soviética",
-      "leader": "Nikita Khrushchev",
-      "type": "Superpotência",
-      "color": "#ef4444",
-      "description": "Líder do bloco comunista, buscava proteger Cuba, projetar poder e equilibrar a ameaça dos mísseis americanos na Turquia.",
-      "image": "khrushchev-castro",
-      "objective": "Garantir a soberania de Cuba e obter vantagem estratégica.",
-      "key_figures": "Andrei Gromyko, Anatoly Dobrynin",
-      "key_assets": "Mísseis R-12, Submarinos"
-    },
-    {
-      "id": "Cuba",
-      "name": "Cuba",
-      "leader": "Fidel Castro",
-      "type": "Nação Revolucionária",
-      "color": "#22c55e",
-      "description": "Ilha recém-revolucionária. Aceitou os mísseis soviéticos para se proteger de uma nova invasão americana.",
-      "image": "castro-speech",
-      "objective": "Assegurar a sobrevivência do regime comunista.",
-      "key_figures": "Che Guevara, Raúl Castro",
-      "key_assets": "Posição Geográfica, Defesas Antiaéreas"
-    },
-    {
-      "id": "NATO",
-      "name": "OTAN",
-      "leader": "Dirk Stikker",
-      "type": "Aliança Militar",
-      "color": "#6366f1",
-      "description": "Aliança militar ocidental. A crise testou sua coesão e colocou suas forças em alerta máximo.",
-      "image": "un-security-council",
-      "objective": "Apresentar uma frente unida contra a agressão soviética.",
-      "key_figures": "Generais da OTAN",
-      "key_assets": "Forças militares na Europa"
-    }
+    { "id": "USA", "name": "Estados Unidos", "leader": "John F. Kennedy", "type": "Superpotência", "color": "#3b82f6", "description": "Liderando o bloco ocidental, buscava conter a expansão do comunismo e responder à ameaça direta a 90 milhas de sua costa.", "image": "kennedy-advisors", "objective": "Remover os mísseis de Cuba sem iniciar uma guerra nuclear.", "key_figures": "Robert Kennedy, Robert McNamara", "key_assets": "Aviões U-2, Frota Naval" },
+    { "id": "USSR", "name": "União Soviética", "leader": "Nikita Khrushchev", "type": "Superpotência", "color": "#ef4444", "description": "Líder do bloco comunista, buscava proteger Cuba, projetar poder e equilibrar a ameaça dos mísseis americanos na Turquia.", "image": "khrushchev-castro", "objective": "Garantir a soberania de Cuba e obter vantagem estratégica.", "key_figures": "Andrei Gromyko, Anatoly Dobrynin", "key_assets": "Mísseis R-12, Submarinos" },
+    { "id": "Cuba", "name": "Cuba", "leader": "Fidel Castro", "type": "Nação Revolucionária", "color": "#22c55e", "description": "Ilha recém-revolucionária. Aceitou os mísseis soviéticos para se proteger de uma nova invasão americana.", "image": "castro-speech", "objective": "Assegurar a sobrevivência do regime comunista.", "key_figures": "Che Guevara, Raúl Castro", "key_assets": "Posição Geográfica, Defesas Antiaéreas" },
+    { "id": "NATO", "name": "OTAN", "leader": "Dirk Stikker", "type": "Aliança Militar", "color": "#6366f1", "description": "Aliança militar ocidental. A crise testou sua coesão e colocou suas forças em alerta máximo.", "image": "un-security-council", "objective": "Apresentar uma frente unida contra a agressão soviética.", "key_figures": "Generais da OTAN", "key_assets": "Forças militares na Europa" }
   ],
   "events": [
-    {
-      "date": "1962-10-14",
-      "title": "Descoberta dos Mísseis",
-      "description": "Um avião espião U-2 americano fotografa secretamente instalações de mísseis balísticos soviéticos em Cuba.",
-      "riskLevel": 2,
-      "image": "u2-spy-plane",
-      "key_moments": [
-        "Voo do Major Richard Heyser.",
-        "Análise das fotos confirma mísseis SS-4.",
-        "A inteligência americana é pega de surpresa."
-      ],
-      "quote": "Essas coisas são mísseis! Isso é inacreditável!",
-      "quote_author": "Analista da CIA",
-      "actions": [
-        {"source": "USA", "target": "Cuba", "type": "surveillance"}
-      ]
-    },
-    {
-      "date": "1962-10-16",
-      "title": "Formação do ExComm",
-      "description": "Kennedy é informado e forma o Comitê Executivo (ExComm) para debater secretamente as opções de resposta.",
-      "riskLevel": 3,
-      "image": "excomm-meeting",
-      "key_moments": [
-        "Primeira reunião do ExComm na Casa Branca.",
-        "Debate entre ataque aéreo ('falcões') vs. bloqueio ('pombas').",
-        "Kennedy favorece uma abordagem menos agressiva inicialmente."
-      ],
-      "quote": "Temos que ter um plano. Não podemos simplesmente deixar isso acontecer.",
-      "quote_author": "John F. Kennedy",
-      "actions": [
-        {"source": "USA", "target": "USA", "type": "analysis"},
-        {"source": "USA", "target": "NATO", "type": "consultation"}
-      ]
-    },
-    {
-      "date": "1962-10-22",
-      "title": "Discurso e 'Quarentena'",
-      "description": "Kennedy revela a crise ao mundo em um discurso televisivo e anuncia uma 'quarentena' naval ao redor de Cuba.",
-      "riskLevel": 4,
-      "image": "naval-blockade",
-      "key_moments": [
-        "Discurso assistido por 100 milhões de pessoas.",
-        "Forças dos EUA elevadas para DEFCON 3.",
-        "Uso do termo 'quarentena' para evitar um ato de guerra."
-      ],
-      "quote": "Será a política desta nação considerar qualquer míssil nuclear lançado de Cuba... como um ataque da União Soviética aos Estados Unidos.",
-      "quote_author": "John F. Kennedy",
-      "actions": [
-        {"source": "USA", "target": "Cuba", "type": "blockade"},
-        {"source": "USA", "target": "USSR", "type": "ultimatum"}
-      ]
-    },
-    {
-      "date": "1962-10-27",
-      "title": "Sábado Negro",
-      "description": "O dia mais tenso: um U-2 é abatido sobre Cuba, e um submarino soviético quase lança um torpedo nuclear.",
-      "riskLevel": 5,
-      "image": "vasily-arkhipov",
-      "key_moments": [
-        "Major Rudolf Anderson é morto no abate do U-2.",
-        "Khrushchev exige a retirada dos mísseis da Turquia.",
-        "Vasily Arkhipov, no submarino B-59, se recusa a autorizar o lançamento nuclear."
-      ],
-      "quote": "Havia uma sensação de que o laço estava cada vez mais apertado... e que poderia quebrar.",
-      "quote_author": "Robert Kennedy",
-      "actions": [
-        {"source": "Cuba", "target": "USA", "type": "attack"},
-        {"source": "USSR", "target": "USA", "type": "threat"},
-        {"source": "USA", "target": "USSR", "type": "standoff"}
-      ]
-    },
-    {
-      "date": "1962-10-28",
-      "title": "Resolução da Crise",
-      "description": "Khrushchev anuncia a remoção dos mísseis em troca da promessa dos EUA de não invadir Cuba e de retirar secretamente mísseis da Turquia.",
-      "riskLevel": 1,
-      "image": "kennedy-advisors",
-      "key_moments": [
-        "Anúncio feito na Rádio Moscou.",
-        "Acordo secreto sobre os mísseis da Turquia.",
-        "O mundo respira aliviado."
-      ],
-      "quote": "O cheiro da fumaça queimada paira no ar. Devemos mostrar prudência.",
-      "quote_author": "Nikita Khrushchev (em carta)",
-      "actions": [
-        {"source": "USSR", "target": "USA", "type": "agreement"},
-        {"source": "USA", "target": "USSR", "type": "agreement"}
-      ]
-    }
+    { "date": "1962-10-14", "title": "A Descoberta", "description": "Um avião espião U-2 americano fotografa secretamente instalações de mísseis balísticos soviéticos em Cuba.", "riskLevel": 1, "image": "u2-spy-plane", "key_moments": ["Voo do Major Richard Heyser.", "Análise inicial das fotos confirma mísseis SS-4."], "quote": "Essas coisas são mísseis! Isso é inacreditável!", "quote_author": "Analista da CIA", "actions": [{"source": "USA", "target": "Cuba", "type": "surveillance"}] },
+    { "date": "1962-10-16", "title": "ExComm é Formado", "description": "Kennedy é informado e forma o Comitê Executivo (ExComm) para debater secretamente as opções de resposta.", "riskLevel": 2, "image": "excomm-meeting", "key_moments": ["Primeira reunião na Casa Branca.", "Debate entre ataque aéreo ('falcões') vs. bloqueio ('pombas')."], "quote": "Temos que ter um plano. Não podemos simplesmente deixar isso acontecer.", "quote_author": "John F. Kennedy", "actions": [{"source": "USA", "target": "USA", "type": "analysis"}, {"source": "USA", "target": "NATO", "type": "consultation"}] },
+    { "date": "1962-10-18", "title": "Confronto Diplomático", "description": "Kennedy se encontra com o Ministro das Relações Exteriores soviético, Andrei Gromyko, que nega a presença de armas ofensivas em Cuba.", "riskLevel": 3, "image": "khrushchev-castro", "key_moments": ["Gromyko mente diretamente para Kennedy.", "Kennedy não revela que já sabe dos mísseis."], "quote": "Estas armas são puramente para fins defensivos.", "quote_author": "Andrei Gromyko (mentindo)", "actions": [{"source": "USA", "target": "USSR", "type": "negotiation"}] },
+    { "date": "1962-10-20", "title": "A Decisão pelo Bloqueio", "description": "Após dias de debate no ExComm, Kennedy decide pela opção menos agressiva: um bloqueio naval, que ele chamará de 'quarentena'.", "riskLevel": 3, "image": "kennedy-advisors", "key_moments": ["Opção de ataque aéreo é descartada por enquanto.", "Plano para um discurso à nação é preparado."], "quote": "A opção mais branda que temos, creio eu, é o bloqueio.", "quote_author": "Robert McNamara", "actions": [{"source": "USA", "target": "USA", "type": "analysis"}] },
+    { "date": "1962-10-22", "title": "Discurso e 'Quarentena'", "description": "Kennedy revela a crise ao mundo em um discurso televisivo e anuncia a 'quarentena' naval ao redor de Cuba, elevando o alerta para DEFCON 3.", "riskLevel": 4, "image": "naval-blockade", "key_moments": ["Discurso assistido por 100 milhões de pessoas.", "Forças dos EUA elevadas para DEFCON 3."], "quote": "Será a política desta nação considerar qualquer míssil... como um ataque da União Soviética.", "quote_author": "John F. Kennedy", "actions": [{"source": "USA", "target": "Cuba", "type": "blockade"}, {"source": "USA", "target": "USSR", "type": "ultimatum"}] },
+    { "date": "1962-10-24", "title": "O Impasse Naval", "description": "Navios soviéticos se aproximam da linha de quarentena. O mundo prende a respiração, mas os navios param ou mudam de rota no último minuto.", "riskLevel": 4, "image": "naval-blockade", "key_moments": ["Navios soviéticos param antes de confrontar a frota dos EUA.", "Construção dos mísseis em Cuba continua acelerada."], "quote": "Estamos olho no olho, e creio que o outro cara acabou de piscar.", "quote_author": "Dean Rusk", "actions": [{"source": "USA", "target": "USSR", "type": "standoff"}] },
+    { "date": "1962-10-25", "title": "Confronto na ONU", "description": "O embaixador dos EUA, Adlai Stevenson, confronta o embaixador soviético Zorin no Conselho de Segurança da ONU com as fotos de reconhecimento.", "riskLevel": 4, "image": "un-security-council", "key_moments": ["Stevenson revela as fotos publicamente.", "Zorin se recusa a responder, desacreditando a URSS."], "quote": "Estou preparado para esperar pela minha resposta até que o inferno congele!", "quote_author": "Adlai Stevenson", "actions": [{"source": "USA", "target": "USSR", "type": "threat"}] },
+    { "date": "1962-10-26", "title": "Canal Secreto", "description": "Khrushchev envia uma carta a Kennedy oferecendo retirar os mísseis em troca de uma promessa de não-invasão. Um canal secreto é aberto.", "riskLevel": 3, "image": "khrushchev-castro", "key_moments": ["Primeira carta de Khrushchev, de tom emocional.", "Robert Kennedy inicia conversas com o embaixador Dobrynin."], "quote": "Vamos não apenas relaxar as forças que puxam as pontas da corda, vamos tomar medidas.", "quote_author": "Nikita Khrushchev (em carta)", "actions": [{"source": "USSR", "target": "USA", "type": "negotiation"}] },
+    { "date": "1962-10-27", "title": "Sábado Negro", "description": "O dia mais tenso: um U-2 é abatido sobre Cuba, e um submarino soviético quase lança um torpedo nuclear.", "riskLevel": 5, "image": "vasily-arkhipov", "key_moments": ["Major Rudolf Anderson é morto no abate do U-2.", "Vasily Arkhipov, no submarino B-59, se recusa a autorizar o lançamento nuclear."], "quote": "Havia uma sensação de que o laço estava cada vez mais apertado... e que poderia quebrar.", "quote_author": "Robert Kennedy", "actions": [{"source": "Cuba", "target": "USA", "type": "attack"}, {"source": "USSR", "target": "USA", "type": "ultimatum"}, {"source": "USA", "target": "USSR", "type": "standoff"}] },
+    { "date": "1962-10-28", "title": "A Resolução", "description": "Khrushchev anuncia a remoção dos mísseis em troca da promessa dos EUA de não invadir Cuba e de retirar secretamente mísseis da Turquia.", "riskLevel": 1, "image": "kennedy-advisors", "key_moments": ["Anúncio feito na Rádio Moscou.", "Acordo secreto sobre os mísseis da Turquia.", "O mundo respira aliviado."], "quote": "O cheiro da fumaça queimada paira no ar. Devemos mostrar prudência.", "quote_author": "Nikita Khrushchev (em carta)", "actions": [{"source": "USSR", "target": "USA", "type": "agreement"}, {"source": "USA", "target": "USSR", "type": "agreement"}] }
   ]
 }

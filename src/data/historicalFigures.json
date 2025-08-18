@@ -1,5 +1,3 @@
-
-
 [
   {
     "id": "arkhipov",
@@ -8,11 +6,7 @@
     "chance": 64,
     "description": "O oficial que, sozinho, se recusou a autorizar um lançamento nuclear, potencialmente salvando o mundo.",
     "image": "figure_arkhipov.jpg",
-    "stats": { "hp": 150, "attack": 20, "speed": 40 },
-    "bio": "Vasily Alexandrovich Arkhipov foi um oficial naval soviético que ganhou fama mundial por seu papel durante a Crise dos Mísseis de Cuba. Sua calma e adesão ao protocolo sob imensa pressão o distinguiram como uma figura histórica de grande importância.",
-    "crisisRole": "Como segundo em comando do submarino B-59, Arkhipov vetou a decisão do capitão de lançar um torpedo com ogiva nuclear contra a frota americana. O protocolo exigia o consentimento unânime dos três oficiais superiores, e a recusa de Arkhipov evitou o que poderia ter sido o início da Terceira Guerra Mundial.",
-    "quote": "Não vamos nos tornar criminosos de guerra.",
-    "specialTrait": "Veto Decisivo: Imune a ações de 'Pânico' ou 'Pressão'. Aumenta a defesa de todos os aliados em momentos críticos."
+    "stats": { "hp": 150, "attack": 20, "speed": 40 }
   },
   {
     "id": "rfk",
@@ -22,11 +16,7 @@
     "description": "Procurador-Geral e principal negociador secreto de Kennedy, crucial para a resolução pacífica.",
     "image": "figure_rfk.jpg",
     "isStarter": true,
-    "stats": { "hp": 90, "attack": 25, "speed": 80 },
-    "bio": "Irmão mais novo e conselheiro mais confiável do Presidente John F. Kennedy, Robert F. Kennedy serviu como Procurador-Geral. Sua capacidade de pensar além das linhas militares e focar na diplomacia foi fundamental.",
-    "crisisRole": "Membro chave do ExComm, RFK defendeu a opção da 'quarentena' em vez de um ataque aéreo. Mais importante, ele conduziu as negociações secretas e diretas com o embaixador soviético Anatoly Dobrynin, que levaram ao acordo final para a remoção dos mísseis.",
-    "quote": "Que tipo de paz buscamos? Não uma Pax Americana imposta ao mundo pelas armas de guerra americanas.",
-    "specialTrait": "Canal Secreto: Aumenta a eficácia das ações diplomáticas e tem chance de evitar o contra-ataque do oponente."
+    "stats": { "hp": 90, "attack": 25, "speed": 80 }
   },
   {
     "id": "stevenson",
@@ -35,11 +25,7 @@
     "chance": 24,
     "description": "Embaixador dos EUA na ONU, famoso por confrontar publicamente o embaixador soviético com as fotos.",
     "image": "figure_stevenson.jpg",
-    "stats": { "hp": 80, "attack": 30, "speed": 70 },
-    "bio": "Um político e diplomata americano respeitado, Adlai Stevenson foi o embaixador dos EUA nas Nações Unidas. Sua eloquência e firmeza no palco mundial foram uma arma poderosa para a administração Kennedy.",
-    "crisisRole": "Stevenson apresentou as evidências fotográficas das instalações de mísseis soviéticos em Cuba ao Conselho de Segurança da ONU, em um confronto dramático e televisionado com o embaixador soviético Valerian Zorin, expondo a negação da URSS como uma mentira.",
-    "quote": "Estou preparado para esperar pela minha resposta até que o inferno congele.",
-    "specialTrait": "Pressão Pública: Reduz o ataque do oponente por um turno após expor uma fraqueza."
+    "stats": { "hp": 80, "attack": 30, "speed": 70 }
   },
   {
     "id": "mcnamara",
@@ -49,11 +35,7 @@
     "description": "Secretário de Defesa dos EUA e membro-chave do ExComm que ajudou a moldar a estratégia da 'quarentena'.",
     "image": "figure_mcnamara.jpg",
     "isStarter": true,
-    "stats": { "hp": 110, "attack": 20, "speed": 60 },
-    "bio": "Como Secretário de Defesa, Robert McNamara era conhecido por sua abordagem analítica e baseada em dados. Inicialmente, ele apoiou um ataque militar, mas rapidamente mudou de ideia ao perceber os riscos catastróficos.",
-    "crisisRole": "No ExComm, McNamara tornou-se um dos principais proponentes da 'quarentena' naval, vendo-a como uma medida forte, mas que ainda deixava espaço para a diplomacia e evitava um ato de guerra imediato.",
-    "quote": "Se eu tivesse visto [a crise dos mísseis] de um ponto de vista cubano, eu poderia ter pensado que os Estados Unidos pretendiam invadir.",
-    "specialTrait": "Análise de Risco: Aumenta a chance de sucesso em ações de 'bloqueio' ou 'contenção'."
+    "stats": { "hp": 110, "attack": 20, "speed": 60 }
   },
   {
     "id": "anderson",
@@ -62,11 +44,7 @@
     "chance": 12,
     "description": "O piloto do U-2 abatido sobre Cuba no 'Sábado Negro', a única baixa em combate direto da crise.",
     "image": "figure_anderson.jpg",
-    "stats": { "hp": 70, "attack": 15, "speed": 90 },
-    "bio": "Major da Força Aérea dos Estados Unidos e piloto do avião de reconhecimento U-2. Anderson foi um veterano da Guerra da Coreia e um piloto experiente, condecorado postumamente com a primeira Cruz da Força Aérea.",
-    "crisisRole": "Durante uma missão de reconhecimento fotográfico sobre Cuba no auge da crise, em 27 de outubro ('Sábado Negro'), o U-2 de Anderson foi abatido por um míssil terra-ar soviético. Sua morte aumentou drasticamente a tensão, quase levando a uma retaliação militar americana imediata.",
-    "quote": "N/A",
-    "specialTrait": "Sacrifício Heroico: Sua derrota inspira os aliados, aumentando o ataque deles no próximo turno."
+    "stats": { "hp": 70, "attack": 15, "speed": 90 }
   },
   {
     "id": "dobrynin",
@@ -76,10 +54,6 @@
     "description": "Embaixador soviético nos EUA. Sua linha de comunicação secreta com RFK foi essencial para o acordo.",
     "image": "figure_dobrynin.jpg",
     "isStarter": true,
-    "stats": { "hp": 80, "attack": 15, "speed": 75 },
-    "bio": "Anatoly Dobrynin serviu como embaixador soviético nos Estados Unidos por 24 anos, tornando-se uma figura central nas relações EUA-URSS. Ele era conhecido por seu profissionalismo e por manter canais de comunicação abertos mesmo nos tempos mais tensos.",
-    "crisisRole": "Durante a crise, Dobrynin foi o principal intermediário entre o Kremlin e a Casa Branca. Suas reuniões secretas com Robert F. Kennedy foram o 'canal secreto' que permitiu a negociação direta e a troca de propostas que finalmente resolveram o impasse.",
-    "quote": "O elemento mais importante nas relações entre os estados é a confiança.",
-    "specialTrait": "Diplomacia Discreta: Reduz o nível de 'Ameaça' a cada turno em que está ativo."
+    "stats": { "hp": 80, "attack": 15, "speed": 75 }
   }
 ]
