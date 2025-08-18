@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import { Key, Trophy, Swords, ArrowLeft, ArrowRight, ArrowUp, ArrowDown, Space } from 'lucide-react';
 
 // --- CONFIGURAÇÕES DO JOGO ---
 const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
-const LINES_TO_WIN = 10;
+const LINES_TO_WIN = 1;
 
+// --- FORMAS DOS MÍSSEIS (BLOCOS DE TETRIS) ---
 const PIECES = {
   0: { shape: [[0]], color: 'transparent' },
   I: { shape: [[1, 1, 1, 1]], color: '#3b82f6' },
@@ -50,10 +50,9 @@ const ControlsPanel = () => (
 );
 
 interface TetrisProps {
-    opponent: any;
+  opponent: any;
   onWin: () => void;
   onLose: () => void;
-  
 }
 
 const MissileCrisisTetris: React.FC<TetrisProps> = ({ onWin, onLose }) => {
@@ -71,7 +70,7 @@ const MissileCrisisTetris: React.FC<TetrisProps> = ({ onWin, onLose }) => {
     const newPiece = PIECES[randShape];
     return {
       pos: { x: Math.floor(BOARD_WIDTH / 2) - Math.floor(newPiece.shape[0].length / 2), y: 0 },
-      shape: newPiece.shape,
+      shape: JSON.parse(JSON.stringify(newPiece.shape)), // Deep copy da forma
       color: newPiece.color,
     };
   }
@@ -91,13 +90,16 @@ const MissileCrisisTetris: React.FC<TetrisProps> = ({ onWin, onLose }) => {
     return false;
   }, []);
   
-  // >> FUNÇÃO CORRIGIDA <<
   const lockPieceAndReset = useCallback((pieceToLock: Piece) => {
     const newBoard = JSON.parse(JSON.stringify(board));
     pieceToLock.shape.forEach((row, y) => {
       row.forEach((value, x) => {
         if (value !== 0) {
-          newBoard[pieceToLock.pos.y + y][pieceToLock.pos.x + x] = [1, pieceToLock.color];
+          const boardY = pieceToLock.pos.y + y;
+          const boardX = pieceToLock.pos.x + x;
+          if (boardY >= 0 && boardY < BOARD_HEIGHT && boardX >= 0 && boardX < BOARD_WIDTH) {
+            newBoard[boardY][boardX] = [1, pieceToLock.color];
+          }
         }
       });
     });
@@ -124,62 +126,88 @@ const MissileCrisisTetris: React.FC<TetrisProps> = ({ onWin, onLose }) => {
   }, [board, nextPiece, checkCollision]);
 
   const drop = useCallback(() => {
-    const newPiece = { ...player, pos: { ...player.pos, y: player.pos.y + 1 } };
-    if (!checkCollision(newPiece, board)) {
-      setPlayer(newPiece);
-    } else {
-      if (player.pos.y < 1) {
-        setGameState('lost');
-        return;
+    setPlayer(prev => {
+      const newPiece = { ...prev, pos: { x: prev.pos.x, y: prev.pos.y + 1 } };
+      if (!checkCollision(newPiece, board)) {
+        return newPiece;
+      } else {
+        if (prev.pos.y < 1) {
+          setGameState('lost');
+        }
+        lockPieceAndReset(prev);
+        return prev;
       }
-      lockPieceAndReset(player);
-    }
-  }, [board, player, checkCollision, lockPieceAndReset]);
+    });
+  }, [board, checkCollision, lockPieceAndReset]);
 
   const movePlayer = (dir: -1 | 1) => {
-    const newPiece = { ...player, pos: { ...player.pos, x: player.pos.x + dir } };
-    if (!checkCollision(newPiece, board)) {
-      setPlayer(newPiece);
-    }
+    setPlayer(prev => {
+      const newPiece = { ...prev, pos: { ...prev.pos, x: prev.pos.x + dir } };
+      if (!checkCollision(newPiece, board)) {
+        return newPiece;
+      }
+      return prev;
+    });
   };
-
+  
   const rotatePlayer = () => {
-    const matrix = player.shape;
-    const rotated = matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex])).reverse();
-    let newPiece = { ...player, shape: rotated };
-    
-    if (checkCollision(newPiece, board)) {
-      const kickedRight = { ...newPiece, pos: { ...newPiece.pos, x: newPiece.pos.x + 1 }};
-      if (!checkCollision(kickedRight, board)) { setPlayer(kickedRight); return; }
-      const kickedLeft = { ...newPiece, pos: { ...newPiece.pos, x: newPiece.pos.x - 1 }};
-      if (!checkCollision(kickedLeft, board)) { setPlayer(kickedLeft); return; }
-      const kickedLeftTwice = { ...newPiece, pos: { ...newPiece.pos, x: newPiece.pos.x - 2 }};
-      if (!checkCollision(kickedLeftTwice, board)) { setPlayer(kickedLeftTwice); return; }
-    } else {
-      setPlayer(newPiece);
-    }
+    setPlayer(prev => {
+      // Não rotacionar a peça O (quadrado)
+      if (prev.color === '#ef4444') return prev; // Cor da peça O
+      
+      // Criar uma rotação 90 graus no sentido horário
+      const matrix = prev.shape;
+      const rotated = matrix[0].map((_, colIndex) => 
+        matrix.map(row => row[colIndex]).reverse()
+      );
+      
+      const newPiece = {
+        ...prev,
+        shape: rotated
+      };
+
+      // Tentar diferentes posições para encaixar a peça rotacionada
+      const offsets = [0, 1, -1, 2, -2];
+      for (const offset of offsets) {
+        const testPiece = {
+          ...newPiece,
+          pos: { ...newPiece.pos, x: prev.pos.x + offset }
+        };
+        
+        if (!checkCollision(testPiece, board)) {
+          return testPiece;
+        }
+      }
+      
+      // Se não conseguir rotacionar, manter a peça original
+      return prev;
+    });
   };
 
   const hardDrop = () => {
-    let tempPiece = { ...player };
-    while (!checkCollision({ ...tempPiece, pos: { ...tempPiece.pos, y: tempPiece.pos.y + 1 } }, board)) {
-      tempPiece.pos.y += 1;
-    }
-    lockPieceAndReset(tempPiece);
+    setPlayer(prev => {
+      let tempPiece = { ...prev };
+      while (!checkCollision({ ...tempPiece, pos: { ...tempPiece.pos, y: tempPiece.pos.y + 1 } }, board)) {
+        tempPiece.pos.y += 1;
+      }
+      lockPieceAndReset(tempPiece);
+      return tempPiece;
+    });
   };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (gameState !== 'playing') return;
-      if (event.keyCode === 37) movePlayer(-1);
-      else if (event.keyCode === 39) movePlayer(1);
-      else if (event.keyCode === 40) drop();
-      else if (event.keyCode === 38) rotatePlayer();
-      else if (event.keyCode === 32) {
-        event.preventDefault();
-        hardDrop();
-      }
+      
+      event.preventDefault(); // Prevenir scroll da página
+      
+      if (event.keyCode === 37) movePlayer(-1);      // Seta esquerda
+      else if (event.keyCode === 39) movePlayer(1);  // Seta direita
+      else if (event.keyCode === 40) drop();         // Seta para baixo
+      else if (event.keyCode === 38) rotatePlayer(); // Seta para cima
+      else if (event.keyCode === 32) hardDrop();     // Espaço
     };
+    
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [gameState, player, board, drop]);
@@ -210,21 +238,26 @@ const MissileCrisisTetris: React.FC<TetrisProps> = ({ onWin, onLose }) => {
   }, [gameState, onWin, onLose]);
   
   useEffect(() => {
-      let gameInterval: NodeJS.Timeout | undefined;
-      if(gameState === 'playing') {
-          gameInterval = setInterval(drop, dropTime);
-      }
-      return () => clearInterval(gameInterval);
+    let gameInterval: NodeJS.Timeout | undefined;
+    if(gameState === 'playing') {
+      gameInterval = setInterval(drop, dropTime);
+    }
+    return () => clearInterval(gameInterval);
   }, [gameState, dropTime, drop]);
 
-  const displayBoard = JSON.parse(JSON.stringify(board));
-  if (player.shape[0][0] !== 0) {
+  // Renderizar o tabuleiro com a peça atual
+  const displayBoard = board.map(row => row.map(cell => [...cell])) as [number, string][][];
+  
+  // Adicionar a peça atual ao tabuleiro de display
+  if (player.shape && player.shape.length > 0) {
     player.shape.forEach((row, y) => {
       row.forEach((value, x) => {
         if (value !== 0) {
           const boardY = player.pos.y + y;
           const boardX = player.pos.x + x;
-          if (boardY < BOARD_HEIGHT) displayBoard[boardY][boardX] = [1, player.color];
+          if (boardY >= 0 && boardY < BOARD_HEIGHT && boardX >= 0 && boardX < BOARD_WIDTH) {
+            displayBoard[boardY][boardX] = [1, player.color];
+          }
         }
       });
     });
@@ -232,11 +265,34 @@ const MissileCrisisTetris: React.FC<TetrisProps> = ({ onWin, onLose }) => {
 
   if (gameState !== 'playing') {
     return (
-        <div className="fixed inset-0 bg-black z-[100] flex items-center justify-center font-mono">
-            {gameState === 'intro' && <p className="text-white text-2xl">INICIANDO SIMULAÇÃO DE CONTENÇÃO...</p>}
-            {gameState === 'won' && <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}><div className="text-center text-white p-8 bg-slate-900 border-2 border-yellow-500 rounded-lg"><Trophy className="w-20 h-20 text-yellow-400 mx-auto" /><h1 className="text-4xl font-bold mt-4">VITÓRIA!</h1><p className="text-lg text-gray-300 mt-2">Ameaça neutralizada.</p><div className="my-6 text-2xl font-bold text-yellow-300 flex items-center justify-center gap-2"><Key/> +1 Chave de Análise</div><Button size="lg" className="bg-green-600 hover:bg-green-700" onClick={onWin}>Prosseguir</Button></div></motion.div>}
-            {gameState === 'lost' && <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}><div className="text-center text-white p-8 bg-slate-900 border-2 border-red-500 rounded-lg"><Swords className="w-20 h-20 text-red-400 mx-auto" /><h1 className="text-4xl font-bold mt-4">FALHA NA MISSÃO</h1><p className="text-lg text-gray-300 mt-2">A ameaça sobrepujou as defesas.</p><Button size="lg" className="bg-blue-600 hover:bg-blue-700 mt-6" onClick={onLose}>Voltar para a Timeline</Button></div></motion.div>}
-        </div>
+      <div className="fixed inset-0 bg-black z-[100] flex items-center justify-center font-mono">
+        {gameState === 'intro' && (
+          <p className="text-white text-2xl">INICIANDO SIMULAÇÃO DE CONTENÇÃO...</p>
+        )}
+        {gameState === 'won' && (
+          <div className="text-center text-white p-8 bg-slate-900 border-2 border-yellow-500 rounded-lg">
+            <Trophy className="w-20 h-20 text-yellow-400 mx-auto" />
+            <h1 className="text-4xl font-bold mt-4">VITÓRIA!</h1>
+            <p className="text-lg text-gray-300 mt-2">Ameaça neutralizada.</p>
+            <div className="my-6 text-2xl font-bold text-yellow-300 flex items-center justify-center gap-2">
+              <Key/> +1 Chave de Análise
+            </div>
+            <Button size="lg" className="bg-green-600 hover:bg-green-700" onClick={onWin}>
+              Prosseguir
+            </Button>
+          </div>
+        )}
+        {gameState === 'lost' && (
+          <div className="text-center text-white p-8 bg-slate-900 border-2 border-red-500 rounded-lg">
+            <Swords className="w-20 h-20 text-red-400 mx-auto" />
+            <h1 className="text-4xl font-bold mt-4">FALHA NA MISSÃO</h1>
+            <p className="text-lg text-gray-300 mt-2">A ameaça sobrepujou as defesas.</p>
+            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 mt-6" onClick={onLose}>
+              Voltar para a Timeline
+            </Button>
+          </div>
+        )}
+      </div>
     );
   }
 
@@ -245,16 +301,37 @@ const MissileCrisisTetris: React.FC<TetrisProps> = ({ onWin, onLose }) => {
       <div className="flex gap-8 items-center">
         <div className="grid grid-cols-10 gap-px bg-slate-900 border-4 border-slate-600 p-1">
           {displayBoard.map((row, y) =>
-            row.map((cell, x) => <div key={`${y}-${x}`} className="w-8 h-8" style={{ backgroundColor: cell[1] }} />)
+            row.map((cell, x) => (
+              <div 
+                key={`${y}-${x}`} 
+                className="w-8 h-8 border border-slate-700" 
+                style={{ backgroundColor: cell[1] === 'transparent' ? '#1e293b' : cell[1] }} 
+              />
+            ))
           )}
         </div>
         <div className="w-52 text-white">
           <div className="bg-slate-800 p-4 rounded-lg border-2 border-slate-600">
             <h2 className="text-lg font-bold text-cyan-400 mb-2 text-center">PRÓXIMA AMEAÇA</h2>
-            <div className="grid grid-cols-4 gap-px mx-auto w-min">
-              {nextPiece.shape.map((row, y) => row.map((cell, x) => (
-                <div key={`${y}-${x}`} className="w-6 h-6" style={{ backgroundColor: cell !== 0 ? nextPiece.color : 'transparent' }} />
-              )))}
+            <div className="flex justify-center items-center min-h-[80px]">
+              <div 
+                className="grid gap-px p-2 bg-slate-700 rounded"
+                style={{
+                  gridTemplateColumns: `repeat(${nextPiece.shape[0]?.length || 1}, minmax(0, 1fr))`
+                }}
+              >
+                {nextPiece.shape.map((row, y) =>
+                  row.map((cell, x) => (
+                    <div 
+                      key={`next-${y}-${x}`} 
+                      className="w-6 h-6 border border-slate-600" 
+                      style={{ 
+                        backgroundColor: cell !== 0 ? nextPiece.color : '#374151'
+                      }} 
+                    />
+                  ))
+                )}
+              </div>
             </div>
           </div>
           <GameInfoPanel title={<>AMEAÇAS<br/>NEUTRALIZADAS</>} value={`${linesCleared} / ${LINES_TO_WIN}`} />
