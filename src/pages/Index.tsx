@@ -19,18 +19,21 @@ import { Button } from '../components/ui/button';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../components/ui/resizable';
 
 // Dados e Tipos
-import crisisData from '../data/crisisData.json'; // Mantido como crisisData, INALTERADO
+import crisisData from '../data/crisisData.json';
 import allFiguresData from '../data/historicalFigures.json';
 import opponentsData from '../data/opponents.json';
 import { NetworkNode, DailyEvent, HistoricalFigure, DailyOpponent } from '../types/crisisDataTypes';
 import Lootbox from '@/components/LootBox';
 import BossBattle from '../components/BossBattle';
 
+// --- NOVA IMPORTAÇÃO DO CHEFÃO FINAL ---
+import { theFinalBoss } from '../data/finalBoss'; // Importa o chefão completo
+
+
 const allFigures = allFiguresData as HistoricalFigure[];
 const opponents = opponentsData as Record<string, DailyOpponent>;
 
-// --- ALTERAÇÃO AQUI: DEFINIR O JOGO PARA 10 DIAS ---
-const CRISIS_DAYS_LIMIT = 10; // <--- MUDADO PARA 10 DIAS
+const CRISIS_DAYS_LIMIT = 10; // Mantido em 10 dias
 const limitedCrisisEvents = crisisData.events.slice(0, CRISIS_DAYS_LIMIT);
 const sortedCrisisDates = limitedCrisisEvents.map(event => event.date).sort();
 
@@ -76,10 +79,20 @@ const Index: React.FC<IndexProps> = ({
   const [pendingDate, setPendingDate] = useState<string | null>(null);
   const [showAgentSelection, setShowAgentSelection] = useState<boolean>(false);
   const [showBattleScreen, setShowBattleScreen] = useState<boolean>(false);
+  // selectedAgentForBattle deve ser HistoricalFigure, pois é seu personagem
   const [selectedAgentForBattle, setSelectedAgentForBattle] = useState<HistoricalFigure | null>(null);
   const [currentOpponent, setCurrentOpponent] = useState<DailyOpponent | null>(null);
 
   const [showBossMinigame, setShowBossMinigame] = useState<boolean>(false);
+
+  // --- REMOVIDO: O useMemo que derivava o chefão de opponentsData ---
+  // const finalBossFigure: DailyOpponent = useMemo(() => { ... }, []);
+
+  // Define um playerAgent padrão para testes, se o jogo não tiver seleção prévia
+  const defaultPlayerAgent: HistoricalFigure = useMemo(() => {
+    return userCollection.length > 0 ? userCollection[0] : allFigures[0];
+  }, [userCollection]);
+
 
   useEffect(() => {
     const initialFigures = allFigures.filter(figure => 
@@ -106,8 +119,9 @@ const Index: React.FC<IndexProps> = ({
       return; 
     }
 
-    // Se é o ÚLTIMO DIA da linha do tempo (AGORA 10 DIAS) E o jogador está nele
+    // Se é o ÚLTIMO DIA da linha do tempo (10 DIAS) E o jogador está nele
     if (isLastTimelineDay && currentIndex === highestUnlockedLevel) {
+        // --- USAMOS O CHEFÃO IMPORTADO AQUI ---
         setShowBossMinigame(true); 
         return; 
     }
@@ -124,10 +138,14 @@ const Index: React.FC<IndexProps> = ({
             if (opponentForCurrentDay.battleType === 'tetris') {
                 setShowBattleScreen(true);
             } else {
-                setShowAgentSelection(true);
+                if (!selectedAgentForBattle) {
+                    setShowAgentSelection(true); 
+                } else {
+                    setShowBattleScreen(true);
+                }
             }
         } else {
-            console.log("Chegou ao final dos dias limitados, sem batalha pendente.");
+            console.log("Chegou ao final dos dias limitados, sem batalha diária pendente para o último dia");
         }
     } else {
         const nextIndex = currentIndex + 1;
@@ -139,7 +157,7 @@ const Index: React.FC<IndexProps> = ({
             console.log("Não há mais dias para avançar na linha do tempo limitada.");
         }
     }
-  }, [selectedDate, highestUnlockedLevel, isLastTimelineDay, opponents]);
+  }, [selectedDate, highestUnlockedLevel, isLastTimelineDay, opponents, selectedAgentForBattle]);
 
   const handleAgentSelectForBattle = useCallback((agent: HistoricalFigure) => {
     setSelectedAgentForBattle(agent);
@@ -246,7 +264,6 @@ const Index: React.FC<IndexProps> = ({
 
   const formattedDate = new Date(selectedDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
 
-  // Pula para o último dia DOS 10 DIAS (índice 9)
   const handleJumpToLastDay = useCallback(() => {
     const lastDayIndex = sortedCrisisDates.length - 1; 
     setSelectedDate(sortedCrisisDates[lastDayIndex]);
@@ -327,7 +344,6 @@ const Index: React.FC<IndexProps> = ({
         {isTimelineVisible && (
           <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="fixed bottom-0 left-0 right-0 z-40 bg-black/50 backdrop-blur-md border-t border-cyan-500/30 p-4">
             <Timeline 
-              // --- AGORA PASSA TODOS OS 10 EVENTOS PARA O TIMELINE ---
               events={limitedCrisisEvents.map(e => ({ date: e.date, title: e.title }))} 
               selectedDate={selectedDate} 
               onDateChange={handleDateChange} 
@@ -350,13 +366,14 @@ const Index: React.FC<IndexProps> = ({
             if (currentOpponent.battleType === 'tetris') {
                 return <MissileCrisisTetris opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
             }
+            // Garante que selectedAgentForBattle não é nulo para outras batalhas
             if (selectedAgentForBattle) {
                 if (currentOpponent.battleType === 'rhythm') {
                     return <RhythmBattle playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
                 }
                 return <BattleScreen playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
             }
-            return null;
+            return null; // Caso de fallback se selectedAgentForBattle for nulo (não deveria acontecer)
         })()}
 
         {showFinalQuiz && ( 
@@ -380,8 +397,11 @@ const Index: React.FC<IndexProps> = ({
           /> 
         )}
 
-        {showBossMinigame && ( 
+        {/* Renderiza a BossBattle APENAS quando showBossMinigame for true */}
+        {showBossMinigame && defaultPlayerAgent && ( // Assegura que defaultPlayerAgent exista
           <BossBattle 
+            playerAgent={selectedAgentForBattle || defaultPlayerAgent} // Prioriza o selecionado, senão usa o padrão
+            bossFigure={theFinalBoss} // <--- AQUI USAMOS O NOVO CHEFÃO IMPORTADO
             onWin={handleBossMinigameWin} 
             onLose={handleBossMinigameLose} 
           />
