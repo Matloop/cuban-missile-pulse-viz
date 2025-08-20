@@ -10,8 +10,8 @@ import RiskIndicator from '../components/RiskIndicator';
 import AgentSelection from '../components/AgentSelection';
 import BattleScreen from '../components/BattleScreen';
 import MissileCrisisTetris from '../components/MissileCrisisTetris';
-// import FinalQuiz from '../components/Quiz'; // <--- REMOVIDO OU RENOMEADO
-import EventQuiz from '../components/EventQuiz'; // <--- NOVA IMPORTAÇÃO (ou renomeado de Quiz)
+import FinalQuiz from '../components/Quiz'; 
+import EventQuiz from '../components/EventQuiz'; 
 import Collection from '../components/Collection';
 
 import RhythmBattle from '@/components/RhythmBattle';
@@ -23,17 +23,16 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../compone
 import crisisData from '../data/crisisData.json'; 
 import allFiguresData from '../data/historicalFigures.json';
 import opponentsData from '../data/opponents.json';
-import quizQuestionsData from '../data/quizQuestions.json'; // <--- NOVA IMPORTAÇÃO DO QUIZ JSON
+import quizQuestionsData from '../data/quizQuestions.json'; 
 import { NetworkNode, DailyEvent, HistoricalFigure, DailyOpponent, QuizData } from '../types/crisisDataTypes';
 import Lootbox from '@/components/LootBox';
 import BossBattle from '../components/BossBattle';
 import { theFinalBoss } from '../data/finalBoss'; 
-import FinalQuiz from '@/components/Quiz';
 
 
 const allFigures = allFiguresData as HistoricalFigure[];
 const opponents = opponentsData as Record<string, DailyOpponent>;
-const allQuizQuestions: Record<string, QuizData[]> = quizQuestionsData; // Tipagem para as perguntas
+const allQuizQuestions: Record<string, QuizData[]> = quizQuestionsData;
 
 const CRISIS_DAYS_LIMIT = 10; 
 const limitedCrisisEvents = crisisData.events.slice(0, CRISIS_DAYS_LIMIT);
@@ -41,11 +40,11 @@ const sortedCrisisDates = limitedCrisisEvents.map(event => event.date).sort();
 
 
 interface IndexProps {
-  initialCollection: string[];
+  initialCollection: string[]; // Espera-se que contenha APENAS o ID do starter escolhido
   lootboxTokens: number;
   onAddToken: () => void;
   onSpendToken: () => void;
-  onStartQuiz: () => void; // Esta prop será usada para o quiz diário
+  onStartQuiz: () => void;
 }
 
 const Index: React.FC<IndexProps> = ({ 
@@ -53,7 +52,7 @@ const Index: React.FC<IndexProps> = ({
   lootboxTokens, 
   onAddToken, 
   onSpendToken, 
-  onStartQuiz: onStartQuizProp // Renomeado para evitar conflito com a função local
+  onStartQuiz: onStartQuizProp 
 }) => {
   const [selectedDate, setSelectedDate] = useState<string>(limitedCrisisEvents[0].date);
   
@@ -72,9 +71,8 @@ const Index: React.FC<IndexProps> = ({
     return currentIndex === sortedCrisisDates.length - 1;
   }, [selectedDate]);
 
-  // Estados para o Quiz Diário/Evento
-  const [showEventQuiz, setShowEventQuiz] = useState<boolean>(false); // <--- NOVO ESTADO
-  const [currentEventQuiz, setCurrentEventQuiz] = useState<QuizData | null>(null); // <--- NOVO ESTADO
+  const [showEventQuiz, setShowEventQuiz] = useState<boolean>(false);
+  const [currentEventQuiz, setCurrentEventQuiz] = useState<QuizData | null>(null);
 
   const [showFinalQuiz, setShowFinalQuiz] = useState<boolean>(false); 
   const [showLootboxOpening, setShowLootboxOpening] = useState<boolean>(false);
@@ -91,16 +89,23 @@ const Index: React.FC<IndexProps> = ({
   const [showBossMinigame, setShowBossMinigame] = useState<boolean>(false);
 
   const defaultPlayerAgent: HistoricalFigure = useMemo(() => {
+    // Isso deve ser revisado se a coleção do usuário começar vazia
+    // e for populada APENAS pelo `initialCollection`
     return userCollection.length > 0 ? userCollection[0] : allFigures[0];
   }, [userCollection]);
 
 
   useEffect(() => {
+    // --- MUDANÇA CRÍTICA AQUI ---
+    // A coleção do usuário deve incluir SOMENTE o ID passado via initialCollection.
+    // A flag `isStarter` não deve ser usada aqui, pois StarterSelection já selecionou APENAS UM.
     const initialFigures = allFigures.filter(figure => 
-        (initialCollection || []).includes(figure.id) || figure.isStarter
+        (initialCollection || []).includes(figure.id) 
+        // || figure.isStarter // <--- REMOVIDO: ESTA ERA A CAUSA DO PROBLEMA
     );
     setUserCollection(initialFigures);
-  }, [initialCollection]);
+  }, [initialCollection]); // Depende apenas de initialCollection
+
 
   useEffect(() => {
       setSelectedNode(null);
@@ -203,33 +208,36 @@ const Index: React.FC<IndexProps> = ({
     setShowFinalQuiz(false);
   }, [onAddToken]);
 
-  // --- NOVA LÓGICA PARA O QUIZ DIÁRIO ---
   const handleStartDailyQuiz = useCallback(() => {
     const dailyQuestions = allQuizQuestions[selectedDate];
-    const generalQuestions = allQuizQuestions['geral'];
-    
-    // Combine as perguntas do dia atual com as perguntas gerais
-    const availableQuestions = [...(dailyQuestions || []), ...(generalQuestions || [])];
+    let selectedQuiz: QuizData | null = null;
 
-    if (availableQuestions.length > 0) {
-      // Seleciona uma pergunta aleatória
-      const randomQuestion = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
-      setCurrentEventQuiz(randomQuestion);
+    if (dailyQuestions && dailyQuestions.length > 0) {
+      selectedQuiz = dailyQuestions[Math.floor(Math.random() * dailyQuestions.length)];
+    } else {
+      const generalQuestions = allQuizQuestions['geral'];
+      if (generalQuestions && generalQuestions.length > 0) {
+        selectedQuiz = generalQuestions[Math.floor(Math.random() * generalQuestions.length)];
+      }
+    }
+
+    if (selectedQuiz) {
+      setCurrentEventQuiz(selectedQuiz);
       setShowEventQuiz(true);
     } else {
-      alert("Nenhuma pergunta disponível para este dia!");
+      alert("Nenhuma pergunta de quiz disponível para este dia.");
     }
-  }, [selectedDate]);
+  }, [selectedDate, allQuizQuestions]);
 
   const handleDailyQuizComplete = useCallback((isCorrect: boolean) => {
     if (isCorrect) {
-      onAddToken(); // Recompensa se acertar
+      onAddToken(); 
       alert("Resposta Correta! Você ganhou uma Chave de Análise!");
     } else {
       alert("Resposta Incorreta. Revise os detalhes!");
     }
-    setShowEventQuiz(false); // Fecha o quiz
-    setCurrentEventQuiz(null); // Limpa a pergunta atual
+    setShowEventQuiz(false); 
+    setCurrentEventQuiz(null); 
   }, [onAddToken]);
 
   const handleOpenLootbox = useCallback(() => {
@@ -315,7 +323,6 @@ const Index: React.FC<IndexProps> = ({
             OPERAÇÃO CHRONOS // ANÁLISE: CRISE DOS MÍSSEIS
           </h1>
           <div className="flex items-center gap-2">
-            {/* O BOTÃO PARA O QUIZ DIÁRIO AGORA USA handleStartDailyQuiz */}
             <Button onClick={handleStartDailyQuiz} className="bg-gray-700 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-md">
               <BookOpen className="w-4 h-4 mr-2" /> Responder Quiz (Diário)
             </Button>
@@ -434,8 +441,7 @@ const Index: React.FC<IndexProps> = ({
           />
         )}
 
-        {/* --- NOVO: RENDERIZAÇÃO DO QUIZ DIÁRIO/EVENTO --- */}
-        {showEventQuiz && currentEventQuiz && ( // <--- NOVO
+        {showEventQuiz && currentEventQuiz && ( 
           <EventQuiz
             quiz={currentEventQuiz}
             onComplete={handleDailyQuizComplete}
