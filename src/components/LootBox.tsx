@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { Key, Sparkles, Trophy } from 'lucide-react';
+import { Key, Sparkles, Trophy, ArrowUpCircle } from 'lucide-react'; // Adicionado ArrowUpCircle
 import { Badge } from './ui/badge';
 import { HistoricalFigure } from '../types/crisisDataTypes';
 import { cn } from '@/lib/utils';
@@ -42,9 +42,10 @@ const GodRay = ({ i, rarityColor }: { i: number; rarityColor: string }) => (
 interface LootboxProps {
   figure: HistoricalFigure;
   onCollect: () => void;
+  isDuplicate: boolean; // Nova propriedade
 }
 
-const Lootbox: React.FC<LootboxProps> = ({ figure, onCollect }) => {
+const Lootbox: React.FC<LootboxProps> = ({ figure, onCollect, isDuplicate }) => {
   const [animationState, setAnimationState] = useState<'shaking' | 'cracking' | 'revealing'>('shaking');
   const styles = rarityStyles[figure.rarity];
 
@@ -93,14 +94,26 @@ const Lootbox: React.FC<LootboxProps> = ({ figure, onCollect }) => {
               <Card className={cn("bg-slate-900/95 text-center max-w-sm w-full shadow-2xl border relative", styles.base, styles.shadow)}>
                 <div className="p-6">
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                    <Trophy className="w-12 h-12 mx-auto text-yellow-400 mb-4" />
-                    <h2 className="text-2xl font-bold text-white mb-2">Figura Desbloqueada!</h2>
+                    {isDuplicate ? (
+                      <ArrowUpCircle className="w-12 h-12 mx-auto text-green-400 mb-4" />
+                    ) : (
+                      <Trophy className="w-12 h-12 mx-auto text-yellow-400 mb-4" />
+                    )}
+                    <h2 className="text-2xl font-bold text-white mb-2">
+                      {isDuplicate ? 'Personagem Repetido!' : 'Figura Desbloqueada!'}
+                    </h2>
                   </motion.div>
                   <motion.img initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.4, type: 'spring', stiffness: 150 }} src={getFigureImageUrl(figure.image)} alt={figure.name} className={cn("w-32 h-32 object-cover rounded-full mx-auto my-4 border-4", styles.base)} />
                   <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
                     <h3 className="text-3xl font-bold text-white">{figure.name}</h3>
                     <Badge variant="outline" className={cn("mt-2", styles.base, styles.text, styles.bg.replace('/20', '/10'), figure.rarity === 'Lendário' && 'animate-pulse')}>{figure.rarity}</Badge>
-                    <p className="text-gray-300 mt-4 text-sm">{figure.description}</p>
+                    {isDuplicate ? (
+                      <p className="text-green-300 mt-4 text-sm">
+                        Seus atributos foram fortalecidos em <strong>20%</strong>!
+                      </p>
+                    ) : (
+                      <p className="text-gray-300 mt-4 text-sm">{figure.description}</p>
+                    )}
                   </motion.div>
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
                     <Button onClick={onCollect} className={cn("mt-6 w-full text-white", styles.bg.replace('/10', '/60'), `hover:${styles.bg.replace('/10', '/70')}`)}>Coletar</Button>

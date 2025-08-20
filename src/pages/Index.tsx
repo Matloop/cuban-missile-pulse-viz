@@ -11,8 +11,10 @@ import AgentSelection from '../components/AgentSelection';
 import BattleScreen from '../components/BattleScreen';
 import MissileCrisisTetris from '../components/MissileCrisisTetris';
 import FinalQuiz from '../components/Quiz';
-
 import Collection from '../components/Collection';
+// Corrigido para o nome do arquivo enviado anteriormente
+import RhythmBattle from '@/components/RhythmBattle';
+
 import { Button } from '../components/ui/button';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../components/ui/resizable';
 
@@ -22,7 +24,6 @@ import allFiguresData from '../data/historicalFigures.json';
 import opponentsData from '../data/opponents.json';
 import { NetworkNode, NetworkEvent, HistoricalFigure } from '../types/crisisDataTypes';
 import Lootbox from '@/components/LootBox';
-import RhythmBattle from '@/components/RhythmBattle';
 
 const allFigures = allFiguresData as HistoricalFigure[];
 const opponents = opponentsData as Record<string, any>;
@@ -37,14 +38,17 @@ const Index: React.FC<IndexProps> = ({ initialCollection }) => {
   const [selectedNode, setSelectedNode] = useState<NetworkNode | null>(null);
   const [isTimelineVisible, setIsTimelineVisible] = useState(true);
   
-  const [userCollection, setUserCollection] = useState<string[]>([]);
+  // Alterado para armazenar o objeto completo da figura para facilitar a atualização dos stats
+  const [userCollection, setUserCollection] = useState<HistoricalFigure[]>([]);
+  
   const [highestUnlockedLevel, setHighestUnlockedLevel] = useState<number>(0);
   const [isFinalDay, setIsFinalDay] = useState(false);
   
   const [showFinalQuiz, setShowFinalQuiz] = useState<boolean>(false);
-  const [lootboxTokens, setLootboxTokens] = useState<number>(1);
+  const [lootboxTokens, setLootboxTokens] = useState<number>(100);
   const [showLootboxOpening, setShowLootboxOpening] = useState<boolean>(false);
   const [unlockedFigure, setUnlockedFigure] = useState<HistoricalFigure | null>(null);
+  const [isDuplicateInLootbox, setIsDuplicateInLootbox] = useState<boolean>(false);
   const [showCollection, setShowCollection] = useState<boolean>(false);
 
   const [pendingDate, setPendingDate] = useState<string | null>(null);
@@ -53,9 +57,18 @@ const Index: React.FC<IndexProps> = ({ initialCollection }) => {
   const [selectedAgentForBattle, setSelectedAgentForBattle] = useState<HistoricalFigure | null>(null);
   const [currentOpponent, setCurrentOpponent] = useState<any | null>(null);
 
-  useEffect(() => {
-    setUserCollection(initialCollection || []);
-  }, [initialCollection]);
+  // Dentro de Index.tsx (ou similar) - VERSÃO CORRIGIDA
+
+useEffect(() => {
+  // Se não houver uma coleção inicial (ex: carregando um jogo salvo), não faça nada.
+  if (!initialCollection) return;
+
+  // Popula a coleção APENAS com os IDs fornecidos em initialCollection.
+  const initialFigures = allFigures.filter(figure => 
+      initialCollection.includes(figure.id)
+  );
+  setUserCollection(initialFigures);
+}, [initialCollection]);
 
   useEffect(() => {
     const eventIndex = crisisData.events.findIndex(e => e.date === selectedDate);
@@ -81,7 +94,6 @@ const Index: React.FC<IndexProps> = ({ initialCollection }) => {
     if (opponent) {
         setPendingDate(nextDate);
         setCurrentOpponent(opponent);
-        // Batalhas de Tetris não precisam de seleção de agente
         if (opponent.battleType === 'tetris') {
             setShowBattleScreen(true);
         } else {
@@ -120,8 +132,64 @@ const Index: React.FC<IndexProps> = ({ initialCollection }) => {
     setShowFinalQuiz(false);
   };
 
-  const handleOpenLootbox = useCallback(() => { /* ... (inalterado) ... */ }, [lootboxTokens]);
-  const handleCollectFigure = useCallback(() => { /* ... (inalterado) ... */ }, [unlockedFigure, userCollection]);
+  // << FUNÇÃO IMPLEMENTADA >>
+  const handleOpenLootbox = useCallback(() => {
+    if (lootboxTokens <= 0) return;
+
+    setLootboxTokens(prev => prev - 1);
+
+    const availableFigures = allFigures.filter(f => !f.isStarter && f.chance > 0);
+    const totalChance = availableFigures.reduce((sum, figure) => sum + (figure.chance || 0), 0);
+    let random = Math.random() * totalChance;
+    
+    let drawnFigure: HistoricalFigure | null = null;
+    for (const figure of availableFigures) {
+        random -= figure.chance || 0;
+        if (random <= 0) {
+            drawnFigure = figure;
+            break;
+        }
+    }
+
+    if (drawnFigure) {
+        const isDuplicate = userCollection.some(f => f.id === drawnFigure!.id);
+        setUnlockedFigure(drawnFigure);
+        setIsDuplicateInLootbox(isDuplicate);
+        setShowLootboxOpening(true);
+    }
+  }, [lootboxTokens, userCollection]);
+
+  // << FUNÇÃO IMPLEMENTADA >>
+  const handleCollectFigure = useCallback(() => {
+    if (!unlockedFigure) return;
+
+    if (isDuplicateInLootbox) {
+        // Personagem repetido: aumenta os stats em 20%
+        setUserCollection(currentCollection =>
+            currentCollection.map(figure => {
+                if (figure.id === unlockedFigure.id && figure.stats) {
+                    return {
+                        ...figure,
+                        stats: {
+                            hp: Math.round(figure.stats.hp * 1.2),
+                            attack: Math.round(figure.stats.attack * 1.2),
+                            speed: Math.round(figure.stats.speed * 1.2),
+                        }
+                    };
+                }
+                return figure;
+            })
+        );
+    } else {
+        // Novo personagem: adiciona à coleção
+        setUserCollection(currentCollection => [...currentCollection, unlockedFigure]);
+    }
+    
+    setShowLootboxOpening(false);
+    setUnlockedFigure(null);
+    setIsDuplicateInLootbox(false);
+  }, [unlockedFigure, isDuplicateInLootbox]);
+
   const handleNodeSelect = (node: NetworkNode) => setSelectedNode(prev => (prev?.id === node.id ? null : node));
   
   const formattedDate = new Date(selectedDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
@@ -186,49 +254,29 @@ const Index: React.FC<IndexProps> = ({ initialCollection }) => {
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {showAgentSelection && ( <AgentSelection userCollection={userCollection} allFigures={allFigures} onSelect={handleAgentSelectForBattle} onCancel={() => setShowAgentSelection(false)} /> )}
+        {showAgentSelection && ( <AgentSelection userCollection={userCollection.map(f => f.id)} allFigures={allFigures} onSelect={handleAgentSelectForBattle} onCancel={() => setShowAgentSelection(false)} /> )}
         
-        {/* >> CORREÇÃO FINAL AQUI << */}
-        {showBattleScreen && currentOpponent && (
-            currentOpponent.battleType === 'tetris' ? (
-                <MissileCrisisTetris
-                    opponent={currentOpponent}
-                    onWin={handleBattleWin}
-                    onLose={handleBattleLose}
-                />
-            ) : (
-                selectedAgentForBattle && (
-                    <BattleScreen
-                        playerAgent={selectedAgentForBattle}
-                        opponent={currentOpponent}
-                        onWin={handleBattleWin}
-                        onLose={handleBattleLose}
-                    />
-                )
-            )
-        )}
-        {showBattleScreen && currentOpponent && (
-            currentOpponent.battleType === 'rhythm' ? (
-                <RhythmBattle
-                    playerAgent={selectedAgentForBattle}
-                    opponent={currentOpponent}
-                    onWin={handleBattleWin}
-                    onLose={handleBattleLose}
-                />
-            ) : (
-                selectedAgentForBattle && (
-                    <BattleScreen
-                        playerAgent={selectedAgentForBattle}
-                        opponent={currentOpponent}
-                        onWin={handleBattleWin}
-                        onLose={handleBattleLose}
-                    />
-                )
-            )
-        )}
+        {/* Bloco de renderização de Batalha CORRIGIDO */}
+        {showBattleScreen && currentOpponent && (() => {
+            if (currentOpponent.battleType === 'tetris') {
+                return <MissileCrisisTetris opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
+            }
+            if (selectedAgentForBattle) {
+                if (currentOpponent.battleType === 'rhythm') {
+                    return <RhythmBattle playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
+                }
+                // Batalha padrão
+                return <BattleScreen playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
+            }
+            return null;
+        })()}
 
         {showFinalQuiz && ( <FinalQuiz onClose={() => setShowFinalQuiz(false)} onComplete={handleFinalQuizComplete} /> )}
-        {showLootboxOpening && unlockedFigure && ( <Lootbox figure={unlockedFigure} onCollect={handleCollectFigure} /> )}
+        
+        {/* Passando a prop 'isDuplicate' para o componente Lootbox */}
+        {showLootboxOpening && unlockedFigure && ( <Lootbox figure={unlockedFigure} onCollect={handleCollectFigure} isDuplicate={isDuplicateInLootbox} /> )}
+        
+        {/* Passando a coleção de objetos para o componente Collection */}
         {showCollection && ( <Collection collection={userCollection} allFigures={allFigures} onClose={() => setShowCollection(false)} /> )}
       </AnimatePresence>
     </motion.div>
