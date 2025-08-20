@@ -1,59 +1,88 @@
-[
-  {
-    "id": "arkhipov",
-    "name": "Vasily Arkhipov",
-    "rarity": "Lendário",
-    "chance": 64,
-    "description": "O oficial que, sozinho, se recusou a autorizar um lançamento nuclear, potencialmente salvando o mundo.",
-    "image": "figure_arkhipov.jpg",
-    "stats": { "hp": 150, "attack": 20, "speed": 40 }
-  },
-  {
-    "id": "rfk",
-    "name": "Robert F. Kennedy",
-    "rarity": "Épico",
-    "chance": 32,
-    "description": "Procurador-Geral e principal negociador secreto de Kennedy, crucial para a resolução pacífica.",
-    "image": "figure_rfk.jpg",
-    "isStarter": true,
-    "stats": { "hp": 90, "attack": 25, "speed": 80 }
-  },
-  {
-    "id": "stevenson",
-    "name": "Adlai Stevenson II",
-    "rarity": "Épico",
-    "chance": 24,
-    "description": "Embaixador dos EUA na ONU, famoso por confrontar publicamente o embaixador soviético com as fotos.",
-    "image": "figure_stevenson.jpg",
-    "stats": { "hp": 80, "attack": 30, "speed": 70 }
-  },
-  {
-    "id": "mcnamara",
-    "name": "Robert McNamara",
-    "rarity": "Raro",
-    "chance": 16,
-    "description": "Secretário de Defesa dos EUA e membro-chave do ExComm que ajudou a moldar a estratégia da 'quarentena'.",
-    "image": "figure_mcnamara.jpg",
-    "isStarter": true,
-    "stats": { "hp": 110, "attack": 20, "speed": 60 }
-  },
-  {
-    "id": "anderson",
-    "name": "Rudolf Anderson Jr.",
-    "rarity": "Raro",
-    "chance": 12,
-    "description": "O piloto do U-2 abatido sobre Cuba no 'Sábado Negro', a única baixa em combate direto da crise.",
-    "image": "figure_anderson.jpg",
-    "stats": { "hp": 70, "attack": 15, "speed": 90 }
-  },
-  {
-    "id": "dobrynin",
-    "name": "Anatoly Dobrynin",
-    "rarity": "Comum",
-    "chance": 4,
-    "description": "Embaixador soviético nos EUA. Sua linha de comunicação secreta com RFK foi essencial para o acordo.",
-    "image": "figure_dobrynin.jpg",
-    "isStarter": true,
-    "stats": { "hp": 80, "attack": 15, "speed": 75 }
-  }
-]
+
+  [
+    {
+      "id": "arkhipov",
+      "name": "Vasily Arkhipov",
+      "rarity": "Lendário",
+      "chance": 64,
+      "description": "O oficial que, sozinho, se recusou a autorizar um lançamento nuclear, potencialmente salvando o mundo.",
+      "image": "figure_arkhipov.jpg",
+      "stats": { "hp": 150, "attack": 20, "speed": 40 }
+    },
+    {
+      "id": "rfk",
+      "name": "Robert F. Kennedy",
+      "rarity": "Épico",
+      "chance": 32,
+      "description": "Procurador-Geral e principal negociador secreto de Kennedy, crucial para a resolução pacífica.",
+      "image": "figure_rfk.jpg",
+      "stats": { "hp": 90, "attack": 25, "speed": 80 }
+    },
+    {
+      "id": "stevenson",
+      "name": "Adlai Stevenson II",
+      "rarity": "Épico",
+      "chance": 24,
+      "description": "Embaixador dos EUA na ONU, famoso por confrontar publicamente o embaixador soviético com as fotos.",
+      "image": "figure_stevenson.jpg",
+      "stats": { "hp": 80, "attack": 30, "speed": 70 }
+    },
+    {
+      "id": "mcnamara",
+      "name": "Robert McNamara",
+      "rarity": "Raro",
+      "chance": 16,
+      "description": "Secretário de Defesa dos EUA e membro-chave do ExComm que ajudou a moldar a estratégia da 'quarentena'.",
+      "image": "figure_mcnamara.jpg",
+      "stats": { "hp": 110, "attack": 20, "speed": 60 }
+    },
+    {
+      "id": "anderson",
+      "name": "Rudolf Anderson Jr.",
+      "rarity": "Raro",
+      "chance": 12,
+      "description": "O piloto do U-2 abatido sobre Cuba no 'Sábado Negro', a única baixa em combate direto da crise.",
+      "image": "figure_anderson.jpg",
+      "stats": { "hp": 70, "attack": 15, "speed": 90 }
+    },
+    {
+      "id": "dobrynin",
+      "name": "Anatoly Dobrynin",
+      "rarity": "Comum",
+      "chance": 4,
+      "description": "Embaixador soviético nos EUA. Sua linha de comunicação secreta com RFK foi essencial para o acordo.",
+      "image": "figure_dobrynin.jpg",
+    
+      "stats": { "hp": 80, "attack": 15, "speed": 75 }
+    },
+    {
+      "id": "photo_analyst",
+      "name": "Analista de Reconhecimento",
+      "rarity": "Comum",
+      "chance": 0,
+      "description": "Um dos analistas anônimos cuja análise minuciosa das fotos de vigilância revelou a presença de mísseis em Cuba.",
+      "isStarter": true,
+      "image": "figure_analyst.jpg",
+      "stats": { "hp": 70, "attack": 10, "speed": 70 }
+    },
+    {
+      "id": "navy_sailor",
+      "name": "Marinheiro da Quarentena",
+      "rarity": "Comum",
+      "chance": 0,
+      "description": "Um marinheiro a bordo de um dos navios da Marinha dos EUA que impuseram o 'bloqueio' naval, a linha de frente da crise.",
+      "isStarter": true,
+      "stats": { "hp": 85, "attack": 15, "speed": 50 }
+    },
+    {
+      "id": "diplomatic_courier",
+      "name": "Mensageiro Diplomático",
+      "rarity": "Comum",
+      "chance": 0,
+      "description": "Responsável por transportar mensagens secretas e críticas, garantindo a comunicação entre as superpotências.",
+      "isStarter": true,
+      "image": "figure_courier.jpg",
+      "stats": { "hp": 65, "attack": 5, "speed": 95 }
+    }
+  ]
+   
