@@ -10,7 +10,8 @@ import RiskIndicator from '../components/RiskIndicator';
 import AgentSelection from '../components/AgentSelection';
 import BattleScreen from '../components/BattleScreen';
 import MissileCrisisTetris from '../components/MissileCrisisTetris';
-import FinalQuiz from '../components/Quiz'; 
+// import FinalQuiz from '../components/Quiz'; // <--- REMOVIDO OU RENOMEADO
+import EventQuiz from '../components/EventQuiz'; // <--- NOVA IMPORTAÇÃO (ou renomeado de Quiz)
 import Collection from '../components/Collection';
 
 import RhythmBattle from '@/components/RhythmBattle';
@@ -19,21 +20,22 @@ import { Button } from '../components/ui/button';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../components/ui/resizable';
 
 // Dados e Tipos
-import crisisData from '../data/crisisData.json';
+import crisisData from '../data/crisisData.json'; 
 import allFiguresData from '../data/historicalFigures.json';
 import opponentsData from '../data/opponents.json';
-import { NetworkNode, DailyEvent, HistoricalFigure, DailyOpponent } from '../types/crisisDataTypes';
+import quizQuestionsData from '../data/quizQuestions.json'; // <--- NOVA IMPORTAÇÃO DO QUIZ JSON
+import { NetworkNode, DailyEvent, HistoricalFigure, DailyOpponent, QuizData } from '../types/crisisDataTypes';
 import Lootbox from '@/components/LootBox';
 import BossBattle from '../components/BossBattle';
-
-// --- NOVA IMPORTAÇÃO DO CHEFÃO FINAL ---
-import { theFinalBoss } from '../data/finalBoss'; // Importa o chefão completo
+import { theFinalBoss } from '../data/finalBoss'; 
+import FinalQuiz from '@/components/Quiz';
 
 
 const allFigures = allFiguresData as HistoricalFigure[];
 const opponents = opponentsData as Record<string, DailyOpponent>;
+const allQuizQuestions: Record<string, QuizData[]> = quizQuestionsData; // Tipagem para as perguntas
 
-const CRISIS_DAYS_LIMIT = 10; // Mantido em 10 dias
+const CRISIS_DAYS_LIMIT = 10; 
 const limitedCrisisEvents = crisisData.events.slice(0, CRISIS_DAYS_LIMIT);
 const sortedCrisisDates = limitedCrisisEvents.map(event => event.date).sort();
 
@@ -43,7 +45,7 @@ interface IndexProps {
   lootboxTokens: number;
   onAddToken: () => void;
   onSpendToken: () => void;
-  onStartQuiz: () => void;
+  onStartQuiz: () => void; // Esta prop será usada para o quiz diário
 }
 
 const Index: React.FC<IndexProps> = ({ 
@@ -51,7 +53,7 @@ const Index: React.FC<IndexProps> = ({
   lootboxTokens, 
   onAddToken, 
   onSpendToken, 
-  onStartQuiz 
+  onStartQuiz: onStartQuizProp // Renomeado para evitar conflito com a função local
 }) => {
   const [selectedDate, setSelectedDate] = useState<string>(limitedCrisisEvents[0].date);
   
@@ -70,7 +72,11 @@ const Index: React.FC<IndexProps> = ({
     return currentIndex === sortedCrisisDates.length - 1;
   }, [selectedDate]);
 
-  const [showFinalQuiz, setShowFinalQuiz] = useState<boolean>(false);
+  // Estados para o Quiz Diário/Evento
+  const [showEventQuiz, setShowEventQuiz] = useState<boolean>(false); // <--- NOVO ESTADO
+  const [currentEventQuiz, setCurrentEventQuiz] = useState<QuizData | null>(null); // <--- NOVO ESTADO
+
+  const [showFinalQuiz, setShowFinalQuiz] = useState<boolean>(false); 
   const [showLootboxOpening, setShowLootboxOpening] = useState<boolean>(false);
   const [unlockedFigure, setUnlockedFigure] = useState<HistoricalFigure | null>(null);
   const [isDuplicateInLootbox, setIsDuplicateInLootbox] = useState<boolean>(false);
@@ -79,16 +85,11 @@ const Index: React.FC<IndexProps> = ({
   const [pendingDate, setPendingDate] = useState<string | null>(null);
   const [showAgentSelection, setShowAgentSelection] = useState<boolean>(false);
   const [showBattleScreen, setShowBattleScreen] = useState<boolean>(false);
-  // selectedAgentForBattle deve ser HistoricalFigure, pois é seu personagem
   const [selectedAgentForBattle, setSelectedAgentForBattle] = useState<HistoricalFigure | null>(null);
   const [currentOpponent, setCurrentOpponent] = useState<DailyOpponent | null>(null);
 
   const [showBossMinigame, setShowBossMinigame] = useState<boolean>(false);
 
-  // --- REMOVIDO: O useMemo que derivava o chefão de opponentsData ---
-  // const finalBossFigure: DailyOpponent = useMemo(() => { ... }, []);
-
-  // Define um playerAgent padrão para testes, se o jogo não tiver seleção prévia
   const defaultPlayerAgent: HistoricalFigure = useMemo(() => {
     return userCollection.length > 0 ? userCollection[0] : allFigures[0];
   }, [userCollection]);
@@ -119,9 +120,7 @@ const Index: React.FC<IndexProps> = ({
       return; 
     }
 
-    // Se é o ÚLTIMO DIA da linha do tempo (10 DIAS) E o jogador está nele
     if (isLastTimelineDay && currentIndex === highestUnlockedLevel) {
-        // --- USAMOS O CHEFÃO IMPORTADO AQUI ---
         setShowBossMinigame(true); 
         return; 
     }
@@ -202,6 +201,35 @@ const Index: React.FC<IndexProps> = ({
       onAddToken();
     }
     setShowFinalQuiz(false);
+  }, [onAddToken]);
+
+  // --- NOVA LÓGICA PARA O QUIZ DIÁRIO ---
+  const handleStartDailyQuiz = useCallback(() => {
+    const dailyQuestions = allQuizQuestions[selectedDate];
+    const generalQuestions = allQuizQuestions['geral'];
+    
+    // Combine as perguntas do dia atual com as perguntas gerais
+    const availableQuestions = [...(dailyQuestions || []), ...(generalQuestions || [])];
+
+    if (availableQuestions.length > 0) {
+      // Seleciona uma pergunta aleatória
+      const randomQuestion = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+      setCurrentEventQuiz(randomQuestion);
+      setShowEventQuiz(true);
+    } else {
+      alert("Nenhuma pergunta disponível para este dia!");
+    }
+  }, [selectedDate]);
+
+  const handleDailyQuizComplete = useCallback((isCorrect: boolean) => {
+    if (isCorrect) {
+      onAddToken(); // Recompensa se acertar
+      alert("Resposta Correta! Você ganhou uma Chave de Análise!");
+    } else {
+      alert("Resposta Incorreta. Revise os detalhes!");
+    }
+    setShowEventQuiz(false); // Fecha o quiz
+    setCurrentEventQuiz(null); // Limpa a pergunta atual
   }, [onAddToken]);
 
   const handleOpenLootbox = useCallback(() => {
@@ -287,7 +315,8 @@ const Index: React.FC<IndexProps> = ({
             OPERAÇÃO CHRONOS // ANÁLISE: CRISE DOS MÍSSEIS
           </h1>
           <div className="flex items-center gap-2">
-            <Button onClick={onStartQuiz} className="bg-gray-700 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-md">
+            {/* O BOTÃO PARA O QUIZ DIÁRIO AGORA USA handleStartDailyQuiz */}
+            <Button onClick={handleStartDailyQuiz} className="bg-gray-700 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-md">
               <BookOpen className="w-4 h-4 mr-2" /> Responder Quiz (Diário)
             </Button>
             <Button onClick={handleOpenLootbox} disabled={lootboxTokens <= 0} className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold px-4 py-2 rounded-md">
@@ -366,14 +395,13 @@ const Index: React.FC<IndexProps> = ({
             if (currentOpponent.battleType === 'tetris') {
                 return <MissileCrisisTetris opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
             }
-            // Garante que selectedAgentForBattle não é nulo para outras batalhas
             if (selectedAgentForBattle) {
                 if (currentOpponent.battleType === 'rhythm') {
                     return <RhythmBattle playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
                 }
                 return <BattleScreen playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
             }
-            return null; // Caso de fallback se selectedAgentForBattle for nulo (não deveria acontecer)
+            return null;
         })()}
 
         {showFinalQuiz && ( 
@@ -397,13 +425,20 @@ const Index: React.FC<IndexProps> = ({
           /> 
         )}
 
-        {/* Renderiza a BossBattle APENAS quando showBossMinigame for true */}
-        {showBossMinigame && defaultPlayerAgent && ( // Assegura que defaultPlayerAgent exista
+        {showBossMinigame && defaultPlayerAgent && (
           <BossBattle 
-            playerAgent={selectedAgentForBattle || defaultPlayerAgent} // Prioriza o selecionado, senão usa o padrão
-            bossFigure={theFinalBoss} // <--- AQUI USAMOS O NOVO CHEFÃO IMPORTADO
+            playerAgent={selectedAgentForBattle || defaultPlayerAgent} 
+            bossFigure={theFinalBoss} 
             onWin={handleBossMinigameWin} 
             onLose={handleBossMinigameLose} 
+          />
+        )}
+
+        {/* --- NOVO: RENDERIZAÇÃO DO QUIZ DIÁRIO/EVENTO --- */}
+        {showEventQuiz && currentEventQuiz && ( // <--- NOVO
+          <EventQuiz
+            quiz={currentEventQuiz}
+            onComplete={handleDailyQuizComplete}
           />
         )}
       </AnimatePresence>

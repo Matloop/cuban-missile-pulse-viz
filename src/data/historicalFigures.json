@@ -72,6 +72,7 @@
       "chance": 0,
       "description": "Um marinheiro a bordo de um dos navios da Marinha dos EUA que impuseram o 'bloqueio' naval, a linha de frente da crise.",
       "isStarter": true,
+      "image": "qua.jpg",
       "stats": { "hp": 85, "attack": 15, "speed": 50 }
     },
     {
