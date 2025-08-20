@@ -61,4 +61,5 @@
     "image": "khrushchev_leader.jpg",
     "stats": { "hp": 180, "attack": 25, "speed": 75 }
   }
+  
 }

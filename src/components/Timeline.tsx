@@ -2,7 +2,20 @@ import React from 'react';
 import { Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const Timeline = ({ events, selectedDate, onDateChange, highestUnlockedLevel }) => {
+// Assumindo que `events` é um array de objetos com `date` e `title`
+interface TimelineEventDisplay {
+  date: string;
+  title: string;
+}
+
+interface TimelineProps {
+  events: TimelineEventDisplay[]; // Ajustado o tipo da prop
+  selectedDate: string;
+  onDateChange: (date: string) => void;
+  highestUnlockedLevel: number;
+}
+
+const Timeline: React.FC<TimelineProps> = ({ events, selectedDate, onDateChange, highestUnlockedLevel }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
@@ -15,22 +28,25 @@ const Timeline = ({ events, selectedDate, onDateChange, highestUnlockedLevel }) 
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };
 
+  // firstDate agora será o primeiro dia da sua lista LIMITADA de eventos
   const firstDate = events[0]?.date;
 
   return (
     <div className="max-w-6xl mx-auto">
       <h3 className="text-lg font-semibold text-cyan-300 mb-4 text-center">
-        Linha do Tempo - Os 13 Dias da Crise
+        Linha do Tempo - Os {events.length} Dias da Crise {/* O texto se adapta ao número de dias */}
       </h3>
       
       <div className="relative">
+        {/* A barra de progresso colorida */}
         <div className="absolute top-5 left-0 right-0 h-0.5 bg-gradient-to-r from-green-500 via-yellow-500 to-red-500"></div>
         
         <div className="flex justify-between items-start relative">
-          {events.map((event: any, index: number) => {
+          {events.map((event: TimelineEventDisplay, index: number) => { // Usando o tipo TimelineEventDisplay
             const isSelected = event.date === selectedDate;
             const isLocked = index > highestUnlockedLevel;
-            const dayNumber = getDaysDifference(firstDate, event.date) + 1;
+            // DayNumber será 1-indexed dentro da sua lista limitada de eventos
+            const dayNumber = firstDate ? getDaysDifference(firstDate, event.date) + 1 : index + 1;
             
             return (
               <div
@@ -52,6 +68,7 @@ const Timeline = ({ events, selectedDate, onDateChange, highestUnlockedLevel }) 
                         ? 'bg-slate-700 border-slate-500'
                         : 'bg-cyan-600 border-cyan-400 group-hover:bg-cyan-500'
                   )}
+                  // O filtro de sombra é uma propriedade de estilo, não de classe.
                   style={{ filter: isSelected ? 'drop-shadow(0 0 10px rgba(250, 204, 21, 0.8))' : 'none' }}
                 >
                   {isLocked && <Lock className="w-3 h-3 text-white/70" />}

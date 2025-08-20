@@ -1,0 +1,36 @@
+{
+    "1962-10-14": [
+      { "id": 1, "question": "Qual tipo de avião espião fotografou os mísseis em Cuba no dia 14 de Outubro?", "options": ["SR-71 Blackbird", "U-2 Dragon Lady", "B-52 Stratofortress"], "correctAnswer": 1, "explanation": "O U-2, um avião de reconhecimento de alta altitude, foi crucial para a descoberta das instalações." }
+    ],
+    "1962-10-16": [
+      { "id": 2, "question": "Qual o nome do comitê secreto que Kennedy formou no dia 16 de Outubro para gerenciar a crise?", "options": ["Conselho de Guerra", "Grupo de Crise", "ExComm"], "correctAnswer": 2, "explanation": "O ExComm (Comitê Executivo do Conselho de Segurança Nacional) foi formado para assessorar Kennedy." }
+    ],
+    "1962-10-18": [
+      { "id": 11, "question": "No encontro de 18 de Outubro, o que o ministro soviético Gromyko disse a Kennedy?", "options": ["Que os mísseis eram ofensivos", "Que os mísseis eram apenas defensivos", "Que não havia mísseis"], "correctAnswer": 1, "explanation": "Gromyko mentiu, assegurando a Kennedy que todo o armamento em Cuba era estritamente para fins defensivos." }
+    ],
+    "1962-10-20": [
+      { "id": 12, "question": "Qual foi a decisão final de Kennedy em 20 de Outubro, após dias de debate?", "options": ["Invasão total", "Ataque aéreo cirúrgico", "Um bloqueio naval ('quarentena')"], "correctAnswer": 2, "explanation": "Kennedy optou pela 'quarentena' como uma resposta inicial forte, mas que ainda deixava espaço para a diplomacia." }
+    ],
+    "1962-10-22": [
+      { "id": 3, "question": "No discurso de 22 de Outubro, por que Kennedy usou o termo 'quarentena' em vez de 'bloqueio'?", "options": ["Soava menos agressivo", "Um bloqueio é um ato de guerra", "Foi uma sugestão da ONU"], "correctAnswer": 1, "explanation": "Sob o direito internacional, um 'bloqueio' é considerado um ato de guerra, algo que Kennedy queria evitar." }
+    ],
+    "1962-10-24": [
+      { "id": 13, "question": "O que aconteceu em 24 de Outubro que foi visto como um sinal de desescalada pela URSS?", "options": ["Um pedido de desculpas público", "Navios soviéticos pararam antes da linha de quarentena", "Castro pediu a remoção dos mísseis"], "correctAnswer": 1, "explanation": "A frota soviética que se aproximava de Cuba parou ou desviou, evitando um confronto direto com a marinha dos EUA." }
+    ],
+    "1962-10-25": [
+      { "id": 14, "question": "Quem o embaixador Adlai Stevenson confrontou na ONU em 25 de Outubro?", "options": ["Fidel Castro", "Andrei Gromyko", "Valerian Zorin"], "correctAnswer": 2, "explanation": "Stevenson confrontou o embaixador soviético na ONU, Valerian Zorin, que se recusou a responder sobre os mísseis." }
+    ],
+    "1962-10-26": [
+      { "id": 15, "question": "Qual foi a oferta principal na primeira carta que Khrushchev enviou a Kennedy em 26 de Outubro?", "options": ["Retirar os mísseis em troca da não-invasão de Cuba", "Entregar Cuba aos EUA", "Pedir um encontro em Viena"], "correctAnswer": 0, "explanation": "A primeira carta oferecia uma solução direta: remoção dos mísseis em troca de uma garantia pública de que os EUA não invadiriam Cuba." }
+    ],
+    "1962-10-27": [
+      { "id": 4, "question": "Qual evento trágico marcou o 'Sábado Negro', 27 de Outubro?", "options": ["O discurso de Khrushchev", "A invasão de Cuba", "O abate de um avião U-2"], "correctAnswer": 2, "explanation": "O abate do U-2 do Major Rudolf Anderson aumentou drasticamente a tensão, levando o mundo à beira da guerra." }
+    ],
+    "geral": [
+      { "id": 6, "question": "Qual foi a concessão secreta feita pelos EUA para encerrar a crise?", "options": ["Remover mísseis da Turquia", "Pagar uma indenização a Cuba", "Encerrar o embargo comercial"], "correctAnswer": 0, "explanation": "Os EUA concordaram secretamente em remover seus mísseis Júpiter da Turquia meses após a crise." },
+      { "id": 7, "question": "Quantos dias a Crise dos Mísseis de Cuba durou oficialmente?", "options": ["7 dias", "13 dias", "30 dias"], "correctAnswer": 1, "explanation": "A crise durou 13 dias intensos, de 16 a 28 de outubro de 1962." },
+      { "id": 8, "question": "Qual oficial de submarino soviético evitou um desastre nuclear no 'Sábado Negro'?", "options": ["Mikhail Gorbachev", "Vasily Arkhipov", "Yuri Gagarin"], "correctAnswer": 1, "explanation": "Vasily Arkhipov, a bordo do submarino B-59, vetou a decisão de lançar um torpedo nuclear." },
+      { "id": 9, "question": "Qual operação da CIA, que falhou em 1961, aumentou a desconfiança de Cuba em relação aos EUA?", "options": ["Operação Mongoose", "Invasão da Baía dos Porcos", "Operação Northwoods"], "correctAnswer": 1, "explanation": "A fracassada Invasão da Baía dos Porcos levou Cuba a buscar proteção militar da URSS." },
+      { "id": 10, "question": "O que foi estabelecido entre Washington e Moscou após a crise para evitar futuros conflitos?", "options": ["A 'Linha Vermelha' (Hotline)", "A Organização das Nações Unidas", "O Tratado de Não Proliferação Nuclear"], "correctAnswer": 0, "explanation": "A 'Linha Vermelha', um link de comunicação direta, foi criada para permitir um diálogo rápido entre os líderes." }
+    ]
+  }
