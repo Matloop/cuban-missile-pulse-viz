@@ -90,7 +90,14 @@ const Index: React.FC<IndexProps> = ({
       const savedStateJSON = localStorage.getItem(GAME_STATE_KEY);
       if (savedStateJSON) {
         const savedState = JSON.parse(savedStateJSON);
-        if (savedState.userCollection) setUserCollection(savedState.userCollection);
+        // Garante que a coleção salva não seja vazia antes de carregar
+        if (savedState.userCollection && savedState.userCollection.length > 0) {
+            setUserCollection(savedState.userCollection);
+        } else {
+            // Se a coleção salva estiver vazia, usa a inicial
+            const initialFigures = allFigures.filter(figure => (initialCollection || []).includes(figure.id));
+            setUserCollection(initialFigures);
+        }
         if (savedState.highestUnlockedLevel) setHighestUnlockedLevel(savedState.highestUnlockedLevel);
         if (savedState.selectedDate) setSelectedDate(savedState.selectedDate);
       } else {
@@ -102,20 +109,17 @@ const Index: React.FC<IndexProps> = ({
       }
     } catch (error) {
       console.error("Falha ao carregar o estado do jogo:", error);
-      // Em caso de erro, começa um jogo novo
-      const initialFigures = allFigures.filter(figure => 
-          (initialCollection || []).includes(figure.id) 
-      );
+      const initialFigures = allFigures.filter(figure => (initialCollection || []).includes(figure.id));
       setUserCollection(initialFigures);
     } finally {
       setIsStateLoaded(true); // Marca que o estado foi carregado
     }
-  }, [initialCollection]); // Executa apenas uma vez na montagem inicial
+  }, [initialCollection]); // Depende de initialCollection para o primeiro carregamento
 
   // --- EFEITO PARA SALVAR O JOGO ---
   useEffect(() => {
-    // Só salva o estado DEPOIS que ele foi carregado do localStorage
-    if (isStateLoaded) {
+    // Só salva o estado DEPOIS que ele foi carregado e se a coleção não estiver vazia
+    if (isStateLoaded && userCollection.length > 0) {
       const gameState = {
         userCollection,
         highestUnlockedLevel,
@@ -132,8 +136,10 @@ const Index: React.FC<IndexProps> = ({
   // --- FUNÇÃO PARA RESETAR O JOGO ---
   const handleResetGame = () => {
     if (window.confirm("Você tem certeza que deseja resetar todo o seu progresso? Esta ação não pode ser desfeita.")) {
+      // Limpa os dois locais de armazenamento
       localStorage.removeItem(GAME_STATE_KEY);
-      window.location.reload(); // Recarrega a página para começar do zero
+      localStorage.removeItem('cubanCrisisAppState'); // Limpa o estado do App também
+      window.location.reload(); // Recarrega a página para o fluxo de splash/starter
     }
   };
 
@@ -409,7 +415,7 @@ const Index: React.FC<IndexProps> = ({
             } else if (currentOpponent.battleType === 'rhythm') {
               return <RhythmBattle playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
             } else {
-              return <BattleScreen playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
+              return <BattleScreen playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} currentDate={selectedDate} allCrisisDates={sortedCrisisDates} />;
             }
           })()
         )}

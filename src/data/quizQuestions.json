@@ -13,6 +13,20 @@
       "options": ["Francis Gary Powers", "Richard Heyser", "Rudolf Anderson"],
       "correctAnswer": 1,
       "explanation": "O Major Richard Heyser pilotou o U-2 que trouxe as primeiras fotos das bases de mísseis."
+    },
+    {
+      "id": 26,
+      "question": "Qual foi a principal evidência encontrada nas fotos do U-2 em 14 de outubro?",
+      "options": ["Rampas de lançamento", "Tanques de combustível", "Bases de radar"],
+      "correctAnswer": 0,
+      "explanation": "As fotos revelaram rampas de lançamento de mísseis balísticos soviéticos em construção."
+    },
+    {
+      "id": 27,
+      "question": "Por que o voo de 14 de outubro foi considerado o ponto de virada da crise?",
+      "options": ["Provou que Cuba tinha armas nucleares", "Foi a primeira prova concreta de mísseis soviéticos em Cuba", "Forçou os EUA a invadir imediatamente"],
+      "correctAnswer": 1,
+      "explanation": "Até então, os EUA apenas suspeitavam, mas esse voo trouxe a prova irrefutável."
     }
   ],
   "1962-10-16": [
@@ -29,6 +43,20 @@
       "options": ["Diplomacia vs. espionagem", "Ataque aéreo vs. bloqueio naval", "Negociação vs. rendição"],
       "correctAnswer": 1,
       "explanation": "Alguns membros defendiam um ataque aéreo surpresa, enquanto outros sugeriam um bloqueio naval para evitar escalada imediata."
+    },
+    {
+      "id": 28,
+      "question": "Quem liderava as reuniões do ExComm?",
+      "options": ["Dean Rusk", "Robert Kennedy", "John F. Kennedy"],
+      "correctAnswer": 2,
+      "explanation": "O próprio presidente Kennedy liderava as reuniões, embora se apoiasse muito em seu irmão Robert."
+    },
+    {
+      "id": 29,
+      "question": "Qual foi a primeira reação de Kennedy ao ver as fotos dos mísseis?",
+      "options": ["Ordenar ataque aéreo imediato", "Convocar o ExComm", "Procurar Khrushchev diretamente"],
+      "correctAnswer": 1,
+      "explanation": "Kennedy decidiu organizar o ExComm para analisar cuidadosamente as opções antes de agir."
     }
   ],
   "1962-10-18": [
@@ -45,6 +73,20 @@
       "options": ["Porque não tinha provas ainda", "Porque não queria revelar que sabia das fotos", "Porque respeitava a diplomacia soviética"],
       "correctAnswer": 1,
       "explanation": "Kennedy escolheu não revelar que já tinha provas fotográficas, para manter a vantagem estratégica."
+    },
+    {
+      "id": 30,
+      "question": "Quem acompanhou Kennedy na reunião com Gromyko?",
+      "options": ["Robert Kennedy", "Dean Rusk", "Adlai Stevenson"],
+      "correctAnswer": 1,
+      "explanation": "O Secretário de Estado Dean Rusk estava presente para registrar as declarações soviéticas."
+    },
+    {
+      "id": 31,
+      "question": "O que Kennedy percebeu após a reunião com Gromyko?",
+      "options": ["Que Gromyko estava mal informado", "Que a URSS pretendia ganhar tempo", "Que os soviéticos planejavam recuar"],
+      "correctAnswer": 1,
+      "explanation": "As mentiras de Gromyko indicavam que Moscou estava tentando atrasar a resposta americana."
     }
   ],
   "1962-10-20": [
@@ -61,6 +103,20 @@
       "options": ["Risco de vítimas civis", "Possibilidade de retaliação soviética", "Falta de precisão dos aviões"],
       "correctAnswer": 1,
       "explanation": "McNamara temia que um ataque aéreo levasse à morte de soviéticos em Cuba e provocasse uma retaliação direta."
+    },
+    {
+      "id": 32,
+      "question": "Quem mais defendeu o bloqueio naval como opção inicial?",
+      "options": ["George Ball", "Robert McNamara", "Lyndon Johnson"],
+      "correctAnswer": 1,
+      "explanation": "McNamara considerava o bloqueio a resposta mais controlada e proporcional."
+    },
+    {
+      "id": 33,
+      "question": "Como Kennedy anunciou a decisão ao ExComm?",
+      "options": ["Com hesitação", "Com firmeza mas destacando riscos", "Com ordem militar imediata"],
+      "correctAnswer": 1,
+      "explanation": "Ele deixou claro que era uma solução temporária e que novas medidas poderiam ser necessárias."
     }
   ],
   "1962-10-22": [
@@ -77,6 +133,20 @@
       "options": ["DEFCON 5", "DEFCON 3", "DEFCON 1"],
       "correctAnswer": 1,
       "explanation": "Kennedy elevou as forças armadas para DEFCON 3, sinalizando alerta máximo sem declarar guerra."
+    },
+    {
+      "id": 34,
+      "question": "Quem ajudou a redigir o discurso de Kennedy?",
+      "options": ["Robert Kennedy", "Ted Sorensen", "Henry Kissinger"],
+      "correctAnswer": 1,
+      "explanation": "Ted Sorensen, conselheiro de confiança, foi responsável pela redação principal."
+    },
+    {
+      "id": 35,
+      "question": "Qual foi a reação inicial da população americana ao discurso?",
+      "options": ["Pânico imediato", "Alívio parcial", "Ansiedade e temor de guerra nuclear"],
+      "correctAnswer": 2,
+      "explanation": "A revelação pública deixou milhões em estado de alerta e apreensão."
     }
   ],
   "1962-10-24": [
@@ -93,6 +163,20 @@
       "options": ["Fraqueza soviética", "Intenção de evitar confronto direto", "Desorganização naval"],
       "correctAnswer": 1,
       "explanation": "A pausa foi interpretada como sinal de que Moscou queria evitar um confronto imediato."
+    },
+    {
+      "id": 36,
+      "question": "Quem comandava a frota americana que fazia a quarentena?",
+      "options": ["Almirante George Anderson", "General Curtis LeMay", "Almirante Arleigh Burke"],
+      "correctAnswer": 0,
+      "explanation": "O almirante George Anderson era responsável pela marinha dos EUA durante a crise."
+    },
+    {
+      "id": 37,
+      "question": "Qual foi a reação de Kennedy ao saber que os navios soviéticos haviam parado?",
+      "options": ["Alívio momentâneo", "Preparação para ataque", "Ignorou a notícia"],
+      "correctAnswer": 0,
+      "explanation": "Kennedy viu como um primeiro sinal de que Moscou poderia estar disposto a negociar."
     }
   ],
   "1962-10-25": [
@@ -109,6 +193,20 @@
       "options": ["Gravações de rádio", "Fotos aéreas dos mísseis", "Testemunhos de espiões"],
       "correctAnswer": 1,
       "explanation": "As fotos tiradas pelo U-2 foram mostradas ao mundo, desmentindo as declarações soviéticas."
+    },
+    {
+      "id": 38,
+      "question": "O que os soviéticos alegavam na ONU em resposta às acusações?",
+      "options": ["Que não havia armas em Cuba", "Que os mísseis eram apenas defensivos", "Que as fotos eram falsificadas"],
+      "correctAnswer": 0,
+      "explanation": "Até aquele momento, a URSS negava completamente a presença dos mísseis."
+    },
+    {
+      "id": 39,
+      "question": "Como a performance de Stevenson foi recebida nos EUA?",
+      "options": ["Vista como agressiva demais", "Considerada um ponto alto da diplomacia americana", "Ignorada pela mídia"],
+      "correctAnswer": 1,
+      "explanation": "Stevenson ganhou elogios por confrontar publicamente os soviéticos com provas."
     }
   ],
   "1962-10-26": [
@@ -125,6 +223,20 @@
       "options": ["Agressivo e ameaçador", "Conciliador e pessoal", "Formal e burocrático"],
       "correctAnswer": 1,
       "explanation": "A primeira carta era mais emocional e conciliadora, pedindo um acordo direto."
+    },
+    {
+      "id": 40,
+      "question": "Quem recebeu a primeira carta de Khrushchev?",
+      "options": ["Kennedy diretamente", "Embaixada americana em Moscou", "ONU"],
+      "correctAnswer": 1,
+      "explanation": "A carta foi enviada por canais diplomáticos à embaixada americana em Moscou."
+    },
+    {
+      "id": 41,
+      "question": "Como o ExComm reagiu à primeira carta de Khrushchev?",
+      "options": ["Com desconfiança, mas vendo esperança", "Ignorando completamente", "Preparando ataque aéreo"],
+      "correctAnswer": 0,
+      "explanation": "Muitos viram nela a oportunidade de encerrar a crise pacificamente."
     }
   ],
   "1962-10-27": [
@@ -141,6 +253,20 @@
       "options": ["Era mais dura e exigia a retirada dos mísseis da Turquia", "Oferecia ajuda econômica", "Propunha uma cúpula internacional"],
       "correctAnswer": 0,
       "explanation": "A segunda carta foi mais dura, exigindo a retirada dos mísseis Júpiter da Turquia em troca da resolução da crise."
+    },
+    {
+      "id": 42,
+      "question": "Quem foi Rudolf Anderson, morto no abate do U-2?",
+      "options": ["Um diplomata", "Um piloto americano", "Um agente da CIA"],
+      "correctAnswer": 1,
+      "explanation": "Anderson era piloto do U-2 e se tornou a única vítima mortal direta da crise."
+    },
+    {
+      "id": 43,
+      "question": "O que Robert Kennedy propôs em resposta à segunda carta?",
+      "options": ["Ignorar a mais dura e responder apenas à primeira", "Atacar imediatamente Cuba", "Aceitar retirar mísseis da Turquia publicamente"],
+      "correctAnswer": 0,
+      "explanation": "O governo optou por responder apenas à primeira carta, ignorando a mais exigente."
     }
   ],
   "1962-10-28": [
@@ -150,6 +276,20 @@
       "options": ["Pressão internacional e risco de guerra nuclear", "Vitória diplomática completa", "Conquista de Cuba pelos soviéticos"],
       "correctAnswer": 0,
       "explanation": "A combinação da pressão internacional e do risco de guerra nuclear levou Khrushchev a recuar."
+    },
+    {
+      "id": 44,
+      "question": "Quem anunciou publicamente a resolução da crise em Moscou?",
+      "options": ["Gromyko", "Khrushchev", "Zorin"],
+      "correctAnswer": 1,
+      "explanation": "Khrushchev fez o anúncio oficial pelo rádio, aceitando a proposta dos EUA."
+    },
+    {
+      "id": 45,
+      "question": "Qual foi a reação de Fidel Castro ao acordo final?",
+      "options": ["Apoiou plenamente", "Sentiu-se traído pela URSS", "Exigiu compensações financeiras"],
+      "correctAnswer": 1,
+      "explanation": "Castro ficou insatisfeito, pois não foi consultado diretamente nas negociações."
     }
   ],
   "geral": [
