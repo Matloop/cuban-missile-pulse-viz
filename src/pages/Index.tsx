@@ -408,8 +408,7 @@ const Index: React.FC<IndexProps> = ({
       <AnimatePresence>
         {showAgentSelection && ( 
           <AgentSelection 
-            userCollection={userCollection.map(f => f.id)} 
-            allFigures={allFigures} 
+            userCollection={userCollection}
             onSelect={handleAgentSelectForBattle} 
             onCancel={() => setShowAgentSelection(false)} 
           /> 

@@ -1,6 +1,9 @@
+// src/components/SplashScreen.tsx
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Power, AlertTriangle } from 'lucide-react';
 import { TypeAnimation } from 'react-type-animation';
+import { motion } from 'framer-motion'; // Importar motion
 import * as THREE from 'three';
 import NET from 'vanta/dist/vanta.net.min.js';
 
@@ -10,16 +13,14 @@ interface SplashScreenProps {
 
 const SplashScreen: React.FC<SplashScreenProps> = ({ onStart }) => {
   const vantaRef = useRef(null);
-  // Usamos 'any' para o tipo do vantaEffect, pois a biblioteca Vanta não fornece tipos oficiais
   const [vantaEffect, setVantaEffect] = useState<any>(null);
 
   useEffect(() => {
-    // A verificação `vantaRef.current` garante que o div exista antes de inicializar o Vanta
     if (!vantaEffect && vantaRef.current) {
       setVantaEffect(
         NET({
           el: vantaRef.current,
-          THREE: THREE, // Passa a biblioteca THREE.js (versão correta) para o Vanta
+          THREE: THREE,
           mouseControls: true,
           touchControls: true,
           gyroControls: false,
@@ -27,8 +28,8 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onStart }) => {
           minWidth: 200.00,
           scale: 1.00,
           scaleMobile: 1.00,
-          color: 0x0891b2, // Cor ciano (em hexadecimal)
-          backgroundColor: 0x020617, // Fundo azul escuro
+          color: 0x0891b2,
+          backgroundColor: 0x020617,
           points: 12.00,
           maxDistance: 25.00,
           spacing: 18.00
@@ -36,23 +37,22 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onStart }) => {
       );
     }
 
-    // Função de limpeza para destruir o efeito quando o componente for desmontado
     return () => {
       if (vantaEffect) {
         vantaEffect.destroy();
       }
     };
-  }, [vantaEffect]); // A dependência garante que o useEffect rode apenas uma vez
+  }, [vantaEffect]);
 
   return (
-    // O div principal agora serve como container para o efeito Vanta
-    <div ref={vantaRef} className="relative w-screen h-screen overflow-hidden">
+    <div ref={vantaRef} className="relative w-screen h-screen overflow-hidden flex flex-col">
       
       <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none">
         <div className="scanline"></div>
       </div>
 
-      <div className="relative z-20 flex flex-col items-center justify-center w-full h-full text-cyan-200 font-mono">
+      {/* Conteúdo Principal (Centralizado) */}
+      <div className="relative z-20 flex-grow flex flex-col items-center justify-center w-full h-full text-cyan-200 font-mono">
         <div className="bg-black/40 backdrop-blur-sm border border-cyan-500/30 rounded-xl p-8 max-w-3xl text-center shadow-2xl shadow-cyan-500/10">
           <div className="flex justify-center items-center gap-4 mb-4">
             <AlertTriangle className="w-10 h-10 text-red-400" />
@@ -105,6 +105,18 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onStart }) => {
         <p>RISCO NUCLEAR: CRÍTICO</p>
         <p>PROTOCOLO: DEFCON 2</p>
       </div>
+
+      {/* --- SEÇÃO DE CRÉDITOS RGB ADICIONADA AQUI --- */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.5 }}
+        className="relative w-full text-center py-4 z-20" // `relative` e `z-20` são importantes
+      >
+        <p className="credits-text text-sm font-mono tracking-widest">
+          Desenvolvido por Matheus Dias Estacio, Rafael Adams Moraes Ramos e Luiz Octavio Isolane Theis
+        </p>
+      </motion.div>
     </div>
   );
 };

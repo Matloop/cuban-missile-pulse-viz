@@ -185,3 +185,60 @@ All colors MUST be HSL.
     90% { transform: translate(-10%,10%); }
   }
 }
+/* src/index.css ou src/app.css */
+
+/* --- EFEITO RGB PARA OS CRÉDITOS --- */
+
+.credits-text {
+  /* A animação 'rgb-text-animation' é aplicada aqui */
+  animation: rgb-text-animation 6s ease-in-out infinite;
+  /* Uma sombra sutil para destacar o texto */
+  text-shadow: 
+    0 0 5px rgba(0, 172, 193, 0.5), 
+    0 0 10px rgba(215, 38, 114, 0.5), 
+    0 0 15px rgba(255, 235, 59, 0.5);
+}
+
+/* A animação @keyframes define como a cor muda ao longo do tempo */
+@keyframes rgb-text-animation {
+  0% {
+    color: #00e5ff; /* Ciano */
+  }
+  25% {
+    color: #ff00ff; /* Magenta */
+  }
+  50% {
+    color: #ffff00; /* Amarelo */
+  }
+  75% {
+    color: #00ff00; /* Verde Lima */
+  }
+  100% {
+    color: #00e5ff; /* Volta para o Ciano */
+  }
+}
+
+/* --- (OPCIONAL) ESTILO PARA O SCANLINE --- */
+/* Se você não tem, pode adicionar isso para o efeito de tela antiga */
+.scanline {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0) 50%,
+    rgba(0, 0, 0, 0.2) 70%,
+    rgba(255, 255, 255, 0.1)
+  );
+  background-size: 100% 4px;
+  animation: scan 10s linear infinite;
+  opacity: 0.2;
+}
+
+@keyframes scan {
+  from { background-position: 0 0; }
+  to { background-position: 0 -100px; }
+}

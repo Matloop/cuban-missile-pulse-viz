@@ -17,16 +17,17 @@
   "1962-10-18": {
     "id": "opponent_gromyko",
     "name": "Andrei Gromyko",
+    "battleType": "tetris",
     "description": "O Ministro das Relações Exteriores soviético, conhecido como 'Mr. Nyet'. Sua tática é a negação e a ofuscação diplomática.",
     "image": "figure_gromyko.jpg",
-    "stats": { "hp": 10, "attack": 15, "speed": 50 }
+    "stats": { "hp": 130, "attack": 30, "speed": 50 }
   },
   "1962-10-20": {
     "id": "opponent_mcnamara",
     "name": "Secretário Robert McNamara",
     "description": "O Secretário de Defesa, um mestre da lógica e da análise. Ele desafia sua estratégia com a lógica fria de um bloqueio naval.",
     "image": "figure_mcnamara.jpg",
-    "stats": { "hp": 10, "attack": 20, "speed": 70 }
+    "stats": { "hp": 140, "attack": 40, "speed": 70 }
   },
   "1962-10-22": {
     "id": "opponent_castro",
@@ -34,23 +35,23 @@
     "battleType": "rhythm",
     "description": "O líder revolucionário de Cuba. Sua determinação em defender sua nação a qualquer custo é seu maior trunfo.",
     "image": "figure_castro.jpg",
-    "stats": { "hp": 130, "attack": 30, "speed": 80 }
+    "stats": { "hp": 150, "attack": 45, "speed": 80 }
   
   },
   "1962-10-25": {
     "id": "opponent_zorin",
     "name": "Embaixador Valerian Zorin",
-    "battleType": "rhythm",
+    "battleType": "tetris",
     "description": "O representante soviético na ONU. Sua arma é a negação desafiadora no palco mundial.",
     "image": "figure_zorin.jpg",
-    "stats": { "hp": 90, "attack": 10, "speed": 65 }
+    "stats": { "hp": 160, "attack": 50, "speed": 65 }
   },
   "1962-10-26": {
     "id": "opponent_rfk",
     "name": "Robert F. Kennedy",
     "description": "O negociador secreto. Ele não luta com força, mas com a pressão da diplomacia de bastidores e a urgência do tempo.",
     "image": "figure_rfk.jpg",
-    "stats": { "hp": 100, "attack": 15, "speed": 90 }
+    "stats": { "hp": 160, "attack": 62, "speed": 90 }
   },
   "1962-10-27": {
     "id": "opponent_arkhipov",
@@ -58,7 +59,7 @@
     "battleType": "rhythm",
     "description": "O 'Homem que Salvou o Mundo'. Manter a calma sob pressão extrema é o desafio final.",
     "image": "figure_arkhipov.jpg",
-    "stats": { "hp": 200, "attack": 35, "speed": 30 }
+    "stats": { "hp": 162, "attack": 63, "speed": 30 }
   
   },
   "1962-10-28": {
@@ -66,7 +67,7 @@
     "name": "Nikita Khrushchev",
     "description": "O próprio Premier soviético. O desafio final é convencer o líder da URSS de que a paz é a única opção vitoriosa.",
     "image": "khrushchev_leader.jpg",
-    "stats": { "hp": 180, "attack": 25, "speed": 75 }
+    "stats": { "hp": 163, "attack": 63, "speed": 75 }
   }
   
 }
