@@ -63,7 +63,7 @@
       "description": "Um dos analistas anônimos cuja análise minuciosa das fotos de vigilância revelou a presença de mísseis em Cuba.",
       "isStarter": true,
       "image": "figure_analyst.jpg",
-      "stats": { "hp": 80, "attack": 6, "speed": 70 }
+      "stats": { "hp": 80, "attack": 9, "speed": 70 }
     },
     {
       "id": "navy_sailor",
@@ -83,7 +83,7 @@
       "description": "Responsável por transportar mensagens secretas e críticas, garantindo a comunicação entre as superpotências.",
       "isStarter": true,
       "image": "figure_courier.jpg",
-      "stats": { "hp": 70, "attack": 8, "speed": 95 }
+      "stats": { "hp": 70, "attack": 10, "speed": 95 }
     }
   ]
    

@@ -1,4 +1,11 @@
 {
+  "1962-10-14": {
+    "id": "opponent_lemay",
+    "name": "General Curtis LeMay",
+    "description": "Um 'falcão' da Força Aérea que representa a pressão por um ataque militar imediato.",
+    "image": "figure_lemay.jpg",
+    "stats": { "hp": 45, "attack": 12, "speed": 40 }
+  },
   "1962-10-16": {
     "id": "opponent_lemay",
     "battleType": "rhythm",

@@ -68,11 +68,11 @@ const RhythmBattle: React.FC<RhythmBattleProps> = ({ playerAgent, opponent, onWi
   const [showDamage, setShowDamage] = useState<{ target: 'player' | 'opponent', amount: number } | null>(null);
   const [feedback, setFeedback] = useState<'perfect' | 'great' | 'ok' | 'miss' | ''>('');
   
-  const timerDuration = Math.max(1.5, 3 - (turn * 0.2));
+  const timerDuration = 3;
 
   const generateSequence = useCallback(() => {
     const keys = ['w', 'a', 's', 'd'];
-    const length = Math.min(8, 2 + turn);
+    const length = Math.min(8, 2 + (turn - 1)); // Turno 1: 2 teclas, Turno 2: 3 teclas, etc.
     setSequence(Array.from({ length }, () => keys[Math.floor(Math.random() * keys.length)]));
     setPlayerInput([]);
   }, [turn]);
