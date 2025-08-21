@@ -1,12 +1,11 @@
-// src/components/BossBattle.tsx
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/button';
 import { HistoricalFigure } from '../types/crisisDataTypes';
 import { getFigureImageUrl } from '@/lib/imageLoader';
 
 interface BossBattleProps {
-  playerAgent: HistoricalFigure;
+  playerTeam: HistoricalFigure[]; // Recebe um time de 3 personagens
   bossFigure: HistoricalFigure;
   onWin: () => void;
   onLose: () => void;
@@ -28,58 +27,63 @@ const CRISIS_TEXTS = [
 
 // Configurações do jogo
 const BATTLE_DURATION = 60; // 60 segundos de batalha
-const DAMAGE_PER_WPM = 2; // Dano baseado em WPM
-const ACCURACY_MULTIPLIER = 1.5; // Multiplicador de dano por precisão
-const BOSS_ATTACK_INTERVAL = 3000; // Boss ataca a cada 3 segundos
+const DAMAGE_PER_WORD_BASE = 5; // Dano base por palavra, ANTES do bônus de ataque
+const ACCURACY_MULTIPLIER = 1.2;
+const BOSS_ATTACK_INTERVAL = 3000;
 
-const BossBattle: React.FC<BossBattleProps> = ({ playerAgent, bossFigure, onWin, onLose }) => {
-  // Estados do jogo
+const BossBattle: React.FC<BossBattleProps> = ({ playerTeam, bossFigure, onWin, onLose }) => {
+  // Combina os stats do time (HP e Ataque) em um único objeto
+  const combinedStats = useMemo(() => {
+    return playerTeam.reduce(
+      (acc, figure) => {
+        acc.hp += figure.stats.hp;
+        acc.attack += figure.stats.attack;
+        return acc;
+      },
+      { hp: 0, attack: 0 }
+    );
+  }, [playerTeam]);
+
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   const [timeLeft, setTimeLeft] = useState(BATTLE_DURATION);
-  
-  // Estados de HP
-  const [playerCurrentHp, setPlayerCurrentHp] = useState(playerAgent.stats.hp);
+
+  // Usa os stats combinados para o HP inicial do jogador
+  const [playerCurrentHp, setPlayerCurrentHp] = useState(combinedStats.hp);
   const [bossCurrentHp, setBossCurrentHp] = useState(bossFigure.stats.hp);
-  
-  // Estados de digitação
+
   const [currentText, setCurrentText] = useState('');
   const [userInput, setUserInput] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
-  
-  // Estados de estatísticas
+  const [wordsCompleted, setWordsCompleted] = useState(0);
+
   const [wpm, setWpm] = useState(0);
   const [accuracy, setAccuracy] = useState(100);
   const [correctChars, setCorrectChars] = useState(0);
   const [totalChars, setTotalChars] = useState(0);
   const [startTime, setStartTime] = useState<number | null>(null);
-  
-  // Estados visuais
+
   const [message, setMessage] = useState('');
   const [playerDamageDealt, setPlayerDamageDealt] = useState(0);
   const [bossDamageDealt, setBossDamageDealt] = useState(0);
-  
-  // Refs
+
   const inputRef = useRef<HTMLInputElement>(null);
   const gameTimerRef = useRef<NodeJS.Timeout | null>(null);
   const bossAttackRef = useRef<NodeJS.Timeout | null>(null);
   const wpmTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Inicializar texto aleatório
   useEffect(() => {
     const randomText = CRISIS_TEXTS[Math.floor(Math.random() * CRISIS_TEXTS.length)];
     setCurrentText(randomText);
   }, []);
 
-  // Iniciar jogo
   const startGame = useCallback(() => {
     if (gameStarted || gameEnded) return;
-    
+
     setGameStarted(true);
     setStartTime(Date.now());
     setMessage('Batalha iniciada! Digite o texto para atacar!');
-    
-    // Timer principal do jogo
+
     gameTimerRef.current = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -89,119 +93,134 @@ const BossBattle: React.FC<BossBattleProps> = ({ playerAgent, bossFigure, onWin,
         return prev - 1;
       });
     }, 1000);
-    
-    // Ataques do boss
+
     bossAttackRef.current = setInterval(() => {
       if (!gameEnded) {
         performBossAttack();
       }
     }, BOSS_ATTACK_INTERVAL);
-    
-    // Cálculo de WPM em tempo real
+
     wpmTimerRef.current = setInterval(calculateWPM, 1000);
-    
+
     inputRef.current?.focus();
   }, [gameStarted, gameEnded]);
 
-  // Finalizar jogo
   const endGame = useCallback(() => {
     if (gameEnded) return;
-    
+
     setGameEnded(true);
     setGameStarted(false);
-    
-    // Limpar timers
+
     if (gameTimerRef.current) clearInterval(gameTimerRef.current);
     if (bossAttackRef.current) clearInterval(bossAttackRef.current);
     if (wpmTimerRef.current) clearInterval(wpmTimerRef.current);
-    
-    // Determinar vencedor baseado em HP
-    if (bossCurrentHp <= 0) {
-      setMessage('VITÓRIA! Você derrotou o inimigo com sua velocidade de digitação!');
-      setTimeout(onWin, 2000);
-    } else if (playerCurrentHp <= 0) {
-      setMessage('DERROTA! O inimigo foi mais rápido que você!');
-      setTimeout(onLose, 2000);
-    } else {
-      // Empate - quem tem mais HP ganha
-      if (playerCurrentHp > bossCurrentHp) {
-        setMessage('VITÓRIA! Você sobreviveu com mais HP!');
-        setTimeout(onWin, 2000);
-      } else {
-        setMessage('DERROTA! O inimigo terminou com mais HP!');
-        setTimeout(onLose, 2000);
-      }
-    }
-  }, [gameEnded, bossCurrentHp, playerCurrentHp, onWin, onLose]);
 
-  // Ataque do boss
+    // Usa as variáveis de estado mais recentes para a decisão final
+    setBossCurrentHp(currentBossHp => {
+      setPlayerCurrentHp(currentPlayerHp => {
+        if (currentBossHp <= 0) {
+          setMessage('VITÓRIA! Você derrotou o inimigo!');
+          setTimeout(onWin, 2000);
+        } else if (currentPlayerHp <= 0) {
+          setMessage('DERROTA! Seu esquadrão foi superado!');
+          setTimeout(onLose, 2000);
+        } else {
+          if (currentPlayerHp > currentBossHp) {
+            setMessage('VITÓRIA! Você sobreviveu com mais HP!');
+            setTimeout(onWin, 2000);
+          } else {
+            setMessage('DERROTA! O inimigo terminou com mais HP!');
+            setTimeout(onLose, 2000);
+          }
+        }
+        return currentPlayerHp;
+      });
+      return currentBossHp;
+    });
+  }, [gameEnded, onWin, onLose]);
+
   const performBossAttack = useCallback(() => {
     const baseDamage = bossFigure.stats.attack;
-    const damage = Math.floor(baseDamage * (0.8 + Math.random() * 0.4)); // Dano variável
-    
+    const damage = Math.floor(baseDamage * (0.8 + Math.random() * 0.4)); // Dano com variação
+
     setPlayerCurrentHp(prev => Math.max(0, prev - damage));
     setBossDamageDealt(prev => prev + damage);
     setMessage(`${bossFigure.name} atacou! -${damage} HP`);
-    
+
     setTimeout(() => setMessage(''), 1500);
   }, [bossFigure]);
 
-  // Calcular WPM
   const calculateWPM = useCallback(() => {
     if (!startTime || !gameStarted) return;
-    
+
     const timeElapsed = (Date.now() - startTime) / 60000; // em minutos
-    const wordsTyped = correctChars / 5; // 5 caracteres = 1 palavra (padrão WPM)
+    const wordsTyped = correctChars / 5; // Média de 5 caracteres por palavra
     const currentWpm = Math.round(wordsTyped / timeElapsed) || 0;
-    
+
     setWpm(currentWpm);
   }, [startTime, gameStarted, correctChars]);
 
-  // Lidar com input do usuário
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!gameStarted || gameEnded) return;
-    
+
     const value = e.target.value;
-    const char = value[value.length - 1];
-    
-    if (value.length > currentText.length) return; // Impedir digitação além do texto
-    
+    if (value.length > currentText.length) return;
+
     setUserInput(value);
     setCurrentIndex(value.length);
-    
-    // Calcular estatísticas
+
     let correct = 0;
     for (let i = 0; i < value.length; i++) {
-      if (value[i] === currentText[i]) {
-        correct++;
-      }
+      if (value[i] === currentText[i]) correct++;
     }
-    
+
     setCorrectChars(correct);
     setTotalChars(value.length);
     setAccuracy(value.length > 0 ? Math.round((correct / value.length) * 100) : 100);
+
+    // Verifica se completou uma palavra
+    const words = currentText.split(' ');
+    let charCount = 0;
     
-    // Verificar se completou o texto
+    for (let i = 0; i < words.length; i++) {
+      const wordLength = words[i].length + (i < words.length - 1 ? 1 : 0); // +1 para o espaço
+      if (charCount + wordLength <= value.length) {
+        const wordText = words[i] + (i < words.length - 1 ? ' ' : '');
+        const typedWord = value.substring(charCount, charCount + wordLength);
+        
+        if (wordText === typedWord && i + 1 > wordsCompleted) {
+          // Usa o ataque combinado do time para calcular o dano
+          const attackBonus = combinedStats.attack / 10;
+          const rawWordDamage = DAMAGE_PER_WORD_BASE + attackBonus;
+          const finalDamage = Math.floor(rawWordDamage * (accuracy / 100) * ACCURACY_MULTIPLIER);
+          const totalDamage = Math.max(5, finalDamage); // Dano mínimo
+          
+          setBossCurrentHp(prev => Math.max(0, prev - totalDamage));
+          setPlayerDamageDealt(prev => prev + totalDamage);
+          setWordsCompleted(i + 1);
+          setMessage(`Palavra completada! Dano: ${totalDamage}`);
+          
+          setTimeout(() => setMessage(''), 1000);
+        }
+        charCount += wordLength;
+      } else {
+        break;
+      }
+    }
+
+    // Se completou o texto inteiro, gera um novo
     if (value === currentText) {
-      // Texto completado - causar dano baseado em performance
-      const performanceDamage = Math.floor(wpm * DAMAGE_PER_WPM * (accuracy / 100) * ACCURACY_MULTIPLIER);
-      const totalDamage = Math.max(10, performanceDamage); // Dano mínimo de 10
-      
-      setBossCurrentHp(prev => Math.max(0, prev - totalDamage));
-      setPlayerDamageDealt(prev => prev + totalDamage);
-      setMessage(`Texto completado! Dano causado: ${totalDamage} (${wpm} WPM, ${accuracy}% precisão)`);
-      
-      // Resetar para próximo texto
       const nextText = CRISIS_TEXTS[Math.floor(Math.random() * CRISIS_TEXTS.length)];
       setCurrentText(nextText);
       setUserInput('');
       setCurrentIndex(0);
+      setWordsCompleted(0);
+      setMessage('Texto completado! Novo texto carregado!');
       
-      setTimeout(() => setMessage(''), 2000);
+      setTimeout(() => setMessage(''), 1500);
     }
   };
 
-  // Efeito para verificar fim de jogo por HP
   useEffect(() => {
     if (gameStarted && !gameEnded) {
       if (playerCurrentHp <= 0 || bossCurrentHp <= 0) {
@@ -210,7 +229,6 @@ const BossBattle: React.FC<BossBattleProps> = ({ playerAgent, bossFigure, onWin,
     }
   }, [playerCurrentHp, bossCurrentHp, gameStarted, gameEnded, endGame]);
 
-  // Cleanup
   useEffect(() => {
     return () => {
       if (gameTimerRef.current) clearInterval(gameTimerRef.current);
@@ -219,11 +237,10 @@ const BossBattle: React.FC<BossBattleProps> = ({ playerAgent, bossFigure, onWin,
     };
   }, []);
 
-  // Componente de barra de HP
   const HPBar: React.FC<{ current: number; max: number; label: string; color: string }> = ({ current, max, label, color }) => {
     const percentage = Math.max(0, (current / max) * 100);
     return (
-      <div className="w-full bg-gray-800 rounded-lg h-6 border border-gray-600 relative overflow-hidden">
+      <div className="w-full bg-gray-800 rounded-lg h-8 border border-gray-600 relative overflow-hidden">
         <motion.div
           className="h-full rounded-lg"
           style={{ backgroundColor: color }}
@@ -238,122 +255,130 @@ const BossBattle: React.FC<BossBattleProps> = ({ playerAgent, bossFigure, onWin,
     );
   };
 
-  // Renderizar caracteres do texto
   const renderText = () => {
     return currentText.split('').map((char, index) => {
       let className = 'text-gray-400';
-      
+
       if (index < userInput.length) {
         className = userInput[index] === char ? 'text-green-400 bg-green-400/20' : 'text-red-400 bg-red-400/20';
       } else if (index === currentIndex) {
         className = 'text-white bg-white/20 animate-pulse';
       }
-      
+
       return (
-        <span key={index} className={`${className} text-xl leading-relaxed`}>
-          {char === ' ' ? '·' : char}
+        <span key={index} className={`${className}`}>
+          {char === ' ' ? '\u00A0' : char}
         </span>
       );
     });
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-900 z-[200] flex flex-col items-center justify-center p-4 font-mono text-white">
+    <div className="fixed inset-0 bg-gray-950 z-[200] flex flex-col items-center justify-center p-4 font-mono text-white overflow-hidden">
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
+        exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-6xl bg-gray-800 border border-gray-600 rounded-lg p-6 space-y-6"
+        className="w-full h-full max-w-6xl flex flex-col justify-between"
       >
-        {/* Header com personagens e HPs */}
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <img 
-              src={getFigureImageUrl(playerAgent.image)} 
-              className="h-16 w-16 object-cover rounded-full border-2 border-cyan-400" 
-              alt={playerAgent.name} 
-            />
-            <div className="w-64">
-              <p className="text-sm text-cyan-300 mb-1">{playerAgent.name}</p>
-              <HPBar current={playerCurrentHp} max={playerAgent.stats.hp} label="HP" color="#22d3ee" />
-            </div>
-          </div>
-          
-          <div className="text-center">
-            <div className="text-3xl font-bold text-yellow-400">
-              {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
-            </div>
-            <div className="text-sm text-gray-400">Tempo Restante</div>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <div className="w-64">
-              <p className="text-sm text-red-300 mb-1">{bossFigure.name}</p>
-              <HPBar current={bossCurrentHp} max={bossFigure.stats.hp} label="HP" color="#ef4444" />
-            </div>
-            <img 
-              src={getFigureImageUrl(bossFigure.image)} 
-              className="h-16 w-16 object-cover rounded-full border-2 border-red-400" 
-              alt={bossFigure.name} 
-            />
+        <div className="flex flex-col items-center space-y-3">
+          <img
+            src={getFigureImageUrl(bossFigure.image)}
+            className="h-32 w-32 object-cover rounded-full border-4 border-red-500 shadow-2xl"
+            alt={bossFigure.name}
+          />
+          <p className="text-xl font-bold text-red-400">{bossFigure.name}</p>
+          <div className="w-80">
+            <HPBar current={bossCurrentHp} max={bossFigure.stats.hp} label="Boss HP" color="#ef4444" />
           </div>
         </div>
 
-        {/* Estatísticas */}
-        <div className="grid grid-cols-4 gap-4 text-center">
-          <div className="bg-gray-700 rounded-lg p-3">
-            <div className="text-2xl font-bold text-cyan-400">{wpm}</div>
-            <div className="text-sm text-gray-400">WPM</div>
+        <div className="text-center">
+          <div className="text-3xl font-extrabold text-yellow-400 drop-shadow-lg">
+            {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
           </div>
-          <div className="bg-gray-700 rounded-lg p-3">
-            <div className="text-2xl font-bold text-green-400">{accuracy}%</div>
-            <div className="text-sm text-gray-400">Precisão</div>
-          </div>
-          <div className="bg-gray-700 rounded-lg p-3">
-            <div className="text-2xl font-bold text-yellow-400">{playerDamageDealt}</div>
-            <div className="text-sm text-gray-400">Dano Causado</div>
-          </div>
-          <div className="bg-gray-700 rounded-lg p-3">
-            <div className="text-2xl font-bold text-red-400">{bossDamageDealt}</div>
-            <div className="text-sm text-gray-400">Dano Recebido</div>
+          <div className="text-xs text-gray-400">Tempo Restante</div>
+        </div>
+
+        <div className="flex-1 flex items-center justify-center px-4">
+          <div className="w-full max-w-4xl bg-gray-900 rounded-lg border-2 border-gray-700 shadow-2xl">
+            <div className="p-6 min-h-[200px] max-h-[300px] overflow-hidden">
+              {!gameStarted && !gameEnded ? (
+                <div className="text-center h-full flex flex-col items-center justify-center">
+                  <p className="text-lg text-gray-300 mb-6">
+                    Pressione o botão para iniciar a batalha contra o boss!
+                  </p>
+                  <Button onClick={startGame} className="bg-cyan-600 hover:bg-cyan-700 text-lg px-8 py-3">
+                    INICIAR BATALHA
+                  </Button>
+                </div>
+              ) : (
+                <div 
+                  className="text-lg leading-relaxed text-justify break-words"
+                  style={{ 
+                    fontFamily: 'monospace',
+                    letterSpacing: '0.02em',
+                    lineHeight: '1.6'
+                  }}
+                >
+                  {renderText()}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Mensagem de feedback */}
+        <div className="grid grid-cols-4 gap-3 text-center mb-4">
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-600">
+            <div className="text-xl font-bold text-cyan-400">{wpm}</div>
+            <div className="text-xs text-gray-400">WPM</div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-600">
+            <div className="text-xl font-bold text-green-400">{accuracy}%</div>
+            <div className="text-xs text-gray-400">Precisão</div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-600">
+            <div className="text-xl font-bold text-yellow-400">{playerDamageDealt}</div>
+            <div className="text-xs text-gray-400">Dano Causado</div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-600">
+            <div className="text-xl font-bold text-red-400">{bossDamageDealt}</div>
+            <div className="text-xs text-gray-400">Dano Sofrido</div>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center space-y-2">
+          <div className="flex -space-x-8">
+            {playerTeam.map((agent, index) => (
+              <img
+                key={agent.id}
+                src={getFigureImageUrl(agent.image)}
+                className={`h-20 w-20 object-cover rounded-full border-4 border-cyan-400 shadow-lg z-${10 + index * 10}`}
+                alt={agent.name}
+              />
+            ))}
+          </div>
+          <p className="text-sm text-cyan-300">Seu Esquadrão</p>
+          <div className="w-64">
+            <HPBar current={playerCurrentHp} max={combinedStats.hp} label="HP do Esquadrão" color="#22d3ee" />
+          </div>
+        </div>
+
         <AnimatePresence mode="wait">
           {message && (
             <motion.div
               key={message}
-              initial={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="text-center text-lg font-bold text-yellow-300 bg-yellow-300/10 rounded-lg p-2"
+              exit={{ opacity: 0, y: 10 }}
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-base font-bold text-yellow-300 bg-yellow-300/20 backdrop-blur-sm rounded-lg p-3 border border-yellow-300/30 z-50"
             >
               {message}
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Área de texto */}
-        <div className="bg-gray-900 rounded-lg p-6 min-h-[200px] relative">
-          {!gameStarted && !gameEnded ? (
-            <div className="text-center">
-              <p className="text-xl text-gray-300 mb-4">
-                Pressione o botão para iniciar a batalha de digitação!
-              </p>
-              <Button onClick={startGame} className="bg-cyan-600 hover:bg-cyan-700">
-                INICIAR BATALHA
-              </Button>
-            </div>
-          ) : (
-            <div className="leading-loose text-justify">
-              {renderText()}
-            </div>
-          )}
-        </div>
-
-        {/* Input invisível para capturar digitação */}
         {gameStarted && !gameEnded && (
           <input
             ref={inputRef}
@@ -363,15 +388,6 @@ const BossBattle: React.FC<BossBattleProps> = ({ playerAgent, bossFigure, onWin,
             className="sr-only"
             autoFocus
           />
-        )}
-
-        {/* Instruções */}
-        {!gameStarted && (
-          <div className="text-center text-sm text-gray-400">
-            Digite o texto exibido para causar dano no inimigo. Sua velocidade (WPM) e precisão determinam o dano causado.
-            <br />
-            O inimigo atacará periodicamente. Derrote-o antes que seu HP chegue a zero!
-          </div>
         )}
       </motion.div>
     </div>

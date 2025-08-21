@@ -26,7 +26,7 @@ const App: React.FC = () => {
   const [initialCollection, setInitialCollection] = useState<string[]>([]);
   
   // --- ESTADOS ELEVADOS ---
-  const [lootboxTokens, setLootboxTokens] = useState<number>(1);
+  const [lootboxTokens, setLootboxTokens] = useState<number>(100);
   const [currentQuiz, setCurrentQuiz] = useState<QuizData | null>(null);
 
   const handleStart = () => {

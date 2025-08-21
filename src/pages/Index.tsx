@@ -28,6 +28,8 @@ import { NetworkNode, DailyEvent, HistoricalFigure, DailyOpponent, QuizData } fr
 import Lootbox from '@/components/LootBox';
 import BossBattle from '../components/BossBattle';
 import { theFinalBoss } from '../data/finalBoss'; 
+import TeamSelectionForBoss from '@/components/TeamSelectionForBoss';
+ // <--- NOVA IMPORTAÇÃO
 
 
 const allFigures = allFiguresData as HistoricalFigure[];
@@ -40,7 +42,7 @@ const sortedCrisisDates = limitedCrisisEvents.map(event => event.date).sort();
 
 
 interface IndexProps {
-  initialCollection: string[]; // Espera-se que contenha APENAS o ID do starter escolhido
+  initialCollection: string[];
   lootboxTokens: number;
   onAddToken: () => void;
   onSpendToken: () => void;
@@ -86,26 +88,17 @@ const Index: React.FC<IndexProps> = ({
   const [selectedAgentForBattle, setSelectedAgentForBattle] = useState<HistoricalFigure | null>(null);
   const [currentOpponent, setCurrentOpponent] = useState<DailyOpponent | null>(null);
 
+  // Estados para a Batalha Final
   const [showBossMinigame, setShowBossMinigame] = useState<boolean>(false);
-
-  const defaultPlayerAgent: HistoricalFigure = useMemo(() => {
-    // Isso deve ser revisado se a coleção do usuário começar vazia
-    // e for populada APENAS pelo `initialCollection`
-    return userCollection.length > 0 ? userCollection[0] : allFigures[0];
-  }, [userCollection]);
-
+  const [showTeamSelectionForBoss, setShowTeamSelectionForBoss] = useState<boolean>(false); // <--- NOVO
+  const [finalTeam, setFinalTeam] = useState<HistoricalFigure[]>([]); // <--- NOVO
 
   useEffect(() => {
-    // --- MUDANÇA CRÍTICA AQUI ---
-    // A coleção do usuário deve incluir SOMENTE o ID passado via initialCollection.
-    // A flag `isStarter` não deve ser usada aqui, pois StarterSelection já selecionou APENAS UM.
     const initialFigures = allFigures.filter(figure => 
         (initialCollection || []).includes(figure.id) 
-        // || figure.isStarter // <--- REMOVIDO: ESTA ERA A CAUSA DO PROBLEMA
     );
     setUserCollection(initialFigures);
-  }, [initialCollection]); // Depende apenas de initialCollection
-
+  }, [initialCollection]);
 
   useEffect(() => {
       setSelectedNode(null);
@@ -125,8 +118,9 @@ const Index: React.FC<IndexProps> = ({
       return; 
     }
 
+    // Se é o último dia, inicia a seleção de time para o chefão
     if (isLastTimelineDay && currentIndex === highestUnlockedLevel) {
-        setShowBossMinigame(true); 
+        setShowTeamSelectionForBoss(true); // <--- MUDA PARA A SELEÇÃO DE TIME
         return; 
     }
 
@@ -142,14 +136,8 @@ const Index: React.FC<IndexProps> = ({
             if (opponentForCurrentDay.battleType === 'tetris') {
                 setShowBattleScreen(true);
             } else {
-                if (!selectedAgentForBattle) {
-                    setShowAgentSelection(true); 
-                } else {
-                    setShowBattleScreen(true);
-                }
+                setShowAgentSelection(true);
             }
-        } else {
-            console.log("Chegou ao final dos dias limitados, sem batalha diária pendente para o último dia");
         }
     } else {
         const nextIndex = currentIndex + 1;
@@ -157,11 +145,9 @@ const Index: React.FC<IndexProps> = ({
             setSelectedDate(sortedCrisisDates[nextIndex]);
             setHighestUnlockedLevel(prev => Math.max(prev, nextIndex));
             setSelectedNode(null);
-        } else {
-            console.log("Não há mais dias para avançar na linha do tempo limitada.");
         }
     }
-  }, [selectedDate, highestUnlockedLevel, isLastTimelineDay, opponents, selectedAgentForBattle]);
+  }, [selectedDate, highestUnlockedLevel, isLastTimelineDay, opponents]);
 
   const handleAgentSelectForBattle = useCallback((agent: HistoricalFigure) => {
     setSelectedAgentForBattle(agent);
@@ -188,6 +174,17 @@ const Index: React.FC<IndexProps> = ({
     setShowBattleScreen(false);
     setPendingDate(null);
     window.location.reload(); 
+  }, []);
+
+  // --- Handlers para a Batalha Final ---
+  const handleConfirmFinalTeam = useCallback((team: HistoricalFigure[]) => {
+    setFinalTeam(team);
+    setShowTeamSelectionForBoss(false);
+    setShowBossMinigame(true);
+  }, []);
+
+  const handleCancelFinalTeamSelection = useCallback(() => {
+    setShowTeamSelectionForBoss(false);
   }, []);
 
   const handleBossMinigameWin = useCallback(() => { 
@@ -308,6 +305,7 @@ const Index: React.FC<IndexProps> = ({
     setShowBossMinigame(false);
     setShowFinalQuiz(false);
     setShowBattleScreen(false);
+    setShowTeamSelectionForBoss(false); // Garante que a seleção de time feche também
     setPendingDate(null);
     alert(`Pulando para o Dia ${lastDayIndex + 1} (último dia para testes)!`);
   }, []);
@@ -398,18 +396,18 @@ const Index: React.FC<IndexProps> = ({
           /> 
         )}
         
-        {showBattleScreen && currentOpponent && (() => {
+        {showBattleScreen && currentOpponent && selectedAgentForBattle && (
+          // O tipo de batalha é decidido pelo `battleType` do oponente
+          (() => {
             if (currentOpponent.battleType === 'tetris') {
-                return <MissileCrisisTetris opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
+              return <MissileCrisisTetris opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
+            } else if (currentOpponent.battleType === 'rhythm') {
+              return <RhythmBattle playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
+            } else { // Batalha padrão (quiz)
+              return <BattleScreen playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
             }
-            if (selectedAgentForBattle) {
-                if (currentOpponent.battleType === 'rhythm') {
-                    return <RhythmBattle playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
-                }
-                return <BattleScreen playerAgent={selectedAgentForBattle} opponent={currentOpponent} onWin={handleBattleWin} onLose={handleBattleLose} />;
-            }
-            return null;
-        })()}
+          })()
+        )}
 
         {showFinalQuiz && ( 
           <FinalQuiz 
@@ -432,9 +430,18 @@ const Index: React.FC<IndexProps> = ({
           /> 
         )}
 
-        {showBossMinigame && defaultPlayerAgent && (
+        {/* --- Renderização da Seleção de Time e Batalha Final --- */}
+        {showTeamSelectionForBoss && ( // <--- NOVO
+          <TeamSelectionForBoss 
+            userCollection={userCollection}
+            onConfirm={handleConfirmFinalTeam}
+            onCancel={handleCancelFinalTeamSelection}
+          />
+        )}
+
+        {showBossMinigame && finalTeam.length === 3 && ( // Garante que o time está formado
           <BossBattle 
-            playerAgent={selectedAgentForBattle || defaultPlayerAgent} 
+            playerTeam={finalTeam} // Passa o time selecionado
             bossFigure={theFinalBoss} 
             onWin={handleBossMinigameWin} 
             onLose={handleBossMinigameLose} 

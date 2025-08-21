@@ -1,4 +1,3 @@
-
 {
   "1962-10-14": [
     {
@@ -7,6 +6,13 @@
       "options": ["SR-71 Blackbird", "U-2 Dragon Lady", "B-52 Stratofortress"],
       "correctAnswer": 1,
       "explanation": "O U-2, um avião de reconhecimento de alta altitude, foi crucial para a descoberta das instalações."
+    },
+    {
+      "id": 16,
+      "question": "Quem foi o piloto do avião U-2 que fez o voo crucial de 14 de outubro?",
+      "options": ["Francis Gary Powers", "Richard Heyser", "Rudolf Anderson"],
+      "correctAnswer": 1,
+      "explanation": "O Major Richard Heyser pilotou o U-2 que trouxe as primeiras fotos das bases de mísseis."
     }
   ],
   "1962-10-16": [
@@ -16,6 +22,13 @@
       "options": ["Conselho de Guerra", "Grupo de Crise", "ExComm"],
       "correctAnswer": 2,
       "explanation": "O ExComm (Comitê Executivo do Conselho de Segurança Nacional) foi formado para assessorar Kennedy."
+    },
+    {
+      "id": 17,
+      "question": "Qual foi a principal divisão dentro do ExComm no primeiro dia de debate?",
+      "options": ["Diplomacia vs. espionagem", "Ataque aéreo vs. bloqueio naval", "Negociação vs. rendição"],
+      "correctAnswer": 1,
+      "explanation": "Alguns membros defendiam um ataque aéreo surpresa, enquanto outros sugeriam um bloqueio naval para evitar escalada imediata."
     }
   ],
   "1962-10-18": [
@@ -25,6 +38,13 @@
       "options": ["Que os mísseis eram ofensivos", "Que os mísseis eram apenas defensivos", "Que não havia mísseis"],
       "correctAnswer": 1,
       "explanation": "Gromyko mentiu, assegurando a Kennedy que todo o armamento em Cuba era estritamente para fins defensivos."
+    },
+    {
+      "id": 18,
+      "question": "Por que Kennedy não confrontou Gromyko diretamente sobre os mísseis?",
+      "options": ["Porque não tinha provas ainda", "Porque não queria revelar que sabia das fotos", "Porque respeitava a diplomacia soviética"],
+      "correctAnswer": 1,
+      "explanation": "Kennedy escolheu não revelar que já tinha provas fotográficas, para manter a vantagem estratégica."
     }
   ],
   "1962-10-20": [
@@ -34,6 +54,13 @@
       "options": ["Invasão total", "Ataque aéreo cirúrgico", "Um bloqueio naval ('quarentena')"],
       "correctAnswer": 2,
       "explanation": "Kennedy optou pela 'quarentena' como uma resposta inicial forte, mas que ainda deixava espaço para a diplomacia."
+    },
+    {
+      "id": 19,
+      "question": "Qual foi o principal argumento contra o ataque aéreo feito por McNamara?",
+      "options": ["Risco de vítimas civis", "Possibilidade de retaliação soviética", "Falta de precisão dos aviões"],
+      "correctAnswer": 1,
+      "explanation": "McNamara temia que um ataque aéreo levasse à morte de soviéticos em Cuba e provocasse uma retaliação direta."
     }
   ],
   "1962-10-22": [
@@ -43,6 +70,13 @@
       "options": ["Soava menos agressivo", "Um bloqueio é um ato de guerra", "Foi uma sugestão da ONU"],
       "correctAnswer": 1,
       "explanation": "Sob o direito internacional, um 'bloqueio' é considerado um ato de guerra, algo que Kennedy queria evitar."
+    },
+    {
+      "id": 20,
+      "question": "Qual foi o nível de prontidão militar dos EUA anunciado após o discurso?",
+      "options": ["DEFCON 5", "DEFCON 3", "DEFCON 1"],
+      "correctAnswer": 1,
+      "explanation": "Kennedy elevou as forças armadas para DEFCON 3, sinalizando alerta máximo sem declarar guerra."
     }
   ],
   "1962-10-24": [
@@ -52,6 +86,13 @@
       "options": ["Um pedido de desculpas público", "Navios soviéticos pararam antes da linha de quarentena", "Castro pediu a remoção dos mísseis"],
       "correctAnswer": 1,
       "explanation": "A frota soviética que se aproximava de Cuba parou ou desviou, evitando um confronto direto com a marinha dos EUA."
+    },
+    {
+      "id": 21,
+      "question": "O que a decisão soviética de parar seus navios demonstrou para os analistas ocidentais?",
+      "options": ["Fraqueza soviética", "Intenção de evitar confronto direto", "Desorganização naval"],
+      "correctAnswer": 1,
+      "explanation": "A pausa foi interpretada como sinal de que Moscou queria evitar um confronto imediato."
     }
   ],
   "1962-10-25": [
@@ -61,6 +102,13 @@
       "options": ["Fidel Castro", "Andrei Gromyko", "Valerian Zorin"],
       "correctAnswer": 2,
       "explanation": "Stevenson confrontou o embaixador soviético na ONU, Valerian Zorin, que se recusou a responder sobre os mísseis."
+    },
+    {
+      "id": 22,
+      "question": "Qual foi a prova apresentada por Stevenson na ONU?",
+      "options": ["Gravações de rádio", "Fotos aéreas dos mísseis", "Testemunhos de espiões"],
+      "correctAnswer": 1,
+      "explanation": "As fotos tiradas pelo U-2 foram mostradas ao mundo, desmentindo as declarações soviéticas."
     }
   ],
   "1962-10-26": [
@@ -70,6 +118,13 @@
       "options": ["Retirar os mísseis em troca da não-invasão de Cuba", "Entregar Cuba aos EUA", "Pedir um encontro em Viena"],
       "correctAnswer": 0,
       "explanation": "A primeira carta oferecia uma solução direta: remoção dos mísseis em troca de uma garantia pública de que os EUA não invadiriam Cuba."
+    },
+    {
+      "id": 23,
+      "question": "Qual foi o tom predominante da primeira carta de Khrushchev?",
+      "options": ["Agressivo e ameaçador", "Conciliador e pessoal", "Formal e burocrático"],
+      "correctAnswer": 1,
+      "explanation": "A primeira carta era mais emocional e conciliadora, pedindo um acordo direto."
     }
   ],
   "1962-10-27": [
@@ -79,6 +134,22 @@
       "options": ["O discurso de Khrushchev", "A invasão de Cuba", "O abate de um avião U-2"],
       "correctAnswer": 2,
       "explanation": "O abate do U-2 do Major Rudolf Anderson aumentou drasticamente a tensão, levando o mundo à beira da guerra."
+    },
+    {
+      "id": 24,
+      "question": "O que diferenciava a segunda carta de Khrushchev enviada no mesmo dia?",
+      "options": ["Era mais dura e exigia a retirada dos mísseis da Turquia", "Oferecia ajuda econômica", "Propunha uma cúpula internacional"],
+      "correctAnswer": 0,
+      "explanation": "A segunda carta foi mais dura, exigindo a retirada dos mísseis Júpiter da Turquia em troca da resolução da crise."
+    }
+  ],
+  "1962-10-28": [
+    {
+      "id": 25,
+      "question": "Por que a URSS aceitou o acordo final?",
+      "options": ["Pressão internacional e risco de guerra nuclear", "Vitória diplomática completa", "Conquista de Cuba pelos soviéticos"],
+      "correctAnswer": 0,
+      "explanation": "A combinação da pressão internacional e do risco de guerra nuclear levou Khrushchev a recuar."
     }
   ],
   "geral": [
@@ -89,9 +160,33 @@
       "correctAnswer": 0,
       "explanation": "Os EUA concordaram secretamente em remover seus mísseis Júpiter da Turquia meses após a crise."
     },
-    { "id": 7, "question": "Quantos dias a Crise dos Mísseis de Cuba durou oficialmente?", "options": ["7 dias", "13 dias", "30 dias"], "correctAnswer": 1, "explanation": "A crise durou 13 dias intensos, de 16 a 28 de outubro de 1962." },
-    { "id": 8, "question": "Qual oficial de submarino soviético evitou um desastre nuclear no 'Sábado Negro'?", "options": ["Mikhail Gorbachev", "Vasily Arkhipov", "Yuri Gagarin"], "correctAnswer": 1, "explanation": "Vasily Arkhipov, a bordo do submarino B-59, vetou a decisão de lançar um torpedo nuclear." },
-    { "id": 9, "question": "Qual operação da CIA, que falhou em 1961, aumentou a desconfiança de Cuba em relação aos EUA?", "options": ["Operação Mongoose", "Invasão da Baía dos Porcos", "Operação Northwoods"], "correctAnswer": 1, "explanation": "A fracassada Invasão da Baía dos Porcos levou Cuba a buscar proteção militar da URSS." },
-    { "id": 10, "question": "O que foi estabelecido entre Washington e Moscou após a crise para evitar futuros conflitos?", "options": ["A 'Linha Vermelha' (Hotline)", "A Organização das Nações Unidas", "O Tratado de Não Proliferação Nuclear"], "correctAnswer": 0, "explanation": "A 'Linha Vermelha', um link de comunicação direta, foi criada para permitir um diálogo rápido entre os líderes." }
+    {
+      "id": 7,
+      "question": "Quantos dias a Crise dos Mísseis de Cuba durou oficialmente?",
+      "options": ["7 dias", "13 dias", "30 dias"],
+      "correctAnswer": 1,
+      "explanation": "A crise durou 13 dias intensos, de 16 a 28 de outubro de 1962."
+    },
+    {
+      "id": 8,
+      "question": "Qual oficial de submarino soviético evitou um desastre nuclear no 'Sábado Negro'?",
+      "options": ["Mikhail Gorbachev", "Vasily Arkhipov", "Yuri Gagarin"],
+      "correctAnswer": 1,
+      "explanation": "Vasily Arkhipov, a bordo do submarino B-59, vetou a decisão de lançar um torpedo nuclear."
+    },
+    {
+      "id": 9,
+      "question": "Qual operação da CIA, que falhou em 1961, aumentou a desconfiança de Cuba em relação aos EUA?",
+      "options": ["Operação Mongoose", "Invasão da Baía dos Porcos", "Operação Northwoods"],
+      "correctAnswer": 1,
+      "explanation": "A fracassada Invasão da Baía dos Porcos levou Cuba a buscar proteção militar da URSS."
+    },
+    {
+      "id": 10,
+      "question": "O que foi estabelecido entre Washington e Moscou após a crise para evitar futuros conflitos?",
+      "options": ["A 'Linha Vermelha' (Hotline)", "A Organização das Nações Unidas", "O Tratado de Não Proliferação Nuclear"],
+      "correctAnswer": 0,
+      "explanation": "A 'Linha Vermelha', um link de comunicação direta, foi criada para permitir um diálogo rápido entre os líderes."
+    }
   ]
 }
