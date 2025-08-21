@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Eye, EyeOff, BookOpen, Clock, Key, FolderOpen, FastForward, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from "@/components/ui/sonner";
 
 // Componentes
 import NetworkVisualization from '../components/NetworkVisualization';
@@ -15,6 +16,8 @@ import EventQuiz from '../components/EventQuiz';
 import Collection from '../components/Collection';
 import RhythmBattle from '@/components/RhythmBattle';
 import TeamSelectionForBoss from '../components/TeamSelectionForBoss';
+import Lootbox from '@/components/LootBox';
+import BossBattle from '../components/BossBattle';
 
 import { Button } from '../components/ui/button';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../components/ui/resizable';
@@ -25,8 +28,6 @@ import allFiguresData from '../data/historicalFigures.json';
 import opponentsData from '../data/opponents.json';
 import quizQuestionsData from '../data/quizQuestions.json'; 
 import { NetworkNode, DailyEvent, HistoricalFigure, DailyOpponent, QuizData } from '../types/crisisDataTypes';
-import Lootbox from '@/components/LootBox';
-import BossBattle from '../components/BossBattle';
 import { theFinalBoss } from '../data/finalBoss'; 
 
 const allFigures = allFiguresData as HistoricalFigure[];
@@ -37,8 +38,9 @@ const CRISIS_DAYS_LIMIT = 10;
 const limitedCrisisEvents = crisisData.events.slice(0, CRISIS_DAYS_LIMIT);
 const sortedCrisisDates = limitedCrisisEvents.map(event => event.date).sort();
 
-// Chave para salvar/carregar o estado do jogo no localStorage
+// Chaves para salvar/carregar o estado do jogo no localStorage
 const GAME_STATE_KEY = 'cubanCrisisGameState';
+const CORRECTLY_ANSWERED_QUIZ_KEY = 'cubanCrisisCorrectlyAnsweredQuiz';
 
 interface IndexProps {
   initialCollection: string[];
@@ -59,6 +61,7 @@ const Index: React.FC<IndexProps> = ({
   const [selectedDate, setSelectedDate] = useState<string>(limitedCrisisEvents[0].date);
   const [userCollection, setUserCollection] = useState<HistoricalFigure[]>([]);
   const [highestUnlockedLevel, setHighestUnlockedLevel] = useState<number>(0);
+  const [correctlyAnsweredIds, setCorrectlyAnsweredIds] = useState<number[]>([]);
   
   // Flag para garantir que o salvamento não aconteça antes do carregamento inicial
   const [isStateLoaded, setIsStateLoaded] = useState(false);
@@ -87,47 +90,44 @@ const Index: React.FC<IndexProps> = ({
   // --- EFEITO PARA CARREGAR O JOGO SALVO ---
   useEffect(() => {
     try {
+      // Carrega estado principal
       const savedStateJSON = localStorage.getItem(GAME_STATE_KEY);
       if (savedStateJSON) {
         const savedState = JSON.parse(savedStateJSON);
-        // Garante que a coleção salva não seja vazia antes de carregar
-        if (savedState.userCollection && savedState.userCollection.length > 0) {
-            setUserCollection(savedState.userCollection);
-        } else {
-            // Se a coleção salva estiver vazia, usa a inicial
-            const initialFigures = allFigures.filter(figure => (initialCollection || []).includes(figure.id));
-            setUserCollection(initialFigures);
-        }
+        if (savedState.userCollection?.length > 0) setUserCollection(savedState.userCollection);
+        else setUserCollection(allFigures.filter(f => (initialCollection || []).includes(f.id)));
         if (savedState.highestUnlockedLevel) setHighestUnlockedLevel(savedState.highestUnlockedLevel);
         if (savedState.selectedDate) setSelectedDate(savedState.selectedDate);
       } else {
-        // Se não houver jogo salvo, inicializa com o starter
-        const initialFigures = allFigures.filter(figure => 
-            (initialCollection || []).includes(figure.id) 
-        );
-        setUserCollection(initialFigures);
+        setUserCollection(allFigures.filter(f => (initialCollection || []).includes(f.id)));
       }
+
+      // Carrega IDs dos quizzes respondidos
+      const savedQuizIdsJSON = localStorage.getItem(CORRECTLY_ANSWERED_QUIZ_KEY);
+      if (savedQuizIdsJSON) {
+        setCorrectlyAnsweredIds(JSON.parse(savedQuizIdsJSON));
+      }
+
     } catch (error) {
       console.error("Falha ao carregar o estado do jogo:", error);
-      const initialFigures = allFigures.filter(figure => (initialCollection || []).includes(figure.id));
-      setUserCollection(initialFigures);
+      setUserCollection(allFigures.filter(f => (initialCollection || []).includes(f.id)));
     } finally {
-      setIsStateLoaded(true); // Marca que o estado foi carregado
+      setIsStateLoaded(true);
     }
-  }, [initialCollection]); // Depende de initialCollection para o primeiro carregamento
+  }, [initialCollection]);
 
   // --- EFEITO PARA SALVAR O JOGO ---
   useEffect(() => {
-    // Só salva o estado DEPOIS que ele foi carregado e se a coleção não estiver vazia
-    if (isStateLoaded && userCollection.length > 0) {
-      const gameState = {
-        userCollection,
-        highestUnlockedLevel,
-        selectedDate,
-      };
-      localStorage.setItem(GAME_STATE_KEY, JSON.stringify(gameState));
+    if (isStateLoaded) {
+      // Salva estado principal apenas se a coleção não estiver vazia
+      if (userCollection.length > 0) {
+        const gameState = { userCollection, highestUnlockedLevel, selectedDate };
+        localStorage.setItem(GAME_STATE_KEY, JSON.stringify(gameState));
+      }
+      // Salva IDs dos quizzes respondidos
+      localStorage.setItem(CORRECTLY_ANSWERED_QUIZ_KEY, JSON.stringify(correctlyAnsweredIds));
     }
-  }, [userCollection, highestUnlockedLevel, selectedDate, isStateLoaded]);
+  }, [userCollection, highestUnlockedLevel, selectedDate, correctlyAnsweredIds, isStateLoaded]);
 
   useEffect(() => {
       setSelectedNode(null);
@@ -136,10 +136,10 @@ const Index: React.FC<IndexProps> = ({
   // --- FUNÇÃO PARA RESETAR O JOGO ---
   const handleResetGame = () => {
     if (window.confirm("Você tem certeza que deseja resetar todo o seu progresso? Esta ação não pode ser desfeita.")) {
-      // Limpa os dois locais de armazenamento
       localStorage.removeItem(GAME_STATE_KEY);
-      localStorage.removeItem('cubanCrisisAppState'); // Limpa o estado do App também
-      window.location.reload(); // Recarrega a página para o fluxo de splash/starter
+      localStorage.removeItem('cubanCrisisAppState');
+      localStorage.removeItem(CORRECTLY_ANSWERED_QUIZ_KEY);
+      window.location.reload();
     }
   };
 
@@ -202,7 +202,7 @@ const Index: React.FC<IndexProps> = ({
   const handleBattleLose = useCallback(() => {
     setShowBattleScreen(false);
     setPendingDate(null);
-    alert("Você foi derrotado! Tente novamente ou explore outros dias.");
+    toast.error("Você foi derrotado!", { description: "Reorganize-se e tente novamente." });
   }, []);
 
   const handleConfirmFinalTeam = useCallback((team: HistoricalFigure[]) => {
@@ -217,12 +217,12 @@ const Index: React.FC<IndexProps> = ({
 
   const handleBossMinigameWin = useCallback(() => { 
     setShowBossMinigame(false);
-    alert("Parabéns! Você venceu a batalha final e salvou o mundo!");
+    toast.success("VITÓRIA FINAL!", { description: "Você salvou o mundo da aniquilação nuclear." });
   }, []);
 
   const handleBossMinigameLose = useCallback(() => { 
     setShowBossMinigame(false);
-    alert("Você foi derrotado na batalha final! Reorganize seu esquadrão e tente novamente.");
+    toast.error("Derrota na Batalha Final", { description: "O mundo mergulhou na escuridão. Tente novamente." });
   }, []);
 
   const handleFinalQuizComplete = useCallback((keysEarned: number) => {
@@ -231,34 +231,40 @@ const Index: React.FC<IndexProps> = ({
   }, [onAddToken]);
 
   const handleStartDailyQuiz = useCallback(() => {
-    const dailyQuestions = allQuizQuestions[selectedDate];
+    const filterAnswered = (questions: QuizData[]) => questions.filter(q => !correctlyAnsweredIds.includes(q.id));
+    const dailyQuestions = filterAnswered(allQuizQuestions[selectedDate] || []);
     let selectedQuiz: QuizData | null = null;
-    if (dailyQuestions?.length) {
+
+    if (dailyQuestions.length > 0) {
       selectedQuiz = dailyQuestions[Math.floor(Math.random() * dailyQuestions.length)];
     } else {
-      const generalQuestions = allQuizQuestions['geral'];
-      if (generalQuestions?.length) {
+      const generalQuestions = filterAnswered(allQuizQuestions['geral'] || []);
+      if (generalQuestions.length > 0) {
         selectedQuiz = generalQuestions[Math.floor(Math.random() * generalQuestions.length)];
       }
     }
+
     if (selectedQuiz) {
       setCurrentEventQuiz(selectedQuiz);
       setShowEventQuiz(true);
     } else {
-      alert("Nenhuma pergunta de quiz disponível para este dia.");
+      toast.info("Você já respondeu todas as perguntas disponíveis hoje!");
     }
-  }, [selectedDate]);
+  }, [selectedDate, correctlyAnsweredIds]);
 
   const handleDailyQuizComplete = useCallback((isCorrect: boolean) => {
     if (isCorrect) {
       onAddToken(); 
-      alert("Resposta Correta! Você ganhou uma Chave de Análise!");
+      if (currentEventQuiz) {
+        setCorrectlyAnsweredIds(prev => [...prev, currentEventQuiz.id]);
+      }
+      toast.success("Resposta Correta!", { description: "Você ganhou 1 Chave de Análise." });
     } else {
-      alert("Resposta Incorreta. Revise os detalhes!");
+      toast.error("Resposta Incorreta.", { description: "Revise os detalhes!" });
     }
     setShowEventQuiz(false); 
     setCurrentEventQuiz(null); 
-  }, [onAddToken]);
+  }, [onAddToken, currentEventQuiz]);
 
   const handleOpenLootbox = useCallback(() => {
     if (lootboxTokens <= 0) return;
@@ -292,8 +298,10 @@ const Index: React.FC<IndexProps> = ({
           speed: Math.round(figure.stats.speed * 1.2) 
         }} : figure
       ));
+      toast.info(`Agente Duplicado: ${figureToAdd.name}`, { description: "Seus status foram fortalecidos em 20%." });
     } else {
       setUserCollection(current => [...current, figureToAdd]);
+      toast.success(`Novo Agente Recrutado: ${figureToAdd.name}!`);
     }
     setShowLootboxOpening(false);
     setUnlockedFigure(null);
@@ -315,7 +323,6 @@ const Index: React.FC<IndexProps> = ({
     setShowBattleScreen(false);
     setShowTeamSelectionForBoss(false);
     setPendingDate(null);
-    alert(`Pulando para o Dia ${lastDayIndex + 1} (último dia para testes)!`);
   }, []);
 
   return (

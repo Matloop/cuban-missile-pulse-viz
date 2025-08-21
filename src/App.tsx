@@ -128,20 +128,21 @@ const App: React.FC = () => {
       case 'main':
         return (
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={
-                <Index 
-                  initialCollection={initialCollection}
-                  lootboxTokens={lootboxTokens}
-                  onAddToken={addLootboxToken}
-                  onSpendToken={spendLootboxToken}
-                  onStartQuiz={handleStartGeneralQuiz}
-                />} 
-              />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        );
+          <Routes>
+            <Route path="/" element={
+              <Index 
+                initialCollection={initialCollection}
+                lootboxTokens={lootboxTokens}
+                onAddToken={addLootboxToken}
+                onSpendToken={spendLootboxToken}
+                onStartQuiz={handleStartGeneralQuiz} // Passa o handler do quiz geral
+                // toast={toast} // Passa a função toast como prop
+              />} 
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      );
       
       default:
         return <SplashScreen onStart={handleStart} />;
