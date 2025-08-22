@@ -2,17 +2,18 @@
 
 import * as d3 from 'd3';
 
+// --- DEFINIÇÕES DE TIPO ---
 export interface NetworkNode extends d3.SimulationNodeDatum {
   id: string;
   name: string;
   leader?: string;
   type: string;
   color: string;
+  // --- FIX: Make these properties optional to match the incoming data type ---
   description?: string;
   objective?: string;
   key_figures?: string;
   key_assets?: string;
-  image?: string;
 }
 
 export interface QuizData {

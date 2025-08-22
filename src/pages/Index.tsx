@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Eye, EyeOff, BookOpen, Clock, Key, FolderOpen, FastForward, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -308,7 +309,9 @@ const Index: React.FC<IndexProps> = ({
     setIsDuplicateInLootbox(false);
   }, [userCollection]);
 
-  const handleNodeSelect = useCallback((node: NetworkNode) => setSelectedNode(prev => (prev?.id === node.id ? null : node)), []);
+  const handleNodeSelect = useCallback((node: NetworkNode | null) => {
+    setSelectedNode(node);
+  }, []);
   
   const canAdvance = useMemo(() => sortedCrisisDates.indexOf(selectedDate) === highestUnlockedLevel, [selectedDate, highestUnlockedLevel]);
   const formattedDate = new Date(selectedDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
@@ -332,9 +335,12 @@ const Index: React.FC<IndexProps> = ({
 
       <header className="bg-black/30 backdrop-blur-sm border-b border-cyan-500/30 p-3 shrink-0 z-20">
         <div className="max-w-screen-2xl mx-auto flex justify-between items-center">
-          <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-red-400 bg-clip-text text-transparent tracking-wider">
-            OPERAÇÃO CHRONOS // ANÁLISE: CRISE DOS MÍSSEIS
-          </h1>
+          <div className="flex items-center gap-6">
+            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-red-400 bg-clip-text text-transparent tracking-wider">
+              OPERAÇÃO CHRONOS // ANÁLISE: CRISE DOS MÍSSEIS
+            </h1>
+            <RiskIndicator riskLevel={currentEventData ? currentEventData.riskLevel : 1} />
+          </div>
           <div className="flex items-center gap-2">
             <Button onClick={handleStartDailyQuiz} className="bg-gray-700 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-md">
               <BookOpen className="w-4 h-4 mr-2" /> Quiz
@@ -357,7 +363,7 @@ const Index: React.FC<IndexProps> = ({
       
       <main className="flex-grow min-h-0">
         <ResizablePanelGroup direction="horizontal" className="h-full max-w-screen-2xl mx-auto p-4">
-          <ResizablePanel defaultSize={70}>
+          <ResizablePanel defaultSize={35}>
             <div className="relative h-full w-full bg-black/20 p-2">
               <NetworkVisualization 
                 nodes={crisisData.nodes as NetworkNode[]} 
@@ -368,16 +374,11 @@ const Index: React.FC<IndexProps> = ({
             </div>
           </ResizablePanel>
           <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={30}>
+          <ResizablePanel defaultSize={65}>
             <div className="h-full w-full flex flex-col gap-4 pl-4">
-              <div className="bg-black/20 p-4">
-                <RiskIndicator riskLevel={currentEventData ? currentEventData.riskLevel : 1} />
-              </div>
               <div className="flex-grow min-h-0 bg-black/20 p-4">
                 <InfoPanel 
                   currentEvent={currentEventData} 
-                  selectedNode={selectedNode} 
-                  nodes={crisisData.nodes as NetworkNode[]} 
                   canAdvance={canAdvance} 
                   onAdvanceDay={handleAdvanceDay} 
                   isFinalDay={isLastTimelineDay} 
