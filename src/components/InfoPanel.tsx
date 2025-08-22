@@ -52,8 +52,7 @@ return (
 Resumo do Dia
 </h3>
 </div>
-code
-Code
+
 {currentEvent && (
         <div className="space-y-4">
           {currentEvent.image && imageMap[currentEvent.image] && <img src={imageMap[currentEvent.image]} alt={currentEvent.title} className="w-full h-32 object-cover rounded-lg border border-cyan-500/20" />}
