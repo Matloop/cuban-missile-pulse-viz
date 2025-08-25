@@ -72,3 +72,39 @@
     color: #00e5ff; /* Volta para o Ciano */
   }
 }
+@keyframes rainbow-pulse {
+  0% {
+    box-shadow: 0 0 10px #0ea5e9, 0 0 20px #0ea5e9;
+  }
+  25% {
+    box-shadow: 0 0 10px #22c55e, 0 0 20px #22c55e;
+  }
+  50% {
+    box-shadow: 0 0 10px #facc15, 0 0 20px #facc15;
+  }
+  75% {
+    box-shadow: 0 0 10px #ef4444, 0 0 20px #ef4444;
+  }
+  100% {
+    box-shadow: 0 0 10px #0ea5e9, 0 0 20px #0ea5e9;
+  }
+}
+
+@keyframes hue-rotate {
+  from {
+    filter: hue-rotate(0deg);
+  }
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+
+.rainbow-glow {
+  background-image: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899, #f59e0b);
+  animation: rainbow-pulse 4s linear infinite, hue-rotate 4s linear infinite;
+  transition: transform 0.2s ease-in-out;
+}
+
+.rainbow-glow:hover {
+  transform: scale(1.02);
+}

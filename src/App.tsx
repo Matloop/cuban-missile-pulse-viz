@@ -31,7 +31,7 @@ const App: React.FC = () => {
   const [initialCollection, setInitialCollection] = useState<string[]>([]);
   
   // --- ESTADOS ELEVADOS ---
-  const [lootboxTokens, setLootboxTokens] = useState<number>(15);
+  const [lootboxTokens, setLootboxTokens] = useState<number>(1);
   const [currentQuiz, setCurrentQuiz] = useState<QuizData | null>(null);
 
 
@@ -107,7 +107,7 @@ const App: React.FC = () => {
     }
   };
 
-  const addLootboxToken = useCallback(() => setLootboxTokens(prev => prev + 15), []);
+  const addLootboxToken = useCallback(() => setLootboxTokens(prev => prev + 1), []);
   const spendLootboxToken = useCallback(() => setLootboxTokens(prev => prev > 0 ? prev - 1 : 0), []);
 
   const renderContent = () => {

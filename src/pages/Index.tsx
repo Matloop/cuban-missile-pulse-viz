@@ -1,7 +1,6 @@
-// src/pages/Index.tsx
-
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Eye, EyeOff, BookOpen, Clock, Key, FolderOpen, FastForward, RotateCcw } from 'lucide-react';
+// --- MUDANÇA: Eye e EyeOff não são mais necessários ---
+import { BookOpen, Clock, Key, FolderOpen, FastForward, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from "@/components/ui/sonner";
 
@@ -33,10 +32,6 @@ import { NetworkNode, DailyEvent, HistoricalFigure, DailyOpponent, QuizData } fr
 import { theFinalBoss } from '../data/finalBoss'; 
 
 const allFigures = allFiguresData as HistoricalFigure[];
-// --- DEBUG 1: VERIFICAR A IMPORTAÇÃO DOS DADOS ---
-console.log('[DEBUG] Dados crus importados de historicalFigures.json:', allFiguresData);
-
-
 const opponents = opponentsData as Record<string, DailyOpponent>;
 const allQuizQuestions: Record<string, QuizData[]> = quizQuestionsData;
 
@@ -69,7 +64,6 @@ const Index: React.FC<IndexProps> = ({
   const [isStateLoaded, setIsStateLoaded] = useState(false);
   const currentEventData = useMemo(() => limitedCrisisEvents.find(e => e.date === selectedDate), [selectedDate]);
   const [selectedNode, setSelectedNode] = useState<NetworkNode | null>(null);
-  const [isTimelineVisible, setIsTimelineVisible] = useState(true);
   const isLastTimelineDay = useMemo(() => sortedCrisisDates.indexOf(selectedDate) === sortedCrisisDates.length - 1, [selectedDate]);
   const [showEventQuiz, setShowEventQuiz] = useState<boolean>(false);
   const [currentEventQuiz, setCurrentEventQuiz] = useState<QuizData | null>(null);
@@ -87,6 +81,10 @@ const Index: React.FC<IndexProps> = ({
   const [showTeamSelectionForBoss, setShowTeamSelectionForBoss] = useState<boolean>(false);
   const [finalTeam, setFinalTeam] = useState<HistoricalFigure[]>([]);
 
+  // --- MUDANÇA: Lógica de "isTimelineVisible" removida ---
+  // const [isTimelineVisible, setIsTimelineVisible] = useState(true);
+
+  // Efeito para carregar o jogo salvo... (sem alterações)
   useEffect(() => {
     try {
       const savedStateJSON = localStorage.getItem(GAME_STATE_KEY);
@@ -102,8 +100,6 @@ const Index: React.FC<IndexProps> = ({
               stats: savedFigure.stats || fullFigureData.stats, 
             };
           });
-          // --- DEBUG 2: VERIFICAR COLEÇÃO APÓS CARREGAMENTO DO SAVE ---
-          console.log('[DEBUG] Coleção do usuário carregada e hidratada do save:', rehydratedCollection);
           setUserCollection(rehydratedCollection);
         } else {
           setUserCollection(allFigures.filter(f => (initialCollection || []).includes(f.id)));
@@ -111,10 +107,7 @@ const Index: React.FC<IndexProps> = ({
         if (savedState.highestUnlockedLevel) setHighestUnlockedLevel(savedState.highestUnlockedLevel);
         if (savedState.selectedDate) setSelectedDate(savedState.selectedDate);
       } else {
-        const initialUserCollection = allFigures.filter(f => (initialCollection || []).includes(f.id));
-        // --- DEBUG 3: VERIFICAR COLEÇÃO INICIAL (SEM SAVE) ---
-        console.log('[DEBUG] NENHUM SAVE ENCONTRADO. Criando coleção inicial:', initialUserCollection);
-        setUserCollection(initialUserCollection);
+        setUserCollection(allFigures.filter(f => (initialCollection || []).includes(f.id)));
       }
       const savedQuizIdsJSON = localStorage.getItem(CORRECTLY_ANSWERED_QUIZ_KEY);
       if (savedQuizIdsJSON) {
@@ -127,6 +120,8 @@ const Index: React.FC<IndexProps> = ({
       setIsStateLoaded(true);
     }
   }, [initialCollection]);
+  
+  // Demais funções e efeitos permanecem iguais... (sem alterações no restante do código)
 
   useEffect(() => {
     if (isStateLoaded) {
@@ -139,7 +134,7 @@ const Index: React.FC<IndexProps> = ({
   }, [userCollection, highestUnlockedLevel, selectedDate, correctlyAnsweredIds, isStateLoaded]);
 
   useEffect(() => {
-    setSelectedNode(null);
+      setSelectedNode(null);
   }, [selectedDate]);
   
   const handleResetGame = () => {
@@ -161,29 +156,31 @@ const Index: React.FC<IndexProps> = ({
   const handleAdvanceDay = useCallback(() => {
     const currentIndex = sortedCrisisDates.indexOf(selectedDate);
     if (currentIndex < highestUnlockedLevel) return;
+
     if (isLastTimelineDay && currentIndex === highestUnlockedLevel) {
-      setShowTeamSelectionForBoss(true);
-      return; 
+        setShowTeamSelectionForBoss(true);
+        return; 
     }
+
     const opponentForCurrentDay = opponents[selectedDate];
     if (opponentForCurrentDay) {
-      const nextDate = sortedCrisisDates[currentIndex + 1];
-      if (nextDate) { 
-        setPendingDate(nextDate); 
-        setCurrentOpponent(opponentForCurrentDay);
-        if (opponentForCurrentDay.battleType === 'tetris') {
-          setShowBattleScreen(true);
-        } else {
-          setShowAgentSelection(true);
+        const nextDate = sortedCrisisDates[currentIndex + 1];
+        if (nextDate) { 
+            setPendingDate(nextDate); 
+            setCurrentOpponent(opponentForCurrentDay);
+            if (opponentForCurrentDay.battleType === 'tetris') {
+                setShowBattleScreen(true);
+            } else {
+                setShowAgentSelection(true);
+            }
         }
-      }
     } else {
-      const nextIndex = currentIndex + 1;
-      if (nextIndex < sortedCrisisDates.length) { 
-        setSelectedDate(sortedCrisisDates[nextIndex]);
-        setHighestUnlockedLevel(prev => Math.max(prev, nextIndex));
-        setSelectedNode(null);
-      }
+        const nextIndex = currentIndex + 1;
+        if (nextIndex < sortedCrisisDates.length) { 
+            setSelectedDate(sortedCrisisDates[nextIndex]);
+            setHighestUnlockedLevel(prev => Math.max(prev, nextIndex));
+            setSelectedNode(null);
+        }
     }
   }, [selectedDate, highestUnlockedLevel, isLastTimelineDay]);
 
@@ -240,6 +237,7 @@ const Index: React.FC<IndexProps> = ({
     const filterAnswered = (questions: QuizData[]) => questions.filter(q => !correctlyAnsweredIds.includes(q.id));
     const dailyQuestions = filterAnswered(allQuizQuestions[selectedDate] || []);
     let selectedQuiz: QuizData | null = null;
+
     if (dailyQuestions.length > 0) {
       selectedQuiz = dailyQuestions[Math.floor(Math.random() * dailyQuestions.length)];
     } else {
@@ -248,6 +246,7 @@ const Index: React.FC<IndexProps> = ({
         selectedQuiz = generalQuestions[Math.floor(Math.random() * generalQuestions.length)];
       }
     }
+
     if (selectedQuiz) {
       setCurrentEventQuiz(selectedQuiz);
       setShowEventQuiz(true);
@@ -335,6 +334,7 @@ const Index: React.FC<IndexProps> = ({
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-screen w-screen overflow-hidden text-white flex flex-col">
       <div className="animated-grid-background" />
       <div className="noise-overlay" />
+
       <header className="bg-black/30 backdrop-blur-sm border-b border-cyan-500/30 p-3 shrink-0 z-20">
         <div className="max-w-screen-2xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-6">
@@ -363,6 +363,16 @@ const Index: React.FC<IndexProps> = ({
         </div>
       </header>
       
+      {/* --- MUDANÇA: TIMELINE MOVIDA PARA CÁ --- */}
+      <div className="bg-black/20 border-b border-cyan-500/30 p-4 shrink-0 z-10">
+          <Timeline 
+            events={limitedCrisisEvents.map(e => ({ date: e.date, title: e.title }))} 
+            selectedDate={selectedDate} 
+            onDateChange={handleDateChange} 
+            highestUnlockedLevel={highestUnlockedLevel} 
+          />
+      </div>
+
       <main className="flex-grow min-h-0">
         <ResizablePanelGroup direction="horizontal" className="h-full max-w-screen-2xl mx-auto p-4">
           <ResizablePanel defaultSize={35}>
@@ -390,24 +400,13 @@ const Index: React.FC<IndexProps> = ({
           </ResizablePanel>
         </ResizablePanelGroup>
       </main>
-      <Button onClick={() => setIsTimelineVisible(!isTimelineVisible)} className="fixed bottom-6 right-6 z-50 rounded-full h-12 w-12 p-0">
-        {isTimelineVisible ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
-      </Button>
+      
+      {/* --- MUDANÇA: O botão e o modal da timeline foram removidos daqui --- */}
+
       <div className="fixed bottom-6 left-6 z-30 font-mono text-sm text-cyan-300">
         <Clock className="inline w-4 h-4 mr-2" />{formattedDate}
       </div>
-      <AnimatePresence>
-        {isTimelineVisible && (
-          <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="fixed bottom-0 left-0 right-0 z-40 bg-black/50 backdrop-blur-md border-t border-cyan-500/30 p-4">
-            <Timeline 
-              events={limitedCrisisEvents.map(e => ({ date: e.date, title: e.title }))} 
-              selectedDate={selectedDate} 
-              onDateChange={handleDateChange} 
-              highestUnlockedLevel={highestUnlockedLevel} 
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+
       <AnimatePresence>
         {showAgentSelection && ( 
           <AgentSelection 
@@ -442,16 +441,12 @@ const Index: React.FC<IndexProps> = ({
             isDuplicate={isDuplicateInLootbox} 
           /> 
         )}
-        {showCollection && (
-            <>
-            {/* --- DEBUG 4: VERIFICAR PROPS SENDO PASSADAS PARA A COLEÇÃO --- */}
-            {console.log('[DEBUG] Renderizando <Collection /> com as props:', { userCollection, allFigures })}
-            <Collection 
-                collection={userCollection} 
-                allFigures={allFigures} 
-                onClose={() => setShowCollection(false)} 
-            /> 
-            </>
+        {showCollection && ( 
+          <Collection 
+            collection={userCollection} 
+            allFigures={allFigures} 
+            onClose={() => setShowCollection(false)} 
+          /> 
         )}
         
         {showTeamSelectionForBoss && (
