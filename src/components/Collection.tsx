@@ -26,32 +26,30 @@ interface CollectionProps {
 }
 
 const Collection: React.FC<CollectionProps> = ({ collection, allFigures, onClose }) => {
-  // --- DEBUG 5: VERIFICAR PROPS RECEBIDAS ---
-  console.log('[DEBUG] Props recebidas por <Collection />:', { collection, allFigures });
-
   const [selectedFigureId, setSelectedFigureId] = useState<string | null>(null);
 
   const getHydratedFigure = (id: string | null): HistoricalFigure | null => {
     if (!id) return null;
     const baseFigureData = allFigures.find(f => f.id === id);
-    if (!baseFigureData) return null;
+    if (!baseFigureData) return null; 
     const userFigureData = collection.find(f => f.id === id);
-    const mergedFigure = { ...baseFigureData, ...userFigureData };
-    // --- DEBUG 7: VERIFICAR O OBJETO FINAL ENVIADO PARA O MODAL DE DETALHES ---
-    console.log('[DEBUG] Objeto final e completo sendo preparado para o FigureDetail:', mergedFigure);
-    return mergedFigure;
+    return { ...baseFigureData, ...userFigureData };
   };
   
   const selectedFigure = getHydratedFigure(selectedFigureId);
 
-  const collectibleFigures = allFigures.filter(f => !f.isStarter);
-  const unlockedCollectibles = collection.filter(f => !f.isStarter);
+  // --- LÓGICA DE CONTAGEM ALTERADA PARA MOSTRAR TODAS AS FIGURAS ---
+  // Agora conta o total de figuras no jogo.
+  const totalFiguresInGame = allFigures.length;
+  // Agora conta quantas figuras o jogador possui, incluindo starters.
+  const unlockedFiguresCount = collection.length;
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
       <Card className="bg-slate-900 border-blue-500/30 max-w-5xl w-full h-[90vh] flex flex-col">
         <CardHeader>
-          <CardTitle className="text-white">Figuras Desbloqueadas ({unlockedCollectibles.length}/{collectibleFigures.length})</CardTitle>
+          {/* O título agora usará a nova contagem */}
+          <CardTitle className="text-white">Figuras Desbloqueadas ({unlockedFiguresCount}/{totalFiguresInGame})</CardTitle>
         </CardHeader>
         <CardContent className="flex-grow overflow-hidden">
           <ScrollArea className="h-full pr-6">
@@ -60,12 +58,6 @@ const Collection: React.FC<CollectionProps> = ({ collection, allFigures, onClose
                 const userFigureData = collection.find(f => f.id === baseFigure.id);
                 const isUnlocked = !!userFigureData;
                 const displayFigure: HistoricalFigure = isUnlocked ? { ...baseFigure, ...userFigureData } : baseFigure;
-
-                // --- DEBUG 6: VERIFICAR DADOS DE CADA CARD INDIVIDUALMENTE ---
-                if(isUnlocked) {
-                  console.log(`[DEBUG] Dados para o card de ${displayFigure.name}:`, displayFigure);
-                }
-                
                 const rarityClass = rarityStyles[displayFigure.rarity] || 'border-gray-700';
                 
                 return (
