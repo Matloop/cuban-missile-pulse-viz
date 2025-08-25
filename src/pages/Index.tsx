@@ -1,3 +1,4 @@
+// src/pages/Index.tsx
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Eye, EyeOff, BookOpen, Clock, Key, FolderOpen, FastForward, RotateCcw } from 'lucide-react';
@@ -32,6 +33,10 @@ import { NetworkNode, DailyEvent, HistoricalFigure, DailyOpponent, QuizData } fr
 import { theFinalBoss } from '../data/finalBoss'; 
 
 const allFigures = allFiguresData as HistoricalFigure[];
+// --- DEBUG 1: VERIFICAR A IMPORTAÇÃO DOS DADOS ---
+console.log('[DEBUG] Dados crus importados de historicalFigures.json:', allFiguresData);
+
+
 const opponents = opponentsData as Record<string, DailyOpponent>;
 const allQuizQuestions: Record<string, QuizData[]> = quizQuestionsData;
 
@@ -39,7 +44,6 @@ const CRISIS_DAYS_LIMIT = 10;
 const limitedCrisisEvents = crisisData.events.slice(0, CRISIS_DAYS_LIMIT);
 const sortedCrisisDates = limitedCrisisEvents.map(event => event.date).sort();
 
-// Chaves para salvar/carregar o estado do jogo no localStorage
 const GAME_STATE_KEY = 'cubanCrisisGameState';
 const CORRECTLY_ANSWERED_QUIZ_KEY = 'cubanCrisisCorrectlyAnsweredQuiz';
 
@@ -58,16 +62,11 @@ const Index: React.FC<IndexProps> = ({
   onSpendToken, 
   onStartQuiz: onStartQuizProp 
 }) => {
-  // --- Estados que serão persistidos ---
   const [selectedDate, setSelectedDate] = useState<string>(limitedCrisisEvents[0].date);
   const [userCollection, setUserCollection] = useState<HistoricalFigure[]>([]);
   const [highestUnlockedLevel, setHighestUnlockedLevel] = useState<number>(0);
   const [correctlyAnsweredIds, setCorrectlyAnsweredIds] = useState<number[]>([]);
-  
-  // Flag para garantir que o salvamento não aconteça antes do carregamento inicial
   const [isStateLoaded, setIsStateLoaded] = useState(false);
-  
-  // --- Outros estados de UI e de jogo ---
   const currentEventData = useMemo(() => limitedCrisisEvents.find(e => e.date === selectedDate), [selectedDate]);
   const [selectedNode, setSelectedNode] = useState<NetworkNode | null>(null);
   const [isTimelineVisible, setIsTimelineVisible] = useState(true);
@@ -88,27 +87,39 @@ const Index: React.FC<IndexProps> = ({
   const [showTeamSelectionForBoss, setShowTeamSelectionForBoss] = useState<boolean>(false);
   const [finalTeam, setFinalTeam] = useState<HistoricalFigure[]>([]);
 
-  // --- EFEITO PARA CARREGAR O JOGO SALVO ---
   useEffect(() => {
     try {
-      // Carrega estado principal
       const savedStateJSON = localStorage.getItem(GAME_STATE_KEY);
       if (savedStateJSON) {
         const savedState = JSON.parse(savedStateJSON);
-        if (savedState.userCollection?.length > 0) setUserCollection(savedState.userCollection);
-        else setUserCollection(allFigures.filter(f => (initialCollection || []).includes(f.id)));
+        if (savedState.userCollection?.length > 0) {
+          const rehydratedCollection = savedState.userCollection.map((savedFigure: HistoricalFigure) => {
+            const fullFigureData = allFigures.find(f => f.id === savedFigure.id);
+            if (!fullFigureData) return savedFigure;
+            return {
+              ...fullFigureData,
+              ...savedFigure,
+              stats: savedFigure.stats || fullFigureData.stats, 
+            };
+          });
+          // --- DEBUG 2: VERIFICAR COLEÇÃO APÓS CARREGAMENTO DO SAVE ---
+          console.log('[DEBUG] Coleção do usuário carregada e hidratada do save:', rehydratedCollection);
+          setUserCollection(rehydratedCollection);
+        } else {
+          setUserCollection(allFigures.filter(f => (initialCollection || []).includes(f.id)));
+        }
         if (savedState.highestUnlockedLevel) setHighestUnlockedLevel(savedState.highestUnlockedLevel);
         if (savedState.selectedDate) setSelectedDate(savedState.selectedDate);
       } else {
-        setUserCollection(allFigures.filter(f => (initialCollection || []).includes(f.id)));
+        const initialUserCollection = allFigures.filter(f => (initialCollection || []).includes(f.id));
+        // --- DEBUG 3: VERIFICAR COLEÇÃO INICIAL (SEM SAVE) ---
+        console.log('[DEBUG] NENHUM SAVE ENCONTRADO. Criando coleção inicial:', initialUserCollection);
+        setUserCollection(initialUserCollection);
       }
-
-      // Carrega IDs dos quizzes respondidos
       const savedQuizIdsJSON = localStorage.getItem(CORRECTLY_ANSWERED_QUIZ_KEY);
       if (savedQuizIdsJSON) {
         setCorrectlyAnsweredIds(JSON.parse(savedQuizIdsJSON));
       }
-
     } catch (error) {
       console.error("Falha ao carregar o estado do jogo:", error);
       setUserCollection(allFigures.filter(f => (initialCollection || []).includes(f.id)));
@@ -117,24 +128,20 @@ const Index: React.FC<IndexProps> = ({
     }
   }, [initialCollection]);
 
-  // --- EFEITO PARA SALVAR O JOGO ---
   useEffect(() => {
     if (isStateLoaded) {
-      // Salva estado principal apenas se a coleção não estiver vazia
       if (userCollection.length > 0) {
         const gameState = { userCollection, highestUnlockedLevel, selectedDate };
         localStorage.setItem(GAME_STATE_KEY, JSON.stringify(gameState));
       }
-      // Salva IDs dos quizzes respondidos
       localStorage.setItem(CORRECTLY_ANSWERED_QUIZ_KEY, JSON.stringify(correctlyAnsweredIds));
     }
   }, [userCollection, highestUnlockedLevel, selectedDate, correctlyAnsweredIds, isStateLoaded]);
 
   useEffect(() => {
-      setSelectedNode(null);
+    setSelectedNode(null);
   }, [selectedDate]);
   
-  // --- FUNÇÃO PARA RESETAR O JOGO ---
   const handleResetGame = () => {
     if (window.confirm("Você tem certeza que deseja resetar todo o seu progresso? Esta ação não pode ser desfeita.")) {
       localStorage.removeItem(GAME_STATE_KEY);
@@ -154,33 +161,31 @@ const Index: React.FC<IndexProps> = ({
   const handleAdvanceDay = useCallback(() => {
     const currentIndex = sortedCrisisDates.indexOf(selectedDate);
     if (currentIndex < highestUnlockedLevel) return;
-
     if (isLastTimelineDay && currentIndex === highestUnlockedLevel) {
-        setShowTeamSelectionForBoss(true);
-        return; 
+      setShowTeamSelectionForBoss(true);
+      return; 
     }
-
     const opponentForCurrentDay = opponents[selectedDate];
     if (opponentForCurrentDay) {
-        const nextDate = sortedCrisisDates[currentIndex + 1];
-        if (nextDate) { 
-            setPendingDate(nextDate); 
-            setCurrentOpponent(opponentForCurrentDay);
-            if (opponentForCurrentDay.battleType === 'tetris') {
-                setShowBattleScreen(true);
-            } else {
-                setShowAgentSelection(true);
-            }
+      const nextDate = sortedCrisisDates[currentIndex + 1];
+      if (nextDate) { 
+        setPendingDate(nextDate); 
+        setCurrentOpponent(opponentForCurrentDay);
+        if (opponentForCurrentDay.battleType === 'tetris') {
+          setShowBattleScreen(true);
+        } else {
+          setShowAgentSelection(true);
         }
+      }
     } else {
-        const nextIndex = currentIndex + 1;
-        if (nextIndex < sortedCrisisDates.length) { 
-            setSelectedDate(sortedCrisisDates[nextIndex]);
-            setHighestUnlockedLevel(prev => Math.max(prev, nextIndex));
-            setSelectedNode(null);
-        }
+      const nextIndex = currentIndex + 1;
+      if (nextIndex < sortedCrisisDates.length) { 
+        setSelectedDate(sortedCrisisDates[nextIndex]);
+        setHighestUnlockedLevel(prev => Math.max(prev, nextIndex));
+        setSelectedNode(null);
+      }
     }
-  }, [selectedDate, highestUnlockedLevel, isLastTimelineDay, opponents]);
+  }, [selectedDate, highestUnlockedLevel, isLastTimelineDay]);
 
   const handleAgentSelectForBattle = useCallback((agent: HistoricalFigure) => {
     setSelectedAgentForBattle(agent);
@@ -235,7 +240,6 @@ const Index: React.FC<IndexProps> = ({
     const filterAnswered = (questions: QuizData[]) => questions.filter(q => !correctlyAnsweredIds.includes(q.id));
     const dailyQuestions = filterAnswered(allQuizQuestions[selectedDate] || []);
     let selectedQuiz: QuizData | null = null;
-
     if (dailyQuestions.length > 0) {
       selectedQuiz = dailyQuestions[Math.floor(Math.random() * dailyQuestions.length)];
     } else {
@@ -244,7 +248,6 @@ const Index: React.FC<IndexProps> = ({
         selectedQuiz = generalQuestions[Math.floor(Math.random() * generalQuestions.length)];
       }
     }
-
     if (selectedQuiz) {
       setCurrentEventQuiz(selectedQuiz);
       setShowEventQuiz(true);
@@ -332,7 +335,6 @@ const Index: React.FC<IndexProps> = ({
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-screen w-screen overflow-hidden text-white flex flex-col">
       <div className="animated-grid-background" />
       <div className="noise-overlay" />
-
       <header className="bg-black/30 backdrop-blur-sm border-b border-cyan-500/30 p-3 shrink-0 z-20">
         <div className="max-w-screen-2xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-6">
@@ -440,12 +442,16 @@ const Index: React.FC<IndexProps> = ({
             isDuplicate={isDuplicateInLootbox} 
           /> 
         )}
-        {showCollection && ( 
-          <Collection 
-            collection={userCollection} 
-            allFigures={allFigures} 
-            onClose={() => setShowCollection(false)} 
-          /> 
+        {showCollection && (
+            <>
+            {/* --- DEBUG 4: VERIFICAR PROPS SENDO PASSADAS PARA A COLEÇÃO --- */}
+            {console.log('[DEBUG] Renderizando <Collection /> com as props:', { userCollection, allFigures })}
+            <Collection 
+                collection={userCollection} 
+                allFigures={allFigures} 
+                onClose={() => setShowCollection(false)} 
+            /> 
+            </>
         )}
         
         {showTeamSelectionForBoss && (

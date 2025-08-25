@@ -63,10 +63,22 @@ export interface BaseCharacter {
 }
 
 // HistoricalFigure agora estende BaseCharacter e adiciona suas propriedades específicas
-export interface HistoricalFigure extends BaseCharacter {
-  rarity: 'Comum' | 'Raro' | 'Épico' | 'Lendário'; // Estas continuam obrigatórias para HistoricalFigure
-  chance: number; // Estas continuam obrigatórias para HistoricalFigure
+export interface HistoricalFigure {
+  id: string;
+  name: string;
+  image: string;
+  rarity: "Comum" | "Raro" | "Épico" | "Lendário";
   isStarter?: boolean;
+  chance?: number;
+  stats: {
+    hp: number;
+    attack: number;
+    speed: number;
+  };
+  description: string;   // O resumo curto
+  biography?: string;      // A biografia longa (opcional)
+  roleInCrisis?: string;   // O papel na crise (opcional)
+  ability?: string;        // A habilidade no jogo (opcional)
 }
 
 // DailyOpponent agora estende BaseCharacter e adiciona suas propriedades específicas

@@ -1,89 +1,113 @@
-
-  [
-    {
-      "id": "arkhipov",
-      "name": "Vasily Arkhipov",
-      "rarity": "Lendário",
-      "chance": 10  ,
-      "description": "O oficial que, sozinho, se recusou a autorizar um lançamento nuclear, potencialmente salvando o mundo.",
-      "image": "figure_arkhipov.jpg",
-      "stats": { "hp": 300, "attack": 40, "speed": 90 }
-    },
-    {
-      "id": "rfk",
-      "name": "Robert F. Kennedy",
-      "rarity": "Épico",
-      "chance": 20,
-      "description": "Procurador-Geral e principal negociador secreto de Kennedy, crucial para a resolução pacífica.",
-      "image": "figure_rfk.jpg",
-      "stats": { "hp": 210, "attack": 37, "speed": 80 }
-    },
-    {
-      "id": "stevenson",
-      "name": "Adlai Stevenson II",
-      "rarity": "Épico",
-      "chance": 20,
-      "description": "Embaixador dos EUA na ONU, famoso por confrontar publicamente o embaixador soviético com as fotos.",
-      "image": "figure_stevenson.jpg",
-      "stats": { "hp": 190, "attack": 30, "speed": 70 }
-    },
-    {
-      "id": "mcnamara",
-      "name": "Robert McNamara",
-      "rarity": "Raro",
-      "chance": 60,
-      "description": "Secretário de Defesa dos EUA e membro-chave do ExComm que ajudou a moldar a estratégia da 'quarentena'.",
-      "image": "figure_mcnamara.jpg",
-      "stats": { "hp": 90, "attack": 13, "speed": 60 }
-    },
-    {
-      "id": "anderson",
-      "name": "Rudolf Anderson Jr.",
-      "rarity": "Raro",
-      "chance": 60,
-      "description": "O piloto do U-2 abatido sobre Cuba no 'Sábado Negro', a única baixa em combate direto da crise.",
-      "image": "figure_anderson.jpg",
-      "stats": { "hp": 80, "attack": 15, "speed": 50 }
-    },
-    {
-      "id": "dobrynin",
-      "name": "Anatoly Dobrynin",
-      "rarity": "Comum",
-      "chance": 120,
-      "description": "Embaixador soviético nos EUA. Sua linha de comunicação secreta com RFK foi essencial para o acordo.",
-      "image": "figure_dobrynin.jpg",
-    
-      "stats": { "hp": 50, "attack": 10, "speed": 30 }
-    },
-    {
-      "id": "photo_analyst",
-      "name": "Analista de Reconhecimento",
-      "rarity": "Comum",
-      "chance": 0,
-      "description": "Um dos analistas anônimos cuja análise minuciosa das fotos de vigilância revelou a presença de mísseis em Cuba.",
-      "isStarter": true,
-      "image": "figure_analyst.jpg",
-      "stats": { "hp": 80, "attack": 9, "speed": 70 }
-    },
-    {
-      "id": "navy_sailor",
-      "name": "Marinheiro da Quarentena",
-      "rarity": "Comum",
-      "chance": 0,
-      "description": "Um marinheiro a bordo de um dos navios da Marinha dos EUA que impuseram o 'bloqueio' naval, a linha de frente da crise.",
-      "isStarter": true,
-      "image": "qua.jpg",
-      "stats": { "hp": 65, "attack": 12, "speed": 50 }
-    },
-    {
-      "id": "diplomatic_courier",
-      "name": "Mensageiro Diplomático",
-      "rarity": "Comum",
-      "chance": 0,
-      "description": "Responsável por transportar mensagens secretas e críticas, garantindo a comunicação entre as superpotências.",
-      "isStarter": true,
-      "image": "figure_courier.jpg",
-      "stats": { "hp": 70, "attack": 10, "speed": 95 }
-    }
-  ]
-   
+[
+  {
+    "id": "arkhipov",
+    "name": "Vasily Arkhipov",
+    "rarity": "Lendário",
+    "chance": 10,
+    "description": "O oficial que, sozinho, se recusou a autorizar um lançamento nuclear, potencialmente salvando o mundo.",
+    "biography": "Vasily Aleksandrovich Arkhipov foi um oficial naval soviético. Durante a Crise dos Mísseis de Cuba, ele impediu o lançamento de um torpedo nuclear e, assim, evitou uma provável guerra nuclear. Este ato o tornou conhecido como 'O Homem que Salvou o Mundo'.",
+    "roleInCrisis": "Como comandante de flotilha e segundo em comando do submarino B-59, Arkhipov se recusou a autorizar o capitão a lançar um torpedo nuclear contra a frota americana, uma decisão que exigia o consentimento unânime dos três oficiais superiores a bordo.",
+    "ability": "Habilidade Passiva 'Veto Decisivo': Em batalhas, há uma pequena chance de anular completamente o ataque de um oponente.",
+    "image": "figure_arkhipov.jpg",
+    "stats": { "hp": 300, "attack": 40, "speed": 90 }
+  },
+  {
+    "id": "rfk",
+    "name": "Robert F. Kennedy",
+    "rarity": "Épico",
+    "chance": 20,
+    "description": "Procurador-Geral e principal negociador secreto de Kennedy, crucial para a resolução pacífica.",
+    "biography": "Irmão do presidente John F. Kennedy, Robert F. Kennedy serviu como Procurador-Geral. Ele era um dos conselheiros mais próximos de JFK e desempenhou um papel central na gestão de crises, incluindo a Crise dos Mísseis Cubanos.",
+    "roleInCrisis": "Atuou como o principal negociador em um canal de comunicação secreto com o embaixador soviético Anatoly Dobrynin, onde o acordo final para a remoção dos mísseis da Turquia foi selado.",
+    "ability": "Habilidade Ativa 'Negociação Secreta': Reduz o ataque do oponente por 2 turnos.",
+    "image": "figure_rfk.jpg",
+    "stats": { "hp": 210, "attack": 37, "speed": 80 }
+  },
+  {
+    "id": "stevenson",
+    "name": "Adlai Stevenson II",
+    "rarity": "Épico",
+    "chance": 20,
+    "description": "Embaixador dos EUA na ONU, famoso por confrontar publicamente o embaixador soviético com as fotos.",
+    "biography": "Adlai Stevenson II foi um político e diplomata americano, servindo como Embaixador dos Estados Unidos nas Nações Unidas durante a administração Kennedy. Ele foi uma voz influente no debate sobre a resposta à crise.",
+    "roleInCrisis": "Ficou famoso por sua confrontação dramática com o embaixador soviético Valerian Zorin no Conselho de Segurança da ONU, onde apresentou evidências fotográficas dos mísseis em Cuba.",
+    "ability": "Habilidade Passiva 'Pressão Pública': Aumenta o dano causado por aliados do tipo 'Épico'.",
+    "image": "figure_stevenson.jpg",
+    "stats": { "hp": 190, "attack": 30, "speed": 70 }
+  },
+  {
+    "id": "mcnamara",
+    "name": "Robert McNamara",
+    "rarity": "Raro",
+    "chance": 60,
+    "description": "Secretário de Defesa dos EUA e membro-chave do ExComm que ajudou a moldar a estratégia da 'quarentena'.",
+    "biography": "Robert McNamara foi um executivo de negócios e o oitavo Secretário de Defesa dos Estados Unidos. Conhecido por sua abordagem analítica e estatística para a gestão, ele foi uma figura central na escalada da Guerra do Vietnã e na gestão da Crise dos Mísseis.",
+    "roleInCrisis": "Como membro do ExComm, ele inicialmente apoiou um ataque militar, mas depois se tornou um forte defensor do bloqueio naval ('quarentena') como uma opção mais controlada para evitar a guerra.",
+    "ability": "Habilidade Passiva 'Estratégia de Quarentena': Aumenta a defesa (reduz dano recebido) de todos os aliados.",
+    "image": "figure_mcnamara.jpg",
+    "stats": { "hp": 90, "attack": 13, "speed": 60 }
+  },
+  {
+    "id": "anderson",
+    "name": "Rudolf Anderson Jr.",
+    "rarity": "Raro",
+    "chance": 60,
+    "description": "O piloto do U-2 abatido sobre Cuba no 'Sábado Negro', a única baixa em combate direto da crise.",
+    "biography": "Rudolf Anderson Jr. foi um piloto e oficial da Força Aérea dos Estados Unidos. Ele foi o primeiro a receber a Cruz da Força Aérea postumamente. Ele voou missões de reconhecimento sobre Cuba durante a crise.",
+    "roleInCrisis": "Pilotando um avião espião U-2, ele foi abatido por um míssil terra-ar soviético sobre Cuba em 27 de outubro de 1962, o 'Sábado Negro'. Sua morte aumentou drasticamente a tensão, quase levando a uma retaliação militar imediata.",
+    "ability": "Habilidade Passiva 'Sacrifício Heroico': Ao ser derrotado, aumenta o ataque de todos os aliados restantes.",
+    "image": "figure_anderson.jpg",
+    "stats": { "hp": 80, "attack": 15, "speed": 50 }
+  },
+  {
+    "id": "dobrynin",
+    "name": "Anatoly Dobrynin",
+    "rarity": "Comum",
+    "chance": 120,
+    "description": "Embaixador soviético nos EUA. Sua linha de comunicação secreta com RFK foi essencial para o acordo.",
+    "biography": "Anatoly Dobrynin foi um diplomata soviético e embaixador nos Estados Unidos por mais de duas décadas. Ele foi um canal de comunicação crucial entre o Kremlin e a Casa Branca durante a maior parte da Guerra Fria.",
+    "roleInCrisis": "Manteve uma linha de comunicação secreta e vital com Robert F. Kennedy, transmitindo mensagens e propostas entre os dois líderes que foram essenciais para a resolução pacífica da crise.",
+    "ability": "Habilidade Passiva 'Canal Secreto': Aumenta a velocidade (SPD) de todos os aliados na equipe.",
+    "image": "figure_dobrynin.jpg",
+    "stats": { "hp": 50, "attack": 10, "speed": 30 }
+  },
+  {
+    "id": "photo_analyst",
+    "name": "Analista de Reconhecimento",
+    "rarity": "Comum",
+    "chance": 0,
+    "description": "Um dos analistas anônimos cuja análise minuciosa das fotos de vigilância revelou a presença de mísseis em Cuba.",
+    "biography": "Os analistas do Centro Nacional de Interpretação Fotográfica (NPIC) eram especialistas em examinar imagens de reconhecimento aéreo para identificar atividades militares e equipamentos. Seu trabalho era meticuloso e crucial para a inteligência dos EUA.",
+    "roleInCrisis": "Foi a análise detalhada das fotos tiradas pelo U-2 que confirmou inequivocamente a presença de mísseis balísticos soviéticos em Cuba, dando início à crise e à formação do ExComm.",
+    "ability": "Habilidade Ativa 'Análise Precisa': Aumenta a chance de acerto crítico do próximo ataque.",
+    "isStarter": true,
+    "image": "figure_analyst.jpg",
+    "stats": { "hp": 80, "attack": 9, "speed": 70 }
+  },
+  {
+    "id": "navy_sailor",
+    "name": "Marinheiro da Quarentena",
+    "rarity": "Comum",
+    "chance": 0,
+    "description": "Um marinheiro a bordo de um dos navios da Marinha dos EUA que impuseram o 'bloqueio' naval, a linha de frente da crise.",
+    "biography": "Representa os milhares de marinheiros da Marinha dos Estados Unidos que serviram a bordo dos destróieres, porta-aviões e outros navios que formaram a linha de quarentena ao redor de Cuba.",
+    "roleInCrisis": "Esses marinheiros estavam na linha de frente, preparados para interceptar e inspecionar navios soviéticos. Suas ações, ou a contenção delas, foram fundamentais para manter o bloqueio sem iniciar um conflito armado.",
+    "ability": "Habilidade Passiva 'Linha de Frente': Aumenta o HP de todos os aliados na equipe.",
+    "isStarter": true,
+    "image": "qua.jpg",
+    "stats": { "hp": 65, "attack": 12, "speed": 50 }
+  },
+  {
+    "id": "diplomatic_courier",
+    "name": "Mensageiro Diplomático",
+    "rarity": "Comum",
+    "chance": 0,
+    "description": "Responsável por transportar mensagens secretas e críticas, garantindo a comunicação entre as superpotências.",
+    "biography": "O mensageiro diplomático é uma figura que representa os canais de comunicação formais e informais que operavam sob imensa pressão durante a crise. Eles garantiam que as mensagens críticas chegassem intactas e sem demora.",
+    "roleInCrisis": "Embora anônimos, esses indivíduos foram essenciais para a troca das longas e complexas cartas entre Kennedy e Khrushchev, garantindo que a diplomacia pudesse continuar mesmo quando a tensão militar estava no auge.",
+    "ability": "Habilidade Passiva 'Comunicação Rápida': Aumenta a velocidade (SPD) do aliado mais rápido da equipe.",
+    "isStarter": true,
+    "image": "figure_courier.jpg",
+    "stats": { "hp": 70, "attack": 10, "speed": 95 }
+  }
+]
