@@ -189,7 +189,7 @@ const Index: React.FC<IndexProps> = ({
               <NetworkVisualization 
                 nodes={crisisData.nodes as NetworkNode[]} 
                 currentEvent={currentEventData ? { actions: currentEventData.actions } : null} 
-                onNodeSelect={handleNodeSelect} 
+                onNodeSelect={handleNodeSelect} // handleNodeSelect é a função que faz setSelectedNode
                 selectedNode={selectedNode} 
               />
             </div>
@@ -200,6 +200,7 @@ const Index: React.FC<IndexProps> = ({
               <div className="flex-grow min-h-0 bg-black/20 p-4">
                 <InfoPanel 
                   currentEvent={currentEventData} 
+                  selectedNode={selectedNode} // <-- PASSE A PROP AQUI
                   canAdvance={canAdvance} 
                   onAdvanceDay={handleAdvanceDay} 
                   isFinalDay={isLastTimelineDay} 

@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 
 // --- DEFINIÇÕES DE TIPO ---
 export interface NetworkNode extends d3.SimulationNodeDatum {
+  image: any;
   id: string;
   name: string;
   leader?: string;
