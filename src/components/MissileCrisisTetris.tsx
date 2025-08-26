@@ -5,8 +5,8 @@ import { Key, Trophy, Swords, ArrowLeft, ArrowRight, ArrowUp, ArrowDown, Space }
 // --- CONFIGURAÇÕES DO JOGO ---
 const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
-const LINES_TO_WIN = 6;
-  
+const LINES_TO_WIN = 5;
+
 // --- FORMAS DOS MÍSSEIS (BLOCOS DE TETRIS) ---
 const PIECES = {
   0: { shape: [[0]], color: 'transparent' },
