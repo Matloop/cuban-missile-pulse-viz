@@ -63,13 +63,13 @@
     "id": "dobrynin",
     "name": "Anatoly Dobrynin",
     "rarity": "Comum",
-    "chance": 120,
+    "chance": 100,
     "description": "Embaixador soviético nos EUA. Sua linha de comunicação secreta com RFK foi essencial para o acordo.",
     "biography": "Anatoly Dobrynin foi um diplomata soviético e embaixador nos Estados Unidos por mais de duas décadas. Ele foi um canal de comunicação crucial entre o Kremlin e a Casa Branca durante a maior parte da Guerra Fria.",
     "roleInCrisis": "Manteve uma linha de comunicação secreta e vital com Robert F. Kennedy, transmitindo mensagens e propostas entre os dois líderes que foram essenciais para a resolução pacífica da crise.",
     "ability": "Habilidade Passiva 'Canal Secreto': Aumenta a velocidade (SPD) de todos os aliados na equipe.",
     "image": "figure_dobrynin.jpg",
-    "stats": { "hp": 50, "attack": 10, "speed": 30 }
+    "stats": { "hp": 50, "attack": 8, "speed": 30 }
   },
   {
     "id": "photo_analyst",
