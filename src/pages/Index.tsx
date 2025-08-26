@@ -161,9 +161,7 @@ const Index: React.FC<IndexProps> = ({
             </Button>
             {process.env.NODE_ENV === 'development' && (
               <>
-                <Button onClick={handleJumpToLastDay} className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded-md">
-                  <FastForward className="w-4 h-4 mr-2" /> Pular Dia Final
-                </Button>
+          
                 <Button onClick={handleResetGame} variant="destructive" className="bg-red-800 hover:bg-red-700">
                   <RotateCcw className="w-4 h-4 mr-2" /> Resetar
                 </Button>

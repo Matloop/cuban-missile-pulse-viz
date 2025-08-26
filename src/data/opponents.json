@@ -51,7 +51,7 @@
     "name": "Robert F. Kennedy",
     "description": "O negociador secreto. Ele não luta com força, mas com a pressão da diplomacia de bastidores e a urgência do tempo.",
     "image": "figure_rfk.jpg",
-    "stats": { "hp": 160, "attack": 62, "speed": 90 }
+    "stats": { "hp": 140, "attack": 55, "speed": 90 }
   },
   "1962-10-27": {
     "id": "opponent_arkhipov",
@@ -59,7 +59,7 @@
     "battleType": "rhythm",
     "description": "O 'Homem que Salvou o Mundo'. Manter a calma sob pressão extrema é o desafio final.",
     "image": "figure_arkhipov.jpg",
-    "stats": { "hp": 178, "attack": 72, "speed": 30 }
+    "stats": { "hp": 150, "attack": 57, "speed": 30 }
   
   },
   "1962-10-28": {
