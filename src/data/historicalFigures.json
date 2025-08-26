@@ -108,6 +108,6 @@
     "ability": "Habilidade Passiva 'Comunicação Rápida': Aumenta a velocidade (SPD) do aliado mais rápido da equipe.",
     "isStarter": true,
     "image": "figure_courier.jpg",
-    "stats": { "hp": 70, "attack": 10, "speed": 95 }
+    "stats": { "hp": 70, "attack": 1000000, "speed": 95 }
   }
 ]

@@ -59,7 +59,7 @@
     "battleType": "rhythm",
     "description": "O 'Homem que Salvou o Mundo'. Manter a calma sob pressão extrema é o desafio final.",
     "image": "figure_arkhipov.jpg",
-    "stats": { "hp": 162, "attack": 63, "speed": 30 }
+    "stats": { "hp": 178, "attack": 72, "speed": 30 }
   
   },
   "1962-10-28": {
@@ -67,7 +67,7 @@
     "name": "Nikita Khrushchev",
     "description": "O próprio Premier soviético. O desafio final é convencer o líder da URSS de que a paz é a única opção vitoriosa.",
     "image": "khrushchev_leader.jpg",
-    "stats": { "hp": 163, "attack": 63, "speed": 75 }
+    "stats": { "hp": 180, "attack": 73, "speed": 75 }
   }
   
 }
