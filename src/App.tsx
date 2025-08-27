@@ -1,6 +1,6 @@
 // src/App.tsx
 
-import React, { useState, useEffect, useCallback, useRef } from "react"; // Adicionado useRef
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,16 +14,18 @@ import StarterSelection from "./components/StarterSelection";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import EventQuiz from "./components/EventQuiz";
+ // <--- NOVA IMPORTAÇÃO
 
 import allFiguresData from './data/historicalFigures.json';
 import quizDataJson from './data/quizData.json';
-
 import { HistoricalFigure, QuizData } from "./types/crisisDataTypes";
+import TutorialOverlay from "./components/TutorialOverlay";
 
 const queryClient = new QueryClient();
 const quizData = quizDataJson as Record<string, QuizData[]>;
 
 const APP_STATE_KEY = 'cubanCrisisAppState';
+const FIRST_LOOTBOX_OPENED_KEY = 'cubanCrisisFirstLootboxOpened'; // Chave para o tutorial
 
 const App: React.FC = () => {
   const [appState, setAppState] = useState<'loading' | 'splash' | 'starter' | 'main'>('loading');
@@ -31,20 +33,24 @@ const App: React.FC = () => {
   const [lootboxTokens, setLootboxTokens] = useState<number>(1);
   const [currentQuiz, setCurrentQuiz] = useState<QuizData | null>(null);
   
-  // --- MUDANÇA 1: Referência para o áudio e estado de controle ---
+  // NOVO ESTADO: controla se o tutorial de abrir o primeiro cofre está ativo
+  const [isFirstLootboxTutorial, setIsFirstLootboxTutorial] = useState<boolean>(false);
+  
   const audioRef = useRef<HTMLAudioElement>(null);
   const [musicStarted, setMusicStarted] = useState(false);
 
-
-  // Efeitos de salvar/carregar permanecem iguais...
+  // Efeito para carregar o estado salvo
   useEffect(() => {
     try {
       const savedStateJSON = localStorage.getItem(APP_STATE_KEY);
+      const firstLootboxOpened = localStorage.getItem(FIRST_LOOTBOX_OPENED_KEY) === 'true';
+
       if (savedStateJSON) {
         const savedState = JSON.parse(savedStateJSON);
         if (savedState.appState === 'main' && savedState.initialCollection?.length > 0) {
           setInitialCollection(savedState.initialCollection);
           setLootboxTokens(savedState.lootboxTokens ?? 1);
+          setIsFirstLootboxTutorial(!firstLootboxOpened); // Ativa o tutorial se o cofre ainda não foi aberto
           setAppState('main');
         } else {
           setAppState('splash');
@@ -58,6 +64,7 @@ const App: React.FC = () => {
     }
   }, []);
 
+  // Efeito para salvar o estado
   useEffect(() => {
     if (appState !== 'loading' && appState !== 'splash') {
       const stateToSave = { appState, initialCollection, lootboxTokens };
@@ -65,55 +72,41 @@ const App: React.FC = () => {
     }
   }, [appState, initialCollection, lootboxTokens]);
 
-  
-  // --- MUDANÇA 2: Função para iniciar o jogo E A MÚSICA ---
   const handleStart = async () => {
-    // Tenta iniciar a música apenas na primeira vez
     if (!musicStarted && audioRef.current) {
       try {
-        // Define o volume para o máximo
         audioRef.current.volume = 1.0; 
-        // Inicia a música
         await audioRef.current.play();
         setMusicStarted(true);
       } catch (error) {
-        console.error("Falha ao iniciar a música (o usuário precisa interagir com a página):", error);
+        console.error("Falha ao iniciar a música:", error);
       }
     }
-    // Continua para a próxima tela
     setAppState('starter');
   };
 
   const handleStarterSelect = (figureId: string) => {
     setInitialCollection([figureId]);
+    setIsFirstLootboxTutorial(true); // Ativa o tutorial ao selecionar o starter
     setAppState('main');
   };
 
-  const handleStartGeneralQuiz = () => {
-    const generalQuizzes = quizData.geral;
-    if (generalQuizzes && generalQuizzes.length > 0) {
-      const randomIndex = Math.floor(Math.random() * generalQuizzes.length);
-      setCurrentQuiz(generalQuizzes[randomIndex]);
-    }
-  };
-
-  const handleQuizComplete = (isCorrect: boolean) => {
-    setCurrentQuiz(null);
-    if (isCorrect) {
-      setLootboxTokens(prev => prev + 1);
-      toast.success("Resposta Correta!", {
-        description: "Você ganhou 1 Chave de Análise.",
-      });
-    } else {
-      toast.error("Resposta Incorreta.", {
-        description: "Mais sorte na próxima vez!",
-      });
-    }
-  };
+  const spendLootboxToken = useCallback(() => {
+    setLootboxTokens(prev => {
+      const newTokens = prev > 0 ? prev - 1 : 0;
+      // Se era o tutorial e o jogador gastou o token, o tutorial acabou.
+      if (isFirstLootboxTutorial && newTokens < 1) {
+        setIsFirstLootboxTutorial(false);
+        localStorage.setItem(FIRST_LOOTBOX_OPENED_KEY, 'true');
+      }
+      return newTokens;
+    });
+  }, [isFirstLootboxTutorial]);
 
   const addLootboxToken = useCallback(() => setLootboxTokens(prev => prev + 1), []);
-  const spendLootboxToken = useCallback(() => setLootboxTokens(prev => prev > 0 ? prev - 1 : 0), []);
-
+  const handleStartGeneralQuiz = () => { /* ... (código sem alterações) ... */ const generalQuizzes = quizData.geral; if (generalQuizzes && generalQuizzes.length > 0) { const randomIndex = Math.floor(Math.random() * generalQuizzes.length); setCurrentQuiz(generalQuizzes[randomIndex]); } };
+  const handleQuizComplete = (isCorrect: boolean) => { setCurrentQuiz(null); if (isCorrect) { setLootboxTokens(prev => prev + 1); toast.success("Resposta Correta!", { description: "Você ganhou 1 Chave de Análise.", }); } else { toast.error("Resposta Incorreta.", { description: "Mais sorte na próxima vez!", }); } };
+  
   const renderContent = () => {
     if (appState === 'loading') {
       return null;
@@ -121,7 +114,6 @@ const App: React.FC = () => {
     
     switch (appState) {
       case 'splash':
-        // A nova função handleStart é passada aqui
         return <SplashScreen onStart={handleStart} />;
       
       case 'starter':
@@ -132,20 +124,21 @@ const App: React.FC = () => {
       case 'main':
         return (
           <BrowserRouter>
-          <Routes>
-            <Route path="/" element={
-              <Index 
-                initialCollection={initialCollection}
-                lootboxTokens={lootboxTokens}
-                onAddToken={addLootboxToken}
-                onSpendToken={spendLootboxToken}
-                onStartQuiz={handleStartGeneralQuiz}
-              />} 
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      );
+            <Routes>
+              <Route path="/" element={
+                <Index 
+                  initialCollection={initialCollection}
+                  lootboxTokens={lootboxTokens}
+                  onAddToken={addLootboxToken}
+                  onSpendToken={spendLootboxToken} // Passa a função que desativa o tutorial
+                  onStartQuiz={handleStartGeneralQuiz}
+                  isTutorialActive={isFirstLootboxTutorial} // Passa o estado do tutorial
+                />} 
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        );
       
       default:
         return <SplashScreen onStart={handleStart} />;
@@ -157,17 +150,15 @@ const App: React.FC = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-
-        {/* --- MUDANÇA 3: Adição do elemento de áudio --- */}
         <audio ref={audioRef} src="/trilha-sonora.mp3" loop />
         
         {renderContent()}
 
         <AnimatePresence>
-          {currentQuiz && (
-            <EventQuiz quiz={currentQuiz} onComplete={handleQuizComplete} />
-          )}
-        </AnimatePresence>
+  {isFirstLootboxTutorial && appState === 'main' && (
+    <TutorialOverlay onFinish={() => setIsFirstLootboxTutorial(false)} />
+  )}
+</AnimatePresence>
       </TooltipProvider>
     </QueryClientProvider>
   );

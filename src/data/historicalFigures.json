@@ -82,7 +82,7 @@
     "ability": "Habilidade Ativa 'Análise Precisa': Aumenta a chance de acerto crítico do próximo ataque.",
     "isStarter": true,
     "image": "figure_analyst.jpg",
-    "stats": { "hp": 80, "attack": 9, "speed": 70 }
+    "stats": { "hp": 80, "attack": 20, "speed": 70 }
   },
   {
     "id": "navy_sailor",
@@ -108,6 +108,13 @@
     "ability": "Habilidade Passiva 'Comunicação Rápida': Aumenta a velocidade (SPD) do aliado mais rápido da equipe.",
     "isStarter": true,
     "image": "figure_courier.jpg",
-    "stats": { "hp": 70, "attack": 1000000, "speed": 95 }
-  }
+    "stats": { "hp": 70, "attack": 15, "speed": 95 }
+  },
+  { "id": "soviet_spy", "name": "Espião Soviético", "rarity": "Raro", "chance": 0, "description": "Infiltrado em território inimigo, coleta informações cruciais para a União Soviética.", "biography": "Os espiões soviéticos foram fundamentais para a coleta de informações durante a crise. Eles operavam sob cobertura, arriscando suas vidas para obter dados valiosos.", "roleInCrisis": "Eles forneceram informações vitais sobre os planos dos EUA, permitindo que a União Soviética tomasse medidas para se defender.", "ability": "Habilidade Ativa 'Infiltração': Reduz a defesa do inimigo mais forte da equipe por 2 turnos.", "isStarter": true, "image": "vs.png", "stats": { "hp": 60, "attack": 15, "speed": 80 } },
+
+ { "id": "us_naval_officer", "name": "Oficial Naval dos EUA", "rarity": "Comum", "chance": 0, "description": "Comanda a frota naval dos EUA, garantindo a segurança das águas territoriais.", "biography": "Os oficiais navais dos EUA desempenharam um papel crucial na crise, liderando a frota naval que impôs o bloqueio naval a Cuba.", "roleInCrisis": "Eles foram responsáveis por garantir que os navios soviéticos não ultrapassassem a linha de bloqueio, evitando uma escalada militar.", "ability": "Habilidade Passiva 'Controle Marítimo': Aumenta a defesa da equipe por 10% enquanto o oficial estiver no campo.", "isStarter": true, "image": "figure_officer.jpg", "stats": { "hp": 80, "attack": 15, "speed": 70 } },
+
+ { "id": "cuban_militia", "name": "Milícia Cubana", "rarity": "Comum", "chance": 0, "description": "Defende a ilha de Cuba contra a ameaça imperialista.", "biography": "A milícia cubana foi formada por civis que se voluntariaram para defender a ilha contra a invasão dos EUA.", "roleInCrisis": "Eles foram fundamentais para a defesa de Cuba, lutando contra as forças dos EUA em várias batalhas.", "ability": "Habilidade Ativa 'Defesa da Pátria': Aumenta a defesa da equipe por 20% por 1 turno.", "isStarter": true, "image": "figure_militia.jpg", "stats": { "hp": 90, "attack": 15, "speed": 60 } },
+
+ { "id": "kennedy_advisor", "name": "Assessor de Kennedy", "rarity": "Raro", "chance": 0, "description": "Assessora o presidente Kennedy em suas decisões cruciais.", "biography": "Os assessores de Kennedy foram fundamentais para a tomada de decisões durante a crise. Eles forneceram informações e análises que ajudaram a moldar as ações do presidente.", "roleInCrisis": "Eles foram responsáveis por ajudar Kennedy a tomar decisões que evitassem uma guerra nuclear.", "ability": "Habilidade Passiva 'Assessoria': Aumenta a chance de crítico do aliado mais forte da equipe por 10%.", "isStarter": true, "image": "figure_advisor.jpg", "stats": { "hp": 50, "attack": 15, "speed": 90 } }
 ]
