@@ -95,7 +95,7 @@
     "ability": "Habilidade Passiva 'Linha de Frente': Aumenta o HP de todos os aliados na equipe.",
     "isStarter": true,
     "image": "qua.jpg",
-    "stats": { "hp": 65, "attack": 12, "speed": 50 }
+    "stats": { "hp": 650, "attack": 1200, "speed": 50 }
   },
   {
     "id": "diplomatic_courier",
