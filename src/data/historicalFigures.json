@@ -116,5 +116,57 @@
 
  { "id": "cuban_militia", "name": "Milícia Cubana", "rarity": "Comum", "chance": 0, "description": "Defende a ilha de Cuba contra a ameaça imperialista.", "biography": "A milícia cubana foi formada por civis que se voluntariaram para defender a ilha contra a invasão dos EUA.", "roleInCrisis": "Eles foram fundamentais para a defesa de Cuba, lutando contra as forças dos EUA em várias batalhas.", "ability": "Habilidade Ativa 'Defesa da Pátria': Aumenta a defesa da equipe por 20% por 1 turno.", "isStarter": true, "image": "figure_militia.jpg", "stats": { "hp": 90, "attack": 15, "speed": 60 } },
 
- { "id": "kennedy_advisor", "name": "Assessor de Kennedy", "rarity": "Raro", "chance": 0, "description": "Assessora o presidente Kennedy em suas decisões cruciais.", "biography": "Os assessores de Kennedy foram fundamentais para a tomada de decisões durante a crise. Eles forneceram informações e análises que ajudaram a moldar as ações do presidente.", "roleInCrisis": "Eles foram responsáveis por ajudar Kennedy a tomar decisões que evitassem uma guerra nuclear.", "ability": "Habilidade Passiva 'Assessoria': Aumenta a chance de crítico do aliado mais forte da equipe por 10%.", "isStarter": true, "image": "figure_advisor.jpg", "stats": { "hp": 50, "attack": 15, "speed": 90 } }
+ { "id": "kennedy_advisor", "name": "Assessor de Kennedy", "rarity": "Raro", "chance": 0, "description": "Assessora o presidente Kennedy em suas decisões cruciais.", "biography": "Os assessores de Kennedy foram fundamentais para a tomada de decisões durante a crise. Eles forneceram informações e análises que ajudaram a moldar as ações do presidente.", "roleInCrisis": "Eles foram responsáveis por ajudar Kennedy a tomar decisões que evitassem uma guerra nuclear.", "ability": "Habilidade Passiva 'Assessoria': Aumenta a chance de crítico do aliado mais forte da equipe por 10%.", "isStarter": true, "image": "figure_advisor.jpg", "stats": { "hp": 50, "attack": 15, "speed": 90 } },
+{
+    "id": "fidel_castro_lieutenant",
+    "name": "Tenente de Fidel Castro",
+    "rarity": "Incomum",
+    "chance": 0,
+    "description": "Lidera unidades cubanas na defesa da revolução e do território.",
+    "biography": "Tenentes leais a Castro organizaram e comandaram as defesas cubanas, prontos para qualquer invasão.",
+    "roleInCrisis": "Eles mobilizaram as tropas e milícias cubanas, garantindo que a ilha estivesse preparada para resistir a um ataque iminente.",
+    "ability": "Habilidade Ativa 'Resistência Cubana': Aumenta o ataque da equipe por 15% por 1 turno.",
+    "isStarter": true,
+    "image": "montagna.png",
+    "stats": {
+      "hp": 85,
+      "attack": 18,
+      "speed": 65
+    }
+  },
+  {
+    "id": "khrushchev_diplomat",
+    "name": "Diplomata de Khrushchev",
+    "rarity": "Raro",
+    "chance": 0,
+    "description": "Representa os interesses soviéticos em negociações delicadas.",
+    "biography": "Os diplomatas de Khrushchev foram cruciais para a comunicação e negociação durante a crise, buscando uma solução pacífica.",
+    "roleInCrisis": "Eles trabalharam para mediar acordos e evitar a escalada do conflito, mantendo as linhas de comunicação abertas.",
+    "ability": "Habilidade Ativa 'Negociação': Reduz o ataque do inimigo mais forte por 2 turnos.",
+    "isStarter": true,
+    "image": "diplomat_khrushchev.png",
+    "stats": {
+      "hp": 65,
+      "attack": 10,
+      "speed": 85
+    }
+  },
+  {
+    "id": "us_pilot",
+    "name": "Piloto da Força Aérea dos EUA",
+    "rarity": "Comum",
+    "chance": 0,
+    "description": "Patrulha os céus sobre Cuba e o Atlântico, monitorando atividades suspeitas.",
+    "biography": "Os pilotos dos EUA realizaram voos de reconhecimento essenciais sobre Cuba, fornecendo as primeiras provas da presença de mísseis.",
+    "roleInCrisis": "Eles foram vitais para a coleta de inteligência visual, confirmando as ameaças e ajudando na formulação da resposta americana.",
+    "ability": "Habilidade Passiva 'Reconhecimento Aéreo': Aumenta a velocidade da equipe em 5% enquanto o piloto estiver no campo.",
+    "isStarter": true,
+    "image": "us_pilot.png",
+    "stats": {
+      "hp": 70,
+      "attack": 20,
+      "speed": 75
+    }
+  }
+
 ]
