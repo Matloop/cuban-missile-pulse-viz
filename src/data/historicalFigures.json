@@ -95,7 +95,7 @@
     "ability": "Habilidade Passiva 'Linha de Frente': Aumenta o HP de todos os aliados na equipe.",
     "isStarter": true,
     "image": "qua.jpg",
-    "stats": { "hp": 650, "attack": 1200, "speed": 50 }
+    "stats": { "hp": 82, "attack": 20, "speed": 50 }
   },
   {
     "id": "diplomatic_courier",
@@ -120,7 +120,7 @@
 {
     "id": "fidel_castro_lieutenant",
     "name": "Tenente de Fidel Castro",
-    "rarity": "Incomum",
+    "rarity": "Lendário",
     "chance": 0,
     "description": "Lidera unidades cubanas na defesa da revolução e do território.",
     "biography": "Tenentes leais a Castro organizaram e comandaram as defesas cubanas, prontos para qualquer invasão.",
