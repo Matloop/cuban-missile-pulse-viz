@@ -201,13 +201,7 @@ const Index: React.FC<IndexProps> = ({
             <Clock className="inline w-4 h-4 mr-2" />
             {formattedDate}
           </div>
-          <Button 
-            onClick={handleJumpToLastDay} 
-            size="sm" 
-            className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-md"
-          >
-            Pular para o Final
-          </Button>
+          
         </div>
 
       <AnimatePresence>
